@@ -7,17 +7,23 @@ buildscript {
 		jcenter()
 		mavenCentral()
 	}
+    dependencies {
+        classpath 'com.bmuschko:gradle-tomcat-plugin:2.2.4'
+    }	
 }
+
+apply plugin: 'eclipse'
+apply plugin: 'eclipse-wtp'
+apply plugin: 'java' 
+apply plugin: 'war'
+apply plugin: 'com.bmuschko.tomcat'
+
+def tomcatVersion = '7.0.59'
 
 repositories {
 	jcenter()
 	mavenCentral()
 }
-
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'eclipse-wtp' 
-apply plugin: 'war'
 
 eclipse {
 	project {
@@ -44,9 +50,14 @@ dependencies {
 			'commons-lang:commons-lang:2.6',
 			'com.google.guava:guava:19.+'
 			
-    providedCompile 'javax.servlet:javax.servlet-api:3.0.+'
+    providedCompile 'javax.servlet:javax.servlet-api:3.0.+',
+    				'javax.servlet.jsp:jsp-api:2.2'
 
     testCompile 'junit:junit:4.+'
+    
+    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
+           "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
+           "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"    
 }
 
 war {
@@ -59,4 +70,11 @@ war {
     		"Implementation-Version": '1.0'
     	)		
 	}
+}
+
+tomcat {
+    httpPort = 8090
+    httpsPort = 8091
+    enableSSL = false
+    contextPath = 'currencybg'
 }

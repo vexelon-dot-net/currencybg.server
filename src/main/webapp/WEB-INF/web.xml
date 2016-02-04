@@ -6,18 +6,18 @@
         version="3.0"
         metadata-complete="true">
       
-  <display-name>net.vexelon.mkp.server</display-name>
-  
-  <servlet>
-      <servlet-name>net.vexelon.currencybg.srv.servlets.TestServlet</servlet-name>
-        <load-on-startup>1</load-on-startup>      
-  </servlet>
-  <servlet-mapping>
-      <servlet-name>net.vexelon.currencybg.srv.servlets.TestServlet</servlet-name>
-      <url-pattern>/test</url-pattern>
-  </servlet-mapping>
-      
-  <listener>
-      <listener-class>net.vexelon.currencybg.srv.servlets.MyServletContextListener</listener-class>
-  </listener>   
+	<display-name>CurrencyBG Server</display-name>
+	
+	<servlet>
+		<servlet-name>TestServlet</servlet-name>
+		<servlet-class>net.vexelon.currencybg.srv.servlets.TestServlet</servlet-class>      
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TestServlet</servlet-name>
+		<url-pattern>/test/*</url-pattern>
+	</servlet-mapping>
+	    
+	<listener>
+		<listener-class>net.vexelon.currencybg.srv.servlets.MyServletContextListener</listener-class>
+	</listener>   
 </web-app>
