@@ -1,0 +1,62 @@
+/**
+ * CurrencyBG App build script
+ */
+ 
+buildscript {
+	repositories {
+		jcenter()
+		mavenCentral()
+	}
+}
+
+repositories {
+	jcenter()
+	mavenCentral()
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'eclipse-wtp' 
+apply plugin: 'war'
+
+eclipse {
+	project {
+		natures 'org.eclipse.jdt.core.javanature',
+				'org.springsource.ide.eclipse.gradle.core.nature',
+				'org.eclipse.wst.common.modulecore.ModuleCoreNature',
+				'org.eclipse.wst.common.project.facet.core.nature',				
+				'org.eclipse.jem.workbench.JavaEMFNature',
+				'org.eclipse.wst.jsdt.core.jsNature'
+	}
+	project.referencedProjects.each { evaluationDependsOn it }
+	jdt {
+    	sourceCompatibility = JavaVersion.VERSION_1_7
+    	targetCompatibility = JavaVersion.VERSION_1_7
+    }
+  	//classpath.plusConfigurations += [ configurations.compile, configurations.testCompile ]
+    classpath {
+    	downloadJavadoc = true
+    }
+}
+
+dependencies {
+	compile 'commons-io:commons-io:2.+',
+			'commons-lang:commons-lang:2.6',
+			'com.google.guava:guava:19.+'
+			
+    providedCompile 'javax.servlet:javax.servlet-api:3.0.+'
+
+    testCompile 'junit:junit:4.+'
+}
+
+war {
+	manifest {
+		def manifestClasspath = configurations.compile.collect { it.getName() }.join(',')
+    	attributes (
+    		"Class-Path": manifestClasspath,
+    		"Implementation-Vendor": 'Vexelon.NET Services',
+    		"Implementation-Title": 'CurrencyBG Server',
+    		"Implementation-Version": '1.0'
+    	)		
+	}
+}
