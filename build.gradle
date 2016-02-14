@@ -18,7 +18,8 @@ apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'com.bmuschko.tomcat'
 
-def tomcatVersion = '7.0.59'
+def tomcatVersion = '7.0.54'
+sourceCompatibility = JavaVersion.VERSION_1_7
 
 repositories {
 	jcenter()
@@ -48,8 +49,9 @@ eclipse {
 dependencies {
 	compile 'commons-io:commons-io:2.+',
 			'commons-lang:commons-lang:2.6',
-			'com.google.guava:guava:19.+'
-			
+			'com.google.guava:guava:19.+',
+			'com.google.code.gson:gson:2.6.+'
+
     providedCompile 'javax.servlet:javax.servlet-api:3.0.+',
     				'javax.servlet.jsp:jsp-api:2.2'
 
@@ -70,6 +72,7 @@ war {
     		"Implementation-Version": '1.0'
     	)		
 	}
+	exclude('src/main/webapp/META-INF/**')
 }
 
 tomcat {
