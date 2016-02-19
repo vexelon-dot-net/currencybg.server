@@ -40,7 +40,9 @@ public class MyServletContextListener implements ServletContextListener {
 
 		final ScheduledExecutorService executor = (ScheduledExecutorService) sce.getServletContext()
 				.getAttribute(THREAD_POOL_ALIAS);
-		executor.shutdown();
+		if (executor != null) {
+			executor.shutdown();
+		}
 	}
 
 }
