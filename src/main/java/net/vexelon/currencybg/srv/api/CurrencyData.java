@@ -10,8 +10,13 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Path("/currencydata")
 public class CurrencyData {
+
+	private static final Logger log = LoggerFactory.getLogger(CurrencyData.class);
 
 	private static final String DB_DRIVER = "com.mysql.jdbc.Driver";
 	private static final String DB_NAME = "currencybg";
@@ -40,6 +45,9 @@ public class CurrencyData {
 		String selectSQL = "SELECT ID FROM temp";
 		StringBuffer result = new StringBuffer();
 
+		// XXX test
+		log.trace("Selected rows {} in {}", selectSQL, selectSQL);
+
 		try {
 			dbConnection = getDBConnection();
 			preparedStatement = dbConnection.prepareStatement(selectSQL);
@@ -60,6 +68,7 @@ public class CurrencyData {
 			}
 
 		} catch (SQLException e) {
+			log.error("Error selecting rows!", e); // XXX test
 
 			System.out.println(e.getMessage());
 
