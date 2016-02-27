@@ -1,11 +1,12 @@
-# currencybg.server
+Currency BG Server
+============================
 
-CurrencyBG RESTful web service
+Currency BG RESTful web service
 
 # Requirements
 
-	* JDK 1.7+
-	* MySQL 5.5+
+	* JDK `1.7+`
+	* MySQL `5.5+`
 
 # Development
 
@@ -20,10 +21,6 @@ To build the project run:
 To start a local test version run:
 
 	gradle tomcatRun
-
-To check what other tasks are available run:
-
-	gradle tasks
 
 # License
 
