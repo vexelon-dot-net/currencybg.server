@@ -25,7 +25,7 @@ package net.vexelon.currencybg.srv.db;
 
 import java.io.Closeable;
 import java.sql.Connection;
-import java.util.List;
+import java.util.Date;
 
 /**
  * Encapsulates the available read-write operations to and from an underlying
@@ -42,75 +42,12 @@ public interface DataSourceInterface extends Closeable {
 	 */
 	Connection dbConnect() throws DataSourceException;
 
-	// TODO - test interface
-	String selectRecordsFromTable() throws DataSourceException;
-
 	/**
-	 * Fetches a list of dates for which exchange rates were downloaded and
-	 * available in the underlying data source.
+	 * Fetches a list of nonfixed currencies
 	 * 
-	 * @param locale
-	 * @return A {@link List} of {@link Date} objects or an empty {@link List},
-	 *         if no dates are available.
-	 * @throws DataSourceException
-	 */
-	// List<Date> getAvailableRatesDates(/* CurrencyLocales */String locale)
-	// throws DataSourceException;
-
-	/**
-	 * Fetches all exchange rates, for all dates, from the underlying data
-	 * source.
-	 * 
-	 * @param locale
-	 * @return {@link List} or {@code null}, if no rates are
-	 *         available.
-	 * @throws DataSourceException
-	 */
-	// TODO - temp return type
-	/* List<CurrencyData> */String getRates(/* CurrencyLocales */String locale) throws DataSourceException;
-
-	/**
-	 * Fetches exchange rates for a given date.
-	 * 
-	 * @param locale
-	 * @param date
-	 * @return {@link List} or {@code null}, if no rates are
-	 *         available for the given date.
-	 * @throws DataSourceException
-	 */
-	// List<CurrencyData> getRates(/* CurrencyLocales */String locale, Date
-	// date) throws DataSourceException;
-
-	// List<CurrencyData> getFixedRates(/* CurrencyLocales */String locale, Date
-	// date) throws DataSourceException;
-
-	/**
-	 * Adds exchange rates data for given download {@link Date}.
-	 * 
-	 * @param rates
-	 *            A {@link Map} of language and {@link CurrencyData} list
-	 *            values.
-	 * @throws DataSourceException
-	 */
-	// void addRates(Map</* CurrencyLocales */String, List<CurrencyData>> rates)
-	// throws DataSourceException;
-
-	/**
-	 * Fetches the latest exchange rates from the underlying data source.
-	 * 
-	 * @param locale
-	 * @throws DataSourceException
-	 */
-	// List<CurrencyData> getLastRates(/* CurrencyLocales */String locale)
-	// throws DataSourceException;
-
-	/**
-	 * Fetches the last exchange fixed rates from the underlying data source.
-	 *
-	 * @param locale
 	 * @return
 	 * @throws DataSourceException
 	 */
-	// List<CurrencyData> getLastFixedRates(/* CurrencyLocales */String locale)
-	// throws DataSourceException;
+	String getNonfixedRates(Date dateFrom) throws DataSourceException;
+
 }
