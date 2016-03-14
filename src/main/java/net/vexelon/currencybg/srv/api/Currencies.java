@@ -23,6 +23,29 @@ public class Currencies {
 
 	@GET
 	@Produces("application/json" + ";charset=utf-8")
+	@Path("/{dateFrom}")
+	public String getAllRatesByDate(@PathParam("dateFrom") String initialDate) throws Exception {
+
+		Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, "yyyy-MM-dd");
+
+		String currencies = null;
+		DataSourceInterface source = null;
+		try {
+			source = new DataSource();
+			source.dbConnect();
+			currencies = source.getAllRatesByDate(dateFrom);
+		} catch (DataSourceException e) {
+			log.error("Error selecting rows!", e);
+		} finally {
+			IOUtils.closeQuitely(source);
+		}
+		System.out.println("Get all currencies");
+		return currencies;
+
+	}
+
+	@GET
+	@Produces("application/json" + ";charset=utf-8")
 	@Path("/nonfixed/{dateFrom}")
 	public String getNonFixedRates(@PathParam("dateFrom") String initialDate) throws Exception {
 

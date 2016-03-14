@@ -43,11 +43,21 @@ public interface DataSourceInterface extends Closeable {
 	Connection dbConnect() throws DataSourceException;
 
 	/**
-	 * Fetches a list of nonfixed currencies
+	 * Fetches a list of nonfixed currencies by date
 	 * 
+	 * @param dateFrom
 	 * @return
 	 * @throws DataSourceException
 	 */
 	String getNonfixedRates(Date dateFrom) throws DataSourceException;
+
+	/**
+	 * Fetches a list of nonfixed and fixed currencies by date
+	 * 
+	 * @param dateFrom
+	 * @return
+	 * @throws DataSourceException
+	 */
+	String getAllRatesByDate(Date dateFrom) throws DataSourceException;
 
 }

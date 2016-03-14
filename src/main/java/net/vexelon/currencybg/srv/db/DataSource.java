@@ -71,6 +71,55 @@ public class DataSource implements DataSourceInterface {
 	}
 
 	@Override
+	public String getAllRatesByDate(Date dateFrom) throws DataSourceException {
+		List<CurrencyData> currencies = new ArrayList<CurrencyData>();
+
+		PreparedStatement preparedStatement = null;
+		ResultSet rs = null;
+
+		String selectSQL = " SELECT column_gold, " + "		column_name, " + "		column_code, " + "		column_ratio, "
+				+ "		column_reverserate, " + "		column_rate, " + "		column_extrainfo, " + "		column_curr_date, "
+				+ "		column_title, " + "		column_f_star, " + "		column_locale," + " false " + "   FROM cbg_currencies"
+				+ " WHERE column_curr_date >= ? ";
+		String json = null;
+		// XXX test
+		log.trace("Selected rows {} in {}", selectSQL, selectSQL);
+
+		try {
+			preparedStatement = dbConnection.prepareStatement(selectSQL);
+			preparedStatement.setDate(1, DateTimeUtils.convertJavaDateToSqlDate(dateFrom));
+			rs = preparedStatement.executeQuery();
+
+			while (rs.next()) {
+
+				currencies.add(new CurrencyData(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs
+						.getString(5), rs.getString(6), rs.getString(7), rs.getDate(8), rs.getString(9), rs.getInt(10),
+						rs.getString(11), rs.getBoolean(12)));
+
+			}
+
+			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+			Type type = new TypeToken<List<CurrencyData>>() {}.getType();
+			json = gson.toJson(currencies, type);
+
+			System.out.println(json);
+			List<CurrencyData> fromJson = gson.fromJson(json, type);
+
+			for (CurrencyData task : fromJson) {
+				System.out.println(task.getCode());
+				System.out.println(DateTimeUtils.parseDateToString(task.getCurrDate(), "yyyy-MM-dd"));
+			}
+
+		} catch (SQLException e) {
+			log.error("Error selecting rows!", e); // XXX test
+
+			System.out.println(e.getMessage());
+
+		}
+		return json;
+	}
+
+	@Override
 	public String getNonfixedRates(Date dateFrom) throws DataSourceException {
 		List<CurrencyData> currencies = new ArrayList<CurrencyData>();
 
