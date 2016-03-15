@@ -8,11 +8,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
@@ -59,10 +56,92 @@ public class BNBSource implements Source {
 	public BNBSource() {
 	}
 
-	private List<CurrencyData> getRatesFromUrl(String sourceUrl) throws SourceException {
+	public List<CurrencyData> getRates(InputStream input) throws Exception {
 		List<CurrencyData> listCurrencyData = Lists.newArrayList();
-		InputStream input = null;
 
+		XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+		factory.setNamespaceAware(true);
+		XmlPullParser parser = factory.newPullParser();
+		parser.setInput(input, Charsets.UTF_8.name());
+
+		DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+		CurrencyData currencyData = new CurrencyData();
+		boolean isHeaderParsed = false;
+		int eventType = parser.getEventType();
+		StringBuilder buffer = new StringBuilder();
+
+		while (eventType != XmlPullParser.END_DOCUMENT) {
+			String tagName = parser.getName();
+			switch (eventType) {
+			case XmlPullParser.START_TAG:
+				if (XML_TAG_ROW.equalsIgnoreCase(tagName)) {
+					if (isHeaderParsed) {
+						currencyData = new CurrencyData();
+						// defaults
+						currencyData.setRate("0");
+						currencyData.setReverseRate("0");
+					}
+				}
+				buffer.setLength(0);
+				break;
+
+			case XmlPullParser.TEXT:
+				if (isHeaderParsed) {
+					buffer.append(parser.getText());
+					break;
+				}
+
+			case XmlPullParser.END_TAG:
+				if (isHeaderParsed) {
+					if (tagName.equalsIgnoreCase(XML_TAG_GOLD)) {
+						currencyData.setGold(Integer.parseInt(buffer.toString()));
+					} else if (tagName.equalsIgnoreCase(XML_TAG_NAME)) {
+						currencyData.setName(buffer.toString());
+					} else if (tagName.equalsIgnoreCase(XML_TAG_CODE)) {
+						currencyData.setCode(buffer.toString());
+					} else if (tagName.equalsIgnoreCase(XML_TAG_RATIO)) {
+						currencyData.setRatio(Integer.parseInt(buffer.toString()));
+					} else if (tagName.equalsIgnoreCase(XML_TAG_REVERSERATE)) {
+						currencyData.setReverseRate(buffer.toString());
+					} else if (tagName.equalsIgnoreCase(XML_TAG_RATE)) {
+						currencyData.setRate(buffer.toString());
+					} else if (tagName.equalsIgnoreCase(XML_TAG_EXTRAINFO)) {
+						currencyData.setExtraInfo(buffer.toString());
+					} else if (tagName.equalsIgnoreCase(XML_TAG_CURR_DATE)) {
+						Date currencyDate;
+						try {
+							currencyDate = dateFormat.parse(buffer.toString());
+						} catch (ParseException e1) {
+							log.debug("Could not parse date from buffer '{}'!", buffer.toString(), e1);
+							// use default (today)
+							currencyDate = new Date();
+						}
+						currencyData.setCurrDate(currencyDate);
+					} else if (tagName.equalsIgnoreCase(XML_TAG_TITLE)) {
+						currencyData.setTitle(buffer.toString());
+					} else if (tagName.equalsIgnoreCase(XML_TAG_F_STAR)) {
+						currencyData.setfStar(Integer.parseInt(buffer.toString()));
+					} else if (XML_TAG_ROW.equalsIgnoreCase(tagName)) {
+						// add to list of parsed items
+						listCurrencyData.add(currencyData);
+					}
+				}
+				if (!isHeaderParsed && XML_TAG_ROW.equalsIgnoreCase(tagName)) {
+					isHeaderParsed = true;
+				}
+				break;
+
+			default:
+				break;
+			}
+			eventType = parser.next();
+		}
+
+		return listCurrencyData;
+	}
+
+	private List<CurrencyData> getRates(String sourceUrl) throws SourceException {
+		InputStream input = null;
 		try {
 			URLConnection connection = new URL(sourceUrl).openConnection();
 			connection.setDoInput(true);
@@ -73,86 +152,7 @@ public class BNBSource implements Source {
 				throw new SourceException(new String(ByteStreams.toByteArray(input), Charsets.UTF_8.name()));
 			}
 			input = httpConn.getInputStream();
-
-			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-			factory.setNamespaceAware(true);
-			XmlPullParser parser = factory.newPullParser();
-			parser.setInput(input, Charsets.UTF_8.name());
-
-			DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-			CurrencyData currencyData = new CurrencyData();
-			boolean isHeaderParsed = false;
-			int eventType = parser.getEventType();
-			StringBuilder buffer = new StringBuilder();
-
-			while (eventType != XmlPullParser.END_DOCUMENT) {
-				String tagName = parser.getName();
-				switch (eventType) {
-				case XmlPullParser.START_TAG:
-					if (XML_TAG_ROW.equalsIgnoreCase(tagName)) {
-						if (isHeaderParsed) {
-							currencyData = new CurrencyData();
-							// defaults
-							currencyData.setRate("0");
-							currencyData.setReverseRate("0");
-						}
-					}
-					buffer.setLength(0);
-					break;
-
-				case XmlPullParser.TEXT:
-					if (isHeaderParsed) {
-						buffer.append(parser.getText());
-						break;
-					}
-
-				case XmlPullParser.END_TAG:
-					if (isHeaderParsed) {
-						if (tagName.equalsIgnoreCase(XML_TAG_GOLD)) {
-							currencyData.setGold(Integer.parseInt(buffer.toString()));
-						} else if (tagName.equalsIgnoreCase(XML_TAG_NAME)) {
-							currencyData.setName(buffer.toString());
-						} else if (tagName.equalsIgnoreCase(XML_TAG_CODE)) {
-							currencyData.setCode(buffer.toString());
-						} else if (tagName.equalsIgnoreCase(XML_TAG_RATIO)) {
-							currencyData.setRatio(Integer.parseInt(buffer.toString()));
-						} else if (tagName.equalsIgnoreCase(XML_TAG_REVERSERATE)) {
-							currencyData.setReverseRate(buffer.toString());
-						} else if (tagName.equalsIgnoreCase(XML_TAG_RATE)) {
-							currencyData.setRate(buffer.toString());
-						} else if (tagName.equalsIgnoreCase(XML_TAG_EXTRAINFO)) {
-							currencyData.setExtraInfo(buffer.toString());
-						} else if (tagName.equalsIgnoreCase(XML_TAG_CURR_DATE)) {
-							Date currencyDate;
-							try {
-								currencyDate = dateFormat.parse(buffer.toString());
-							} catch (ParseException e1) {
-								log.debug("Could not parse date from buffer '{}'!", buffer.toString(), e1);
-								// use default (today)
-								currencyDate = new Date();
-							}
-							currencyData.setCurrDate(currencyDate);
-						} else if (tagName.equalsIgnoreCase(XML_TAG_TITLE)) {
-							currencyData.setTitle(buffer.toString());
-						} else if (tagName.equalsIgnoreCase(XML_TAG_F_STAR)) {
-							currencyData.setfStar(Integer.parseInt(buffer.toString()));
-						} else if (XML_TAG_ROW.equalsIgnoreCase(tagName)) {
-							// add to list of parsed items
-							listCurrencyData.add(currencyData);
-						}
-					}
-					if (!isHeaderParsed && XML_TAG_ROW.equalsIgnoreCase(tagName)) {
-						isHeaderParsed = true;
-					}
-					break;
-
-				default:
-					break;
-				}
-				eventType = parser.next();
-			}
-
-			return listCurrencyData;
+			return getRates(input);
 		} catch (Exception e) {
 			throw new SourceException("Failed loading currencies from BNB source!", e);
 		} finally {
@@ -160,13 +160,65 @@ public class BNBSource implements Source {
 		}
 	}
 
-	private List<CurrencyData> getFixedRates(String sourceUrl, String language) throws SourceException {
+	public List<CurrencyData> getFixedRates(InputStream input, String baseUri) throws Exception {
 		List<CurrencyData> listFixedCurrencyData = Lists.newArrayList();
 		CurrencyData fixedCurrencyData = new CurrencyData();
-
 		Date currentYear = DateTimeUtils.getStartOfYear();
-		InputStream input = null;
 
+		Document doc = Jsoup.parse(input, Charsets.UTF_8.name(), baseUri);
+
+		// Element element =
+		// doc.select("div#more_information > div.box > div.top > div > ul >
+		// li").first();
+		Element div = doc.select("div#content_box.content > div.doc_entry > div > table > tbody").first();
+		Elements divChildren = div.children();
+
+		int lineNumber = 1;
+		for (Element table : divChildren) {
+			if (lineNumber > 1) {
+				// System.out.println(table.tagName());
+				Elements tableChildren = table.children();
+				int elementNumber = 1;
+				fixedCurrencyData.setGold(1);
+				fixedCurrencyData.setfStar(0);
+				fixedCurrencyData.setCurrDate(currentYear);
+				fixedCurrencyData.setIsFixed(true);
+				for (Element elem : tableChildren) {
+					// System.out.println(elem.tagName());
+					Element elemChild = elem.children().first();
+					// System.out.print(elemChild.text());//
+					// elemChild.text()
+					switch (elementNumber) {
+					case 1:
+						fixedCurrencyData.setName(elemChild.text());
+						break;
+					case 2:
+						fixedCurrencyData.setCode(elemChild.text());
+						break;
+					case 3:
+						fixedCurrencyData.setRatio(Integer.parseInt(elemChild.text()));
+						break;
+					case 4:
+						fixedCurrencyData.setRate(elemChild.text());
+						break;
+					case 5:
+						fixedCurrencyData.setReverseRate(elemChild.text());
+						break;
+					}
+					elementNumber++;
+				}
+				listFixedCurrencyData.add(fixedCurrencyData);
+				fixedCurrencyData = new CurrencyData();
+			}
+			lineNumber++;
+		}
+		// Element euroValue = element.getElementsByTag("strong").first();
+		// String euroValuReturn = euroValue.text();
+		return listFixedCurrencyData;
+	}
+
+	private List<CurrencyData> getFixedRates(String sourceUrl, String language) throws SourceException {
+		InputStream input = null;
 		try {
 			URLConnection connection = new URL(sourceUrl).openConnection();
 			connection.setDoInput(true);
@@ -178,56 +230,7 @@ public class BNBSource implements Source {
 				throw new SourceException(new String(ByteStreams.toByteArray(input), Charsets.UTF_8.name()));
 			}
 			input = httpConn.getInputStream();
-			Document doc = Jsoup.parse(input, Charsets.UTF_8.name(), sourceUrl);
-
-			// Element element =
-			// doc.select("div#more_information > div.box > div.top > div > ul >
-			// li").first();
-			Element div = doc.select("div#content_box.content > div.doc_entry > div > table > tbody").first();
-			Elements divChildren = div.children();
-
-			int lineNumber = 1;
-			for (Element table : divChildren) {
-				if (lineNumber > 1) {
-					// System.out.println(table.tagName());
-					Elements tableChildren = table.children();
-					int elementNumber = 1;
-					fixedCurrencyData.setGold(1);
-					fixedCurrencyData.setfStar(0);
-					fixedCurrencyData.setCurrDate(currentYear);
-					fixedCurrencyData.setIsFixed(true);
-					for (Element elem : tableChildren) {
-						// System.out.println(elem.tagName());
-						Element elemChild = elem.children().first();
-						// System.out.print(elemChild.text());//
-						// elemChild.text()
-						switch (elementNumber) {
-						case 1:
-							fixedCurrencyData.setName(elemChild.text());
-							break;
-						case 2:
-							fixedCurrencyData.setCode(elemChild.text());
-							break;
-						case 3:
-							fixedCurrencyData.setRatio(Integer.parseInt(elemChild.text()));
-							break;
-						case 4:
-							fixedCurrencyData.setRate(elemChild.text());
-							break;
-						case 5:
-							fixedCurrencyData.setReverseRate(elemChild.text());
-							break;
-						}
-						elementNumber++;
-					}
-					listFixedCurrencyData.add(fixedCurrencyData);
-					fixedCurrencyData = new CurrencyData();
-				}
-				lineNumber++;
-			}
-			// Element euroValue = element.getElementsByTag("strong").first();
-			// String euroValuReturn = euroValue.text();
-			return listFixedCurrencyData;
+			return getFixedRates(input, sourceUrl);
 		} catch (Exception e) {
 			throw new SourceException("Failed loading fixed currencies from BNB source!", e);
 		} finally {
@@ -239,34 +242,15 @@ public class BNBSource implements Source {
 	public Map<CurrencyLocales, List<CurrencyData>> downloadRates() throws SourceException {
 		Map<CurrencyLocales, List<CurrencyData>> result = Maps.newHashMap();
 
-		List<CurrencyData> ratesENList = getRatesFromUrl(URL_BNB_FORMAT_EN);
+		List<CurrencyData> ratesENList = getRates(URL_BNB_FORMAT_EN);
 		ratesENList.addAll(getFixedRates(URL_BNB_FIXED_RATES + CurrencyLocales.EN.name(), CurrencyLocales.EN.name()));
 		result.put(CurrencyLocales.EN, ratesENList);
 
-		List<CurrencyData> ratesBGList = getRatesFromUrl(URL_BNB_FORMAT_BG);
+		List<CurrencyData> ratesBGList = getRates(URL_BNB_FORMAT_BG);
 		ratesBGList.addAll(getFixedRates(URL_BNB_FIXED_RATES + CurrencyLocales.BG.name(), CurrencyLocales.BG.name()));
 		result.put(CurrencyLocales.BG, ratesBGList);
 
 		return result;
 	}
 
-	public static void main(String[] args) {
-		try {
-			Map<CurrencyLocales, List<CurrencyData>> downloadRates = new BNBSource().downloadRates();
-			Set<Entry<CurrencyLocales, List<CurrencyData>>> entrySet = downloadRates.entrySet();
-			Iterator<Entry<CurrencyLocales, List<CurrencyData>>> iterator = entrySet.iterator();
-			while (iterator.hasNext()) {
-				Entry<CurrencyLocales, List<CurrencyData>> next = iterator.next();
-				System.out.println("--- KEY: " + next.getKey());
-				System.out.println("------------");
-				for (CurrencyData entry : next.getValue()) {
-					System.out.println(entry.getName() + "=" + entry.getRate());
-				}
-			}
-		} catch (SourceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
 }
