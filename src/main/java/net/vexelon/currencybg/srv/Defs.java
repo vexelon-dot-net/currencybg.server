@@ -6,7 +6,9 @@ package net.vexelon.currencybg.srv;
  */
 public final class Defs {
 
-	// Database parameters
+	/*
+	 * Database parameters
+	 */
 	public static final String DB_DRIVER = "com.mysql.jdbc.Driver";
 	public static final String DB_NAME = "currencybg";
 	public static final String DB_HOST = System.getenv("OPENSHIFT_MYSQL_DB_HOST");
@@ -15,6 +17,9 @@ public final class Defs {
 	public static final String DB_USER = System.getenv("OPENSHIFT_MYSQL_DB_USERNAME");
 	public static final String DB_PASSWORD = System.getenv("OPENSHIFT_MYSQL_DB_PASSWORD");
 
+	/*
+	 * Currency update parameters
+	 */
 	public static final long UPDATE_FIRST_INTERVAL = 10; // 10 seconds
 	public static final long UPDATES_PERIODIC_INTERVAL = 6 * 60 * 60; // 6 hours
 

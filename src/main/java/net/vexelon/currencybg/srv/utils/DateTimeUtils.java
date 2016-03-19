@@ -26,9 +26,28 @@ public class DateTimeUtils {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		int year = cal.get(Calendar.YEAR);
-		int month = cal.get(Calendar.MONTH);
-		int day = cal.get(Calendar.DAY_OF_MONTH);
 
 		return year;
+	}
+
+	/**
+	 * Р”Р°С‚Р°С‚Р° СЃРµ СЃРµС‚РІР°, РєР°С‚Рѕ СЃРµ РІР·РµРјРµ С‚РµРєСѓС‰Р°С‚Р°
+	 * РіРѕРґРёРЅР° Рё СЃРµ РґРѕР±Р°РІРё 01.01.
+	 * Р�Р·РїРѕР»Р·РІР° СЃРµ Р·Р° С„РёРєСЃРёСЂР°РЅРёС‚Рµ РІР°Р»СѓС‚Рё.
+	 * 
+	 * @return
+	 */
+	public static Date getStartOfYear() {
+		int year = Calendar.getInstance().get(Calendar.YEAR);
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+		String dateInString = "01.01." + year;
+		Date currentYear = null;
+		try {
+			currentYear = sdf.parse(dateInString);
+		} catch (ParseException e1) {
+			e1.printStackTrace();
+			// use default (today)
+		}
+		return currentYear;
 	}
 }

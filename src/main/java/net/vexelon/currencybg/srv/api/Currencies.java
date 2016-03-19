@@ -7,14 +7,14 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.vexelon.currencybg.srv.db.DataSource;
 import net.vexelon.currencybg.srv.db.DataSourceException;
 import net.vexelon.currencybg.srv.db.DataSourceInterface;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
-import net.vexelon.currencybg.srv.utils.IOUtils;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Path("/rates")
 public class Currencies {
@@ -37,7 +37,7 @@ public class Currencies {
 		} catch (DataSourceException e) {
 			log.error("Error selecting rows!", e);
 		} finally {
-			IOUtils.closeQuitely(source);
+			IOUtils.closeQuietly(source);
 		}
 		System.out.println("Get all currencies");
 		return currencies;
@@ -60,7 +60,7 @@ public class Currencies {
 		} catch (DataSourceException e) {
 			log.error("Error selecting rows!", e);
 		} finally {
-			IOUtils.closeQuitely(source);
+			IOUtils.closeQuietly(source);
 		}
 
 		return currencies;
