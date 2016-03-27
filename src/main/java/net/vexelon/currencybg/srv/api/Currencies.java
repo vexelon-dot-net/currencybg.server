@@ -5,7 +5,10 @@ import java.util.Date;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -16,15 +19,14 @@ import net.vexelon.currencybg.srv.db.DataSourceException;
 import net.vexelon.currencybg.srv.db.DataSourceInterface;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 
-@Path("/rates")
+@Path("/api")
 public class Currencies {
 
 	private static final Logger log = LoggerFactory.getLogger(Currencies.class);
 
 	@GET
-	@Produces("application/json" + ";charset=utf-8")
 	@Path("/{dateFrom}")
-	public String getAllRatesByDate(@PathParam("dateFrom") String initialDate) throws Exception {
+	public Response getAllRatesByDate(@PathParam("dateFrom") String initialDate) throws Exception {
 
 		Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, "yyyy-MM-dd");
 
@@ -35,19 +37,18 @@ public class Currencies {
 			source.dbConnect();
 			currencies = source.getAllRatesByDate(dateFrom);
 		} catch (DataSourceException e) {
-			log.error("Error selecting rows!", e);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("ERROR").build();
 		} finally {
 			IOUtils.closeQuietly(source);
 		}
-		System.out.println("Get all currencies");
-		return currencies;
+		return Response.status(Status.OK).entity(currencies)
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_TYPE + ";charset=utf-8").build();
 
 	}
 
 	@GET
-	@Produces("application/json" + ";charset=utf-8")
 	@Path("/nonfixed/{dateFrom}")
-	public String getNonFixedRates(@PathParam("dateFrom") String initialDate) throws Exception {
+	public Response getNonFixedRates(@PathParam("dateFrom") String initialDate) throws Exception {
 
 		Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, "yyyy-MM-dd");
 
@@ -56,14 +57,38 @@ public class Currencies {
 		try {
 			source = new DataSource();
 			source.dbConnect();
-			currencies = source.getNonfixedRates(dateFrom);
+			currencies = source.getNonFixedRates(dateFrom);
 		} catch (DataSourceException e) {
-			log.error("Error selecting rows!", e);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("ERROR").build();
 		} finally {
 			IOUtils.closeQuietly(source);
 		}
 
-		return currencies;
+		return Response.status(Status.OK).entity(currencies)
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_TYPE + ";charset=utf-8").build();
+
+	}
+
+	@GET
+	@Path("/fixed/{dateFrom}")
+	public Response getFixedRates(@PathParam("dateFrom") String initialDate) throws Exception {
+
+		Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, "yyyy-MM-dd");
+
+		String currencies = null;
+		DataSourceInterface source = null;
+		try {
+			source = new DataSource();
+			source.dbConnect();
+			currencies = source.getFixedRates(dateFrom);
+		} catch (DataSourceException e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("ERROR").build();
+		} finally {
+			IOUtils.closeQuietly(source);
+		}
+
+		return Response.status(Status.OK).entity(currencies)
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_TYPE + ";charset=utf-8").build();
 
 	}
 

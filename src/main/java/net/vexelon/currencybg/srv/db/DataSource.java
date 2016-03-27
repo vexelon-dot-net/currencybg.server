@@ -36,8 +36,8 @@ public class DataSource implements DataSourceInterface {
 			Class.forName(Defs.DB_DRIVER);
 
 		} catch (ClassNotFoundException e) {
-			log.error("Could not open database connection!", e);
-			throw new DataSourceException("Could not open SQLite database!", e);
+			// log.error("Could not open database connection!", e);
+			throw new DataSourceException("Could not find DB driver!", e);
 			// System.out.println(e.getMessage());
 
 		}
@@ -48,7 +48,7 @@ public class DataSource implements DataSourceInterface {
 			return dbConnection;
 
 		} catch (SQLException e) {
-			log.error("Could not open database connection!", e);
+			// log.error("Could not open database connection!", e);
 			throw new DataSourceException("Could not open SQLite database!", e);
 			// System.out.println(e.getMessage());
 
@@ -71,7 +71,7 @@ public class DataSource implements DataSourceInterface {
 	}
 
 	@Override
-	public String getAllRatesByDate(Date dateFrom) throws DataSourceException, SQLException {
+	public String getAllRatesByDate(Date dateFrom) throws DataSourceException {
 		List<CurrencyData> currencies = new ArrayList<CurrencyData>();
 
 		PreparedStatement preparedStatement = null;
@@ -82,12 +82,12 @@ public class DataSource implements DataSourceInterface {
 		String selectSQL = " SELECT column_gold, " + "		column_name, " + "		column_code, "
 				+ "		column_ratio, " + "		column_reverserate, " + "		column_rate, "
 				+ "		column_extrainfo, " + "		column_curr_date, " + "		column_title, " + "		column_f_star, "
-				+ "		column_locale," + " false " + "   FROM cbg_currencies" + " WHERE column_curr_date >= ? ";
+				+ "		column_locale," + " false " + "   FROM cbg_currencies" + " WHERE column_curr_date > ? ";
 
 		String selectSQLFixed = " SELECT column_gold, " + "		column_name, " + "		column_code, "
 				+ "		column_ratio, " + "		column_reverserate, " + "		column_rate, "
 				+ "		column_extrainfo, " + "		column_curr_date, " + "		column_title, " + "		column_f_star, "
-				+ "		column_locale," + " true " + "   FROM cbg_fixedcurrencies" + " WHERE column_curr_date >= ? ";
+				+ "		column_locale," + " true " + "   FROM cbg_fixedcurrencies" + " WHERE column_curr_date > ? ";
 
 		// SELECT * FROM `cbg_fixedcurrencies` WHERE year(column_curr_date) >=
 		// 2016
@@ -139,18 +139,43 @@ public class DataSource implements DataSourceInterface {
 			}
 
 		} catch (SQLException e) {
-			log.error("Error selecting rows!", e); // XXX test
-
-			System.out.println(e.getMessage());
+			log.error("SQL Exception in method getAllRatesByDate!", e);
+			throw new DataSourceException("SQL Exception in method getAllRatesByDate!", e);
 
 		} finally {
-
+			// TODO - close 2 PreprareStatement
 			if (rs != null) {
-				rs.close();
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					log.error("Problem with close of ResultSet(for selectSQL) in method getAllRatesByDate!", e);
+				}
+			}
+
+			if (rsFixed != null) {
+				try {
+					rsFixed.close();
+				} catch (SQLException e) {
+					log.error("Problem with close of ResultSet(for selectSQLFixed) in method getAllRatesByDate!", e);
+				}
 			}
 
 			if (preparedStatement != null) {
-				preparedStatement.close();
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+					log.error("Problem with close of PreparedStatement(for selectSQL) in method getAllRatesByDate!", e);
+				}
+			}
+
+			if (preparedStatementFixed != null) {
+				try {
+					preparedStatementFixed.close();
+				} catch (SQLException e) {
+					log.error(
+							"Problem with close of PreparedStatement(for selectSQLFixed) in method getAllRatesByDate!",
+							e);
+				}
 			}
 
 		}
@@ -159,7 +184,75 @@ public class DataSource implements DataSourceInterface {
 	}
 
 	@Override
-	public String getNonfixedRates(Date dateFrom) throws DataSourceException, SQLException {
+	public String getFixedRates(Date dateFrom) throws DataSourceException {
+		List<CurrencyData> currencies = new ArrayList<CurrencyData>();
+
+		PreparedStatement preparedStatementFixed = null;
+		ResultSet rsFixed = null;
+
+		String selectSQLFixed = " SELECT column_gold, " + "		column_name, " + "		column_code, "
+				+ "		column_ratio, " + "		column_reverserate, " + "		column_rate, "
+				+ "		column_extrainfo, " + "		column_curr_date, " + "		column_title, " + "		column_f_star, "
+				+ "		column_locale," + " true " + "   FROM cbg_fixedcurrencies" + " WHERE column_curr_date > ? ";
+
+		String json = null;
+
+		try {
+
+			preparedStatementFixed = dbConnection.prepareStatement(selectSQLFixed);
+			preparedStatementFixed.setInt(1, DateTimeUtils.getYearByDate(dateFrom));
+			rsFixed = preparedStatementFixed.executeQuery();
+
+			while (rsFixed.next()) {
+
+				currencies.add(new CurrencyData(rsFixed.getInt(1), rsFixed.getString(2), rsFixed.getString(3),
+						rsFixed.getInt(4), rsFixed.getString(5), rsFixed.getString(6), rsFixed.getString(7),
+						rsFixed.getDate(8), rsFixed.getString(9), rsFixed.getInt(10), rsFixed.getString(11),
+						rsFixed.getBoolean(12)));
+
+			}
+
+			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+			Type type = new TypeToken<List<CurrencyData>>() {}.getType();
+			json = gson.toJson(currencies, type);
+
+			System.out.println(json);
+			List<CurrencyData> fromJson = gson.fromJson(json, type);
+
+			for (CurrencyData task : fromJson) {
+				System.out.println(task.getCode());
+				System.out.println(DateTimeUtils.parseDateToString(task.getCurrDate(), "yyyy-MM-dd"));
+			}
+
+		} catch (SQLException e) {
+			log.error("SQL Exception in method getFixedRates!", e);
+			throw new DataSourceException("SQL Exception in method getFixedRates!", e);
+
+		} finally {
+
+			if (rsFixed != null) {
+				try {
+					rsFixed.close();
+				} catch (SQLException e) {
+					log.error("Problem with close of ResultSet in method getFixedRates!", e);
+				}
+			}
+
+			if (preparedStatementFixed != null) {
+				try {
+					preparedStatementFixed.close();
+				} catch (SQLException e) {
+					log.error("Problem with close of PreparedStatement in method getFixedRates!", e);
+				}
+			}
+
+		}
+
+		return json;
+	}
+
+	@Override
+	public String getNonFixedRates(Date dateFrom) throws DataSourceException {
 		List<CurrencyData> currencies = new ArrayList<CurrencyData>();
 
 		PreparedStatement preparedStatement = null;
@@ -168,7 +261,7 @@ public class DataSource implements DataSourceInterface {
 		String selectSQL = " SELECT column_gold, " + "		column_name, " + "		column_code, "
 				+ "		column_ratio, " + "		column_reverserate, " + "		column_rate, "
 				+ "		column_extrainfo, " + "		column_curr_date, " + "		column_title, " + "		column_f_star, "
-				+ "		column_locale," + " false " + "   FROM cbg_currencies" + " WHERE column_curr_date >= ? ";
+				+ "		column_locale," + " false " + "   FROM cbg_currencies" + " WHERE column_curr_date > ? ";
 		String json = null;
 		// XXX test
 		log.trace("Selected rows {} in {}", selectSQL, selectSQL);
@@ -199,18 +292,27 @@ public class DataSource implements DataSourceInterface {
 			}
 
 		} catch (SQLException e) {
-			log.error("Error selecting rows!", e); // XXX test
+			// TODO - Wrap of SQLException
+			log.error("SQL Exception in method getNonfixedRates!", e);
 
-			System.out.println(e.getMessage());
+			throw new DataSourceException("SQL Exception in method getNonfixedRates!", e);
 
 		} finally {
 
 			if (rs != null) {
-				rs.close();
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					log.error("Problem with close of ResultSet in method getNonfixedRates!", e);
+				}
 			}
 
 			if (preparedStatement != null) {
-				preparedStatement.close();
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+					log.error("Problem with close of PreparedStatement in method getNonfixedRates!", e);
+				}
 			}
 
 		}

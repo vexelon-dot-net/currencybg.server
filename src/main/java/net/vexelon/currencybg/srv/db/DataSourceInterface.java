@@ -25,7 +25,6 @@ package net.vexelon.currencybg.srv.db;
 
 import java.io.Closeable;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Date;
 
 /**
@@ -50,7 +49,16 @@ public interface DataSourceInterface extends Closeable {
 	 * @return
 	 * @throws DataSourceException
 	 */
-	String getNonfixedRates(Date dateFrom) throws DataSourceException, SQLException;
+	String getNonFixedRates(Date dateFrom) throws DataSourceException;
+
+	/**
+	 * Fetches a list of fixed currencies by date
+	 * 
+	 * @param dateFrom
+	 * @return
+	 * @throws DataSourceException
+	 */
+	String getFixedRates(Date dateFrom) throws DataSourceException;
 
 	/**
 	 * Fetches a list of nonfixed and fixed currencies by date
@@ -59,6 +67,6 @@ public interface DataSourceInterface extends Closeable {
 	 * @return
 	 * @throws DataSourceException
 	 */
-	String getAllRatesByDate(Date dateFrom) throws DataSourceException, SQLException;
+	String getAllRatesByDate(Date dateFrom) throws DataSourceException;
 
 }
