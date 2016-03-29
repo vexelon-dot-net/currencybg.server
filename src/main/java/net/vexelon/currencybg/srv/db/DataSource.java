@@ -133,10 +133,11 @@ public class DataSource implements DataSourceInterface {
 			System.out.println(json);
 			List<CurrencyData> fromJson = gson.fromJson(json, type);
 
-			for (CurrencyData task : fromJson) {
-				System.out.println(task.getCode());
-				System.out.println(DateTimeUtils.parseDateToString(task.getCurrDate(), "yyyy-MM-dd"));
-			}
+			// for (CurrencyData task : fromJson) {
+			// System.out.println(task.getCode());
+			// System.out.println(DateTimeUtils.parseDateToString(task.getCurrDate(),
+			// "yyyy-MM-dd"));
+			// }
 
 		} catch (SQLException e) {
 			log.error("SQL Exception in method getAllRatesByDate!", e);
@@ -219,10 +220,11 @@ public class DataSource implements DataSourceInterface {
 			System.out.println(json);
 			List<CurrencyData> fromJson = gson.fromJson(json, type);
 
-			for (CurrencyData task : fromJson) {
-				System.out.println(task.getCode());
-				System.out.println(DateTimeUtils.parseDateToString(task.getCurrDate(), "yyyy-MM-dd"));
-			}
+			// for (CurrencyData task : fromJson) {
+			// System.out.println(task.getCode());
+			// System.out.println(DateTimeUtils.parseDateToString(task.getCurrDate(),
+			// "yyyy-MM-dd"));
+			// }
 
 		} catch (SQLException e) {
 			log.error("SQL Exception in method getFixedRates!", e);
@@ -286,10 +288,11 @@ public class DataSource implements DataSourceInterface {
 			System.out.println(json);
 			List<CurrencyData> fromJson = gson.fromJson(json, type);
 
-			for (CurrencyData task : fromJson) {
-				System.out.println(task.getCode());
-				System.out.println(DateTimeUtils.parseDateToString(task.getCurrDate(), "yyyy-MM-dd"));
-			}
+			// for (CurrencyData task : fromJson) {
+			// System.out.println(task.getCode());
+			// System.out.println(DateTimeUtils.parseDateToString(task.getCurrDate(),
+			// "yyyy-MM-dd"));
+			// }
 
 		} catch (SQLException e) {
 			// TODO - Wrap of SQLException
