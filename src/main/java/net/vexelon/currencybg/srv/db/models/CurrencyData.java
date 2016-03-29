@@ -3,6 +3,7 @@ package net.vexelon.currencybg.srv.db.models;
 import java.util.Date;
 
 public class CurrencyData {
+
 	private int gold;
 	private String name;
 	private String code;
@@ -140,8 +141,8 @@ public class CurrencyData {
 	public String toString() {
 		return "CurrencyData [gold=" + gold + ", name=" + name + ", code=" + code + ", ratio=" + ratio
 				+ ", reverseRate=" + reverseRate + ", rate=" + rate + ", extraInfo=" + extraInfo + ", currDate="
-				+ currDate + ", title=" + title + ", fStar=" + fStar + ", location=" + location + ", isFixed="
-				+ isFixed + "]";
+				+ currDate + ", title=" + title + ", fStar=" + fStar + ", location=" + location + ", isFixed=" + isFixed
+				+ "]";
 	}
 
 }

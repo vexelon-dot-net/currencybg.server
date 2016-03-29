@@ -9,6 +9,7 @@ Currency BG RESTful web service
 
   * JDK `1.7+`
   * MySQL `5.5+`
+  * Tomcat `7.0.54+`
 
 # Development
 
