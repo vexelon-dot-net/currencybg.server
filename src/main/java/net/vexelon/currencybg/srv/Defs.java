@@ -1,5 +1,7 @@
 package net.vexelon.currencybg.srv;
 
+import javax.ws.rs.core.MediaType;
+
 /**
  * Global constants
  *
@@ -22,5 +24,8 @@ public final class Defs {
 	 */
 	public static final long UPDATE_FIRST_INTERVAL = 10; // 10 seconds
 	public static final long UPDATES_PERIODIC_INTERVAL = 6 * 60 * 60; // 6 hours
+
+	public static final String DATETIME_FORMAT = "yyyy-MM-dd";
+	public static final String API_JSON_CONTENT_TYPE = MediaType.APPLICATION_JSON_TYPE + ";charset=utf-8";
 
 }
