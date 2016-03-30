@@ -1,6 +1,7 @@
 package net.vexelon.currencybg.srv.api;
 
 import java.util.Date;
+import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -13,16 +14,33 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Maps;
+
 import net.vexelon.currencybg.srv.Defs;
 import net.vexelon.currencybg.srv.db.DataSource;
 import net.vexelon.currencybg.srv.db.DataSourceException;
 import net.vexelon.currencybg.srv.db.DataSourceInterface;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 
-@Path("/currencies")
+@Path(Currencies.JUNCTION_NAME)
 public class Currencies {
 
 	private static final Logger log = LoggerFactory.getLogger(Currencies.class);
+
+	public static final String JUNCTION_NAME = "/currencies";
+
+	/**
+	 * Fetches a key/value set of all available junctions.
+	 * 
+	 * @return
+	 */
+	public static Map<String, String> getJunctionsList() {
+		Map<String, String> junctionsMap = Maps.newHashMap();
+		junctionsMap.put("currencies_fromdate_url", JUNCTION_NAME + "/{date}");
+		junctionsMap.put("currencies_fixed_fromdate_url", JUNCTION_NAME + "/fixed/{date}");
+		junctionsMap.put("currencies_nonfixed_fromdate_url", JUNCTION_NAME + "/nonfixed/{date}");
+		return junctionsMap;
+	}
 
 	@GET
 	@Path("/{dateFrom}")

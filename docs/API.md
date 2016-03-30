@@ -1,7 +1,7 @@
 Currency BG API
 ============================
 
-HTTP API documentation.
+HTTP API documentation
 
 
 ================================
