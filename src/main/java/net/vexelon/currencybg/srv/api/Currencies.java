@@ -19,7 +19,7 @@ import net.vexelon.currencybg.srv.db.DataSourceException;
 import net.vexelon.currencybg.srv.db.DataSourceInterface;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 
-@Path("/api")
+@Path("/currencies")
 public class Currencies {
 
 	private static final Logger log = LoggerFactory.getLogger(Currencies.class);
