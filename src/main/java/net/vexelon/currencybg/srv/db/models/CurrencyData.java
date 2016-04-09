@@ -17,6 +17,26 @@ public class CurrencyData {
 	private String location;
 	private boolean isFixed;
 
+	public CurrencyData() {
+	}
+
+	public CurrencyData(int gold, String name, String code, int ratio, String reverseRate, String rate,
+			String extraInfo, Date currDate, String title, int fStar, String location, boolean isFixed) {
+
+		this.gold = gold;
+		this.name = name;
+		this.code = code;
+		this.ratio = ratio;
+		this.reverseRate = reverseRate;
+		this.rate = rate;
+		this.extraInfo = extraInfo;
+		this.currDate = currDate;
+		this.title = title;
+		this.fStar = fStar;
+		this.location = location;
+		this.isFixed = isFixed;
+	}
+
 	public int getGold() {
 		return gold;
 	}
@@ -115,26 +135,6 @@ public class CurrencyData {
 
 	public void setIsFixed(boolean isFixed) {
 		this.isFixed = isFixed;
-	}
-
-	public CurrencyData(int gold, String name, String code, int ratio, String reverseRate, String rate,
-			String extraInfo, Date currDate, String title, int fStar, String location, boolean isFixed) {
-		super();
-		this.gold = gold;
-		this.name = name;
-		this.code = code;
-		this.ratio = ratio;
-		this.reverseRate = reverseRate;
-		this.rate = rate;
-		this.extraInfo = extraInfo;
-		this.currDate = currDate;
-		this.title = title;
-		this.fStar = fStar;
-		this.location = location;
-		this.isFixed = isFixed;
-	}
-
-	public CurrencyData() {
 	}
 
 	@Override

@@ -10,7 +10,6 @@ public class Bootstrap {
 	private static final Logger log = LoggerFactory.getLogger(Bootstrap.class);
 
 	public void init() {
-
 		log.trace("Running sanity tests ...");
 
 		testEncoding();
