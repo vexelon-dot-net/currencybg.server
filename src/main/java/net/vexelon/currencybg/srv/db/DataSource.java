@@ -71,6 +71,48 @@ public class DataSource implements DataSourceInterface {
 	}
 
 	@Override
+	public boolean checkAuthentication(String headerName, String headerValue) throws DataSourceException {
+
+		PreparedStatement preparedStatement = null;
+		ResultSet rs = null;
+
+		String selectSQL = "SELECT 1 FROM cbg_security WHERE id = ? and value = ?";
+		try {
+			preparedStatement = dbConnection.prepareStatement(selectSQL);
+			preparedStatement.setString(1, headerName);
+			preparedStatement.setString(2, headerValue);
+			rs = preparedStatement.executeQuery();
+
+			if (rs.next())
+				return true;
+		} catch (SQLException e) {
+			log.error("SQL Exception in method getFixedRates!", e);
+			throw new DataSourceException("SQL Exception in method getFixedRates!", e);
+
+		} finally {
+
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					log.error("Problem with close of ResultSet in method checkAuthentication!", e);
+				}
+			}
+
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+					log.error("Problem with close of PreparedStatement in method checkAuthentication!", e);
+				}
+			}
+
+		}
+
+		return false;
+	}
+
+	@Override
 	public String getAllRatesByDate(Date dateFrom) throws DataSourceException {
 		List<CurrencyData> currencies = new ArrayList<CurrencyData>();
 

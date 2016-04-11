@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Map;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.HttpHeaders;
@@ -44,18 +45,26 @@ public class Currencies {
 
 	@GET
 	@Path("/{dateFrom}")
-	public Response getAllRatesByDate(@PathParam("dateFrom") String initialDate) throws Exception {
+	public Response getAllRatesByDate(@PathParam("dateFrom") String initialDate, @HeaderParam("APIKey") String APIValue)
+			throws Exception {
 
 		Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
+		log.debug("test header {}", APIValue);
 
 		String currencies = null;
 		DataSourceInterface source = null;
+
 		try {
+
 			source = new DataSource();
 			source.dbConnect();
+			if (!source.checkAuthentication("APIKey", APIValue)) {
+				return Response.status(Response.Status.UNAUTHORIZED).entity("ERROR").build();
+			}
 			currencies = source.getAllRatesByDate(dateFrom);
 		} catch (DataSourceException e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("ERROR").build();
+
 		} finally {
 			IOUtils.closeQuietly(source);
 		}
@@ -66,7 +75,8 @@ public class Currencies {
 
 	@GET
 	@Path("/nonfixed/{dateFrom}")
-	public Response getNonFixedRates(@PathParam("dateFrom") String initialDate) throws Exception {
+	public Response getNonFixedRates(@PathParam("dateFrom") String initialDate, @HeaderParam("APIKey") String APIValue)
+			throws Exception {
 
 		Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
 
@@ -75,6 +85,9 @@ public class Currencies {
 		try {
 			source = new DataSource();
 			source.dbConnect();
+			if (!source.checkAuthentication("APIKey", APIValue)) {
+				return Response.status(Response.Status.UNAUTHORIZED).entity("ERROR").build();
+			}
 			currencies = source.getNonFixedRates(dateFrom);
 		} catch (DataSourceException e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("ERROR").build();
@@ -89,7 +102,8 @@ public class Currencies {
 
 	@GET
 	@Path("/fixed/{dateFrom}")
-	public Response getFixedRates(@PathParam("dateFrom") String initialDate) throws Exception {
+	public Response getFixedRates(@PathParam("dateFrom") String initialDate, @HeaderParam("APIKey") String APIValue)
+			throws Exception {
 
 		Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
 
@@ -98,6 +112,9 @@ public class Currencies {
 		try {
 			source = new DataSource();
 			source.dbConnect();
+			if (!source.checkAuthentication("APIKey", APIValue)) {
+				return Response.status(Response.Status.UNAUTHORIZED).entity("ERROR").build();
+			}
 			currencies = source.getFixedRates(dateFrom);
 		} catch (DataSourceException e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("ERROR").build();

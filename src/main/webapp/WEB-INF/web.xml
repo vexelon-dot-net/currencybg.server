@@ -27,6 +27,18 @@
 		<servlet-name>Jersey REST Service</servlet-name>
 		<url-pattern>/api/*</url-pattern>
 	</servlet-mapping>
+	<!-- <security-constraint>
+		<web-resource-collection>
+			<url-pattern>/api/*</url-pattern>
+			<http-method>GET</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>currencybg</role-name>
+		</auth-constraint>
+	</security-constraint>
+	<login-config>
+		<auth-method>BASIC</auth-method>
+	</login-config> -->
 	<listener>
 		<listener-class>net.vexelon.currencybg.srv.servlets.MyServletContextListener</listener-class>
 	</listener>

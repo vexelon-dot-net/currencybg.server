@@ -21,6 +21,8 @@ apply plugin: 'com.bmuschko.tomcat'
 def tomcatVersion = '7.0.54'
 sourceCompatibility = JavaVersion.VERSION_1_7
 
+//compileTestJava.options.encoding = 'UTF-8'
+
 repositories {
 	jcenter()
 	mavenCentral()

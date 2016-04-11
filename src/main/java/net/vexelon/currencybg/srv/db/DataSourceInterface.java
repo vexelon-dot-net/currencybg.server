@@ -69,4 +69,14 @@ public interface DataSourceInterface extends Closeable {
 	 */
 	String getAllRatesByDate(Date dateFrom) throws DataSourceException;
 
+	/**
+	 * Check whether the authentication is valid
+	 * 
+	 * @param headerName
+	 * @param headerValue
+	 * @return
+	 * @throws DataSourceException
+	 */
+	boolean checkAuthentication(String headerName, String headerValue) throws DataSourceException;
+
 }
