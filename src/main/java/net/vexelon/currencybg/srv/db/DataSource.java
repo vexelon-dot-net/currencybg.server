@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import com.google.gson.reflect.TypeToken;
 import net.vexelon.currencybg.srv.Defs;
 import net.vexelon.currencybg.srv.api.Currencies;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
+import net.vexelon.currencybg.srv.db.models.CurrencyLocales;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 
 public class DataSource implements DataSourceInterface {
@@ -71,16 +73,207 @@ public class DataSource implements DataSourceInterface {
 	}
 
 	@Override
-	public boolean checkAuthentication(String headerName, String headerValue) throws DataSourceException {
+	public void addRates(Map<CurrencyLocales, List<CurrencyData>> rates) throws DataSourceException {
+
+		for (Map.Entry<CurrencyLocales, List<CurrencyData>> currenciesData : rates.entrySet()) {
+
+			// Данните от сайта на БНБ се разделят на два списъка - от динамични
+			// валути и от статични валути
+			List<CurrencyData> dynamicCurrencies = new ArrayList<CurrencyData>();
+			List<CurrencyData> fixedCurrencies = new ArrayList<CurrencyData>();
+			for (CurrencyData currency : currenciesData.getValue()) {
+				if (currency.isFixed()) {
+					fixedCurrencies.add(currency);
+				} else {
+					dynamicCurrencies.add(currency);
+				}
+			}
+
+			// make sure there is sufficient data in the lists
+			if (dynamicCurrencies.isEmpty() || dynamicCurrencies.size() < 2) {
+				log.debug("Dynamic currencies list is empty (" + dynamicCurrencies.size() + ")!");
+				return;
+			}
+			if (fixedCurrencies.isEmpty() || fixedCurrencies.size() < 2) {
+				log.debug("Fixed currencies list is empty (" + fixedCurrencies.size() + ")!");
+				return;
+			}
+
+			// //За всеки от списъците се прави проверка дали го има в базата.
+			// За динамични валути
+			// TODO - да се ползва новия метод
+
+			if (!isHaveRates(currenciesData.getKey(), dynamicCurrencies.get(1).getCurrDate(), false)) {
+
+				PreparedStatement preparedStatement = null;
+				PreparedStatement preparedStatementDate = null;
+				String insertSQL = "INSERT INTO cbg_currencies(COLUMN_GOLD, COLUMN_NAME, COLUMN_CODE, COLUMN_RATIO, COLUMN_REVERSERATE, COLUMN_RATE, COLUMN_EXTRAINFO, COLUMN_CURR_DATE, COLUMN_TITLE, COLUMN_F_STAR, COLUMN_LOCALE) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+				String insertSQLDate = "INSERT INTO cbg_currenciesdate(COLUMN_CURR_DATE, COLUMN_LOCALE) VALUES (?,?)";
+
+				try {
+					preparedStatement = dbConnection.prepareStatement(insertSQL);
+
+					for (int i = 0; i < dynamicCurrencies.size(); i++) {
+
+						preparedStatement.setInt(1, dynamicCurrencies.get(i).getGold());
+						preparedStatement.setString(2, dynamicCurrencies.get(i).getName());
+						preparedStatement.setString(3, dynamicCurrencies.get(i).getCode());
+						preparedStatement.setInt(4, dynamicCurrencies.get(i).getRatio());
+						preparedStatement.setFloat(5, Float.parseFloat(dynamicCurrencies.get(i).getReverseRate()));
+						preparedStatement.setFloat(6, Float.parseFloat(dynamicCurrencies.get(i).getRate()));
+						preparedStatement.setString(7, dynamicCurrencies.get(i).getExtraInfo());
+						preparedStatement.setDate(8,
+								new java.sql.Date(dynamicCurrencies.get(i).getCurrDate().getTime()));
+						preparedStatement.setString(9, dynamicCurrencies.get(i).getTitle());
+						preparedStatement.setInt(10, dynamicCurrencies.get(i).getfStar());
+						preparedStatement.setString(11, currenciesData.getKey().toString());
+
+						preparedStatement.executeUpdate();
+
+					}
+
+					preparedStatementDate = dbConnection.prepareStatement(insertSQLDate);
+
+					preparedStatementDate.setDate(1,
+							new java.sql.Date(currenciesData.getValue().get(1).getCurrDate().getTime()));
+					preparedStatementDate.setString(2, currenciesData.getKey().toString());
+
+					preparedStatementDate.executeUpdate();
+
+				} catch (SQLException e) {
+					log.error("SQL Exception in method isHaveRates!", e);
+					throw new DataSourceException("SQL Exception in method addRates!", e);
+
+				} finally {
+
+					if (preparedStatement != null) {
+						try {
+							preparedStatement.close();
+						} catch (SQLException e) {
+							log.error("Problem with close of PreparedStatement in method addRates!", e);
+						}
+					}
+
+					if (preparedStatementDate != null) {
+						try {
+							preparedStatementDate.close();
+						} catch (SQLException e) {
+							log.error("Problem with close of PreparedStatement in method addRates!", e);
+						}
+					}
+				}
+
+			}
+
+			// За фиксирани валути. Може да го има вече в базата, защото се
+			// добавят веднъж годишно
+			if (fixedCurrencies.size() > 0) {
+				if (!isHaveRates(currenciesData.getKey(), fixedCurrencies.get(1).getCurrDate(), true)) {
+
+					PreparedStatement preparedStatement = null;
+					String insertSQL = "INSERT INTO cbg_fixedcurrencies(COLUMN_GOLD, COLUMN_NAME, COLUMN_CODE, COLUMN_RATIO, COLUMN_REVERSERATE, COLUMN_RATE, COLUMN_EXTRAINFO, COLUMN_CURR_DATE, COLUMN_TITLE, COLUMN_F_STAR, COLUMN_LOCALE) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+
+					try {
+						preparedStatement = dbConnection.prepareStatement(insertSQL);
+
+						for (int i = 0; i < fixedCurrencies.size(); i++) {
+
+							preparedStatement.setInt(1, fixedCurrencies.get(i).getGold());
+							preparedStatement.setString(2, fixedCurrencies.get(i).getName());
+							preparedStatement.setString(3, fixedCurrencies.get(i).getCode());
+							preparedStatement.setInt(4, fixedCurrencies.get(i).getRatio());
+							preparedStatement.setFloat(5, Float.parseFloat(fixedCurrencies.get(i).getReverseRate()));
+							preparedStatement.setFloat(6, Float.parseFloat(fixedCurrencies.get(i).getRate()));
+							preparedStatement.setString(7, fixedCurrencies.get(i).getExtraInfo());
+							preparedStatement.setDate(8,
+									new java.sql.Date(fixedCurrencies.get(i).getCurrDate().getTime()));
+							preparedStatement.setString(9, fixedCurrencies.get(i).getTitle());
+							preparedStatement.setInt(10, fixedCurrencies.get(i).getfStar());
+							preparedStatement.setString(11, currenciesData.getKey().toString());
+
+							preparedStatement.executeUpdate();
+
+						}
+
+					} catch (SQLException e) {
+						log.error("SQL Exception in method isHaveRates!", e);
+						throw new DataSourceException("SQL Exception in method addRates!", e);
+
+					} finally {
+
+						if (preparedStatement != null) {
+							try {
+								preparedStatement.close();
+							} catch (SQLException e) {
+								log.error("Problem with close of PreparedStatement in method addRates!", e);
+							}
+						}
+					}
+
+				}
+			}
+		}
+	}
+
+	private Boolean isHaveRates(CurrencyLocales locale, Date dateOfCurrency, boolean isFixed)
+			throws DataSourceException {
+		PreparedStatement preparedStatement = null;
+		ResultSet rs = null;
+
+		StringBuilder selectSQL = new StringBuilder("SELECT * FROM");
+		if (isFixed) {
+			selectSQL.append("cbg_fixedcurrencies");
+		} else {
+			selectSQL.append("cbg_currenciesdate");
+		}
+		selectSQL.append("WHERE column_curr_date = ? and column_local = ?");
+
+		try {
+			preparedStatement = dbConnection.prepareStatement(selectSQL.toString());
+			preparedStatement.setDate(1, new java.sql.Date(dateOfCurrency.getTime()));
+			preparedStatement.setString(2, locale.toString());
+			rs = preparedStatement.executeQuery();
+
+			if (rs.next())
+				return true;
+
+		} catch (SQLException e) {
+			log.error("SQL Exception in method isHaveRates!", e);
+			throw new DataSourceException("SQL Exception in method getFixedRates!", e);
+
+		} finally {
+
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					log.error("Problem with close of ResultSet in method isHaveRates!", e);
+				}
+			}
+
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+					log.error("Problem with close of PreparedStatement in method isHaveRates!", e);
+				}
+			}
+
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean checkAuthentication(String authenticationKey) throws DataSourceException {
 
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
 
-		String selectSQL = "SELECT 1 FROM cbg_security WHERE id = ? and value = ?";
+		String selectSQL = "SELECT 1 FROM cbg_apikeys WHERE key_value = ?";
 		try {
 			preparedStatement = dbConnection.prepareStatement(selectSQL);
-			preparedStatement.setString(1, headerName);
-			preparedStatement.setString(2, headerValue);
+			preparedStatement.setString(1, authenticationKey);
 			rs = preparedStatement.executeQuery();
 
 			if (rs.next())

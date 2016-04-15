@@ -58,7 +58,7 @@ public class Currencies {
 
 			source = new DataSource();
 			source.dbConnect();
-			if (!source.checkAuthentication("APIKey", APIValue)) {
+			if (!source.checkAuthentication(APIValue)) {
 				return Response.status(Response.Status.UNAUTHORIZED).entity("ERROR").build();
 			}
 			currencies = source.getAllRatesByDate(dateFrom);
@@ -85,7 +85,7 @@ public class Currencies {
 		try {
 			source = new DataSource();
 			source.dbConnect();
-			if (!source.checkAuthentication("APIKey", APIValue)) {
+			if (!source.checkAuthentication(APIValue)) {
 				return Response.status(Response.Status.UNAUTHORIZED).entity("ERROR").build();
 			}
 			currencies = source.getNonFixedRates(dateFrom);
@@ -112,7 +112,7 @@ public class Currencies {
 		try {
 			source = new DataSource();
 			source.dbConnect();
-			if (!source.checkAuthentication("APIKey", APIValue)) {
+			if (!source.checkAuthentication(APIValue)) {
 				return Response.status(Response.Status.UNAUTHORIZED).entity("ERROR").build();
 			}
 			currencies = source.getFixedRates(dateFrom);

@@ -26,6 +26,11 @@ package net.vexelon.currencybg.srv.db;
 import java.io.Closeable;
 import java.sql.Connection;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import net.vexelon.currencybg.srv.db.models.CurrencyData;
+import net.vexelon.currencybg.srv.db.models.CurrencyLocales;
 
 /**
  * Encapsulates the available read-write operations to and from an underlying
@@ -77,6 +82,16 @@ public interface DataSourceInterface extends Closeable {
 	 * @return
 	 * @throws DataSourceException
 	 */
-	boolean checkAuthentication(String headerName, String headerValue) throws DataSourceException;
+	boolean checkAuthentication(String authenticationKey) throws DataSourceException;
+
+	/**
+	 * Adds exchange rates in DB.
+	 * 
+	 * @param rates
+	 *            A {@link Map} of language and {@link CurrencyData} list
+	 *            values.
+	 * @throws DataSourceException
+	 */
+	void addRates(Map<CurrencyLocales, List<CurrencyData>> rates) throws DataSourceException;
 
 }
