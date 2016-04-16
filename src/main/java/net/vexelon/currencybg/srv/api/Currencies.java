@@ -59,11 +59,19 @@ public class Currencies {
 			source = new DataSource();
 			source.dbConnect();
 			if (!source.checkAuthentication(APIValue)) {
+<<<<<<< HEAD
 				return Response.status(Response.Status.UNAUTHORIZED).entity("ERROR1").build();
 			}
 			currencies = source.getAllRatesByDate(dateFrom);
 		} catch (DataSourceException e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("ERROR1").build();
+=======
+				return Response.status(Response.Status.UNAUTHORIZED).build();
+			}
+			currencies = source.getAllRatesByDate(dateFrom);
+		} catch (DataSourceException e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+>>>>>>> af267aabfef297d2c9c0066c79ce6712dc1a4a5e
 
 		} finally {
 			IOUtils.closeQuietly(source);
