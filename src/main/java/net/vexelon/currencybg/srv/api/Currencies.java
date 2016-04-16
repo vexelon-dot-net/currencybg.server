@@ -49,7 +49,6 @@ public class Currencies {
 			throws Exception {
 
 		Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
-		log.debug("test header {}", APIValue);
 
 		String currencies = null;
 		DataSourceInterface source = null;
@@ -58,13 +57,13 @@ public class Currencies {
 
 			source = new DataSource();
 			source.dbConnect();
-			if (!source.checkAuthentication(APIValue)) {
+			if (!source.isCheckAuthentication(APIValue)) {
 				return Response.status(Response.Status.UNAUTHORIZED).build();
 			}
 			currencies = source.getAllRatesByDate(dateFrom);
 		} catch (DataSourceException e) {
+			log.error("", e);
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-
 		} finally {
 			IOUtils.closeQuietly(source);
 		}
@@ -85,12 +84,13 @@ public class Currencies {
 		try {
 			source = new DataSource();
 			source.dbConnect();
-			if (!source.checkAuthentication(APIValue)) {
-				return Response.status(Response.Status.UNAUTHORIZED).entity("ERROR").build();
+			if (!source.isCheckAuthentication(APIValue)) {
+				return Response.status(Response.Status.UNAUTHORIZED).build();
 			}
 			currencies = source.getNonFixedRates(dateFrom);
 		} catch (DataSourceException e) {
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("ERROR").build();
+			log.error("", e);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
 		} finally {
 			IOUtils.closeQuietly(source);
 		}
@@ -112,12 +112,13 @@ public class Currencies {
 		try {
 			source = new DataSource();
 			source.dbConnect();
-			if (!source.checkAuthentication(APIValue)) {
-				return Response.status(Response.Status.UNAUTHORIZED).entity("ERROR").build();
+			if (!source.isCheckAuthentication(APIValue)) {
+				return Response.status(Response.Status.UNAUTHORIZED).build();
 			}
 			currencies = source.getFixedRates(dateFrom);
 		} catch (DataSourceException e) {
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("ERROR").build();
+			log.error("", e);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
 		} finally {
 			IOUtils.closeQuietly(source);
 		}

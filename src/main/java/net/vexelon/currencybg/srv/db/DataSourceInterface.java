@@ -82,7 +82,7 @@ public interface DataSourceInterface extends Closeable {
 	 * @return
 	 * @throws DataSourceException
 	 */
-	boolean checkAuthentication(String authenticationKey) throws DataSourceException;
+	boolean isCheckAuthentication(String authenticationKey) throws DataSourceException;
 
 	/**
 	 * Adds exchange rates in DB.

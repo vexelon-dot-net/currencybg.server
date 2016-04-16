@@ -119,8 +119,8 @@ public class DataSource implements DataSourceInterface {
 						preparedStatement.setString(2, dynamicCurrencies.get(i).getName());
 						preparedStatement.setString(3, dynamicCurrencies.get(i).getCode());
 						preparedStatement.setInt(4, dynamicCurrencies.get(i).getRatio());
-						preparedStatement.setFloat(5, Float.parseFloat(dynamicCurrencies.get(i).getReverseRate()));
-						preparedStatement.setFloat(6, Float.parseFloat(dynamicCurrencies.get(i).getRate()));
+						preparedStatement.setString(5, dynamicCurrencies.get(i).getReverseRate());
+						preparedStatement.setString(6, dynamicCurrencies.get(i).getRate());
 						preparedStatement.setString(7, dynamicCurrencies.get(i).getExtraInfo());
 						preparedStatement.setDate(8,
 								new java.sql.Date(dynamicCurrencies.get(i).getCurrDate().getTime()));
@@ -141,9 +141,7 @@ public class DataSource implements DataSourceInterface {
 					preparedStatementDate.executeUpdate();
 
 				} catch (SQLException e) {
-					log.error("SQL Exception in method isHaveRates!", e);
 					throw new DataSourceException("SQL Exception in method addRates!", e);
-
 				} finally {
 
 					if (preparedStatement != null) {
@@ -182,8 +180,8 @@ public class DataSource implements DataSourceInterface {
 							preparedStatement.setString(2, fixedCurrencies.get(i).getName());
 							preparedStatement.setString(3, fixedCurrencies.get(i).getCode());
 							preparedStatement.setInt(4, fixedCurrencies.get(i).getRatio());
-							preparedStatement.setFloat(5, Float.parseFloat(fixedCurrencies.get(i).getReverseRate()));
-							preparedStatement.setFloat(6, Float.parseFloat(fixedCurrencies.get(i).getRate()));
+							preparedStatement.setString(5, fixedCurrencies.get(i).getReverseRate());
+							preparedStatement.setString(6, fixedCurrencies.get(i).getRate());
 							preparedStatement.setString(7, fixedCurrencies.get(i).getExtraInfo());
 							preparedStatement.setDate(8,
 									new java.sql.Date(fixedCurrencies.get(i).getCurrDate().getTime()));
@@ -196,9 +194,7 @@ public class DataSource implements DataSourceInterface {
 						}
 
 					} catch (SQLException e) {
-						log.error("SQL Exception in method isHaveRates!", e);
 						throw new DataSourceException("SQL Exception in method addRates!", e);
-
 					} finally {
 
 						if (preparedStatement != null) {
@@ -238,9 +234,7 @@ public class DataSource implements DataSourceInterface {
 				return true;
 
 		} catch (SQLException e) {
-			log.error("SQL Exception in method isHaveRates!", e);
 			throw new DataSourceException("SQL Exception in method getFixedRates!", e);
-
 		} finally {
 
 			if (rs != null) {
@@ -265,12 +259,12 @@ public class DataSource implements DataSourceInterface {
 	}
 
 	@Override
-	public boolean checkAuthentication(String authenticationKey) throws DataSourceException {
+	public boolean isCheckAuthentication(String authenticationKey) throws DataSourceException {
 
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
 
-		String selectSQL = "SELECT 1 FROM cbg_apikeys WHERE key_value = ?";
+		String selectSQL = "SELECT 1 FROM cbg_apikeys WHERE key_value = ? AND status = 0 ";
 		try {
 			preparedStatement = dbConnection.prepareStatement(selectSQL);
 			preparedStatement.setString(1, authenticationKey);
@@ -279,16 +273,14 @@ public class DataSource implements DataSourceInterface {
 			if (rs.next())
 				return true;
 		} catch (SQLException e) {
-			log.error("SQL Exception in method getFixedRates!", e);
 			throw new DataSourceException("SQL Exception in method getFixedRates!", e);
-
 		} finally {
 
 			if (rs != null) {
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					log.error("Problem with close of ResultSet in method checkAuthentication!", e);
+					log.error("Problem with close of ResultSet in method isCheckAuthentication!", e);
 				}
 			}
 
@@ -296,7 +288,7 @@ public class DataSource implements DataSourceInterface {
 				try {
 					preparedStatement.close();
 				} catch (SQLException e) {
-					log.error("Problem with close of PreparedStatement in method checkAuthentication!", e);
+					log.error("Problem with close of PreparedStatement in method isCheckAuthentication!", e);
 				}
 			}
 
@@ -375,7 +367,6 @@ public class DataSource implements DataSourceInterface {
 			// }
 
 		} catch (SQLException e) {
-			log.error("SQL Exception in method getAllRatesByDate!", e);
 			throw new DataSourceException("SQL Exception in method getAllRatesByDate!", e);
 
 		} finally {
@@ -462,9 +453,7 @@ public class DataSource implements DataSourceInterface {
 			// }
 
 		} catch (SQLException e) {
-			log.error("SQL Exception in method getFixedRates!", e);
 			throw new DataSourceException("SQL Exception in method getFixedRates!", e);
-
 		} finally {
 
 			if (rsFixed != null) {
@@ -530,9 +519,6 @@ public class DataSource implements DataSourceInterface {
 			// }
 
 		} catch (SQLException e) {
-			// TODO - Wrap of SQLException
-			log.error("SQL Exception in method getNonfixedRates!", e);
-
 			throw new DataSourceException("SQL Exception in method getNonfixedRates!", e);
 
 		} finally {
