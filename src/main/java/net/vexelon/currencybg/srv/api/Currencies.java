@@ -1,5 +1,6 @@
 package net.vexelon.currencybg.srv.api;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Map;
 
@@ -11,7 +12,6 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,28 +48,19 @@ public class Currencies {
 	public Response getAllRatesByDate(@PathParam("dateFrom") String initialDate, @HeaderParam("APIKey") String APIValue)
 			throws Exception {
 
-		Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
-
-		String currencies = null;
-		DataSourceInterface source = null;
-
-		try {
-
-			source = new DataSource();
+		try (DataSourceInterface source = new DataSource()) {
+			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
 			source.dbConnect();
 			if (!source.isCheckAuthentication(APIValue)) {
 				return Response.status(Response.Status.UNAUTHORIZED).build();
 			}
-			currencies = source.getAllRatesByDate(dateFrom);
-		} catch (DataSourceException e) {
+			String currencies = source.getAllRatesByDate(dateFrom);
+			return Response.status(Status.OK).entity(currencies)
+					.header(HttpHeaders.CONTENT_TYPE, Defs.API_JSON_CONTENT_TYPE).build();
+		} catch (DataSourceException | ParseException e) {
 			log.error("", e);
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-		} finally {
-			IOUtils.closeQuietly(source);
 		}
-		return Response.status(Status.OK).entity(currencies)
-				.header(HttpHeaders.CONTENT_TYPE, Defs.API_JSON_CONTENT_TYPE).build();
-
 	}
 
 	@GET
@@ -77,27 +68,19 @@ public class Currencies {
 	public Response getNonFixedRates(@PathParam("dateFrom") String initialDate, @HeaderParam("APIKey") String APIValue)
 			throws Exception {
 
-		Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
-
-		String currencies = null;
-		DataSourceInterface source = null;
-		try {
-			source = new DataSource();
+		try (DataSourceInterface source = new DataSource()) {
+			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
 			source.dbConnect();
 			if (!source.isCheckAuthentication(APIValue)) {
 				return Response.status(Response.Status.UNAUTHORIZED).build();
 			}
-			currencies = source.getNonFixedRates(dateFrom);
-		} catch (DataSourceException e) {
+			String currencies = source.getNonFixedRates(dateFrom);
+			return Response.status(Status.OK).entity(currencies)
+					.header(HttpHeaders.CONTENT_TYPE, Defs.API_JSON_CONTENT_TYPE).build();
+		} catch (DataSourceException | ParseException e) {
 			log.error("", e);
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-		} finally {
-			IOUtils.closeQuietly(source);
 		}
-
-		return Response.status(Status.OK).entity(currencies)
-				.header(HttpHeaders.CONTENT_TYPE, Defs.API_JSON_CONTENT_TYPE).build();
-
 	}
 
 	@GET
@@ -105,27 +88,20 @@ public class Currencies {
 	public Response getFixedRates(@PathParam("dateFrom") String initialDate, @HeaderParam("APIKey") String APIValue)
 			throws Exception {
 
-		Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
-
-		String currencies = null;
-		DataSourceInterface source = null;
-		try {
-			source = new DataSource();
+		try (DataSourceInterface source = new DataSource()) {
+			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
 			source.dbConnect();
 			if (!source.isCheckAuthentication(APIValue)) {
 				return Response.status(Response.Status.UNAUTHORIZED).build();
 			}
-			currencies = source.getFixedRates(dateFrom);
-		} catch (DataSourceException e) {
+			String currencies = source.getFixedRates(dateFrom);
+			return Response.status(Status.OK).entity(currencies)
+					.header(HttpHeaders.CONTENT_TYPE, Defs.API_JSON_CONTENT_TYPE).build();
+
+		} catch (DataSourceException | ParseException e) {
 			log.error("", e);
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-		} finally {
-			IOUtils.closeQuietly(source);
 		}
-
-		return Response.status(Status.OK).entity(currencies)
-				.header(HttpHeaders.CONTENT_TYPE, Defs.API_JSON_CONTENT_TYPE).build();
-
 	}
 
 }
