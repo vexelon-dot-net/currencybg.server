@@ -45,7 +45,7 @@ public interface DataSourceInterface extends Closeable {
 	 * @throws DataSourceException
 	 *             If an SQL error is thrown.
 	 */
-	Connection dbConnect() throws DataSourceException;
+	Connection connect() throws DataSourceException;
 
 	/**
 	 * Fetches a list of nonfixed currencies by date

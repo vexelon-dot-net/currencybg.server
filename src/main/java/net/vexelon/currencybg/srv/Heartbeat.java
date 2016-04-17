@@ -33,7 +33,7 @@ public class Heartbeat implements Runnable {
 			Map<CurrencyLocales, List<CurrencyData>> downloadRates = source.downloadRates();
 
 			log.debug("Importing downloaded rates in database ...");
-			dataSource.dbConnect();
+			dataSource.connect();
 			dataSource.addRates(downloadRates);
 
 			if (log.isTraceEnabled()) {

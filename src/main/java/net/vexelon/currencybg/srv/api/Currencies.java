@@ -51,7 +51,7 @@ public class Currencies {
 
 		try (DataSourceInterface source = new DataSource()) {
 			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
-			source.dbConnect();
+			source.connect();
 			if (!source.isCheckAuthentication(apiKey)) {
 				return Response.status(Response.Status.UNAUTHORIZED).build();
 			}
@@ -71,7 +71,7 @@ public class Currencies {
 
 		try (DataSourceInterface source = new DataSource()) {
 			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
-			source.dbConnect();
+			source.connect();
 			if (!source.isCheckAuthentication(apiKey)) {
 				return Response.status(Response.Status.UNAUTHORIZED).build();
 			}
@@ -91,7 +91,7 @@ public class Currencies {
 
 		try (DataSourceInterface source = new DataSource()) {
 			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
-			source.dbConnect();
+			source.connect();
 			if (!source.isCheckAuthentication(apiKey)) {
 				return Response.status(Response.Status.UNAUTHORIZED).build();
 			}

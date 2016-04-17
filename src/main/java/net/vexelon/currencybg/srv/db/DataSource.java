@@ -31,7 +31,7 @@ public class DataSource implements DataSourceInterface {
 	Connection dbConnection = null;
 
 	@Override
-	public Connection dbConnect() throws DataSourceException {
+	public Connection connect() throws DataSourceException {
 
 		try {
 
@@ -216,13 +216,13 @@ public class DataSource implements DataSourceInterface {
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
 
-		StringBuilder selectSQL = new StringBuilder("SELECT * FROM");
+		StringBuilder selectSQL = new StringBuilder("SELECT * FROM ");
 		if (isFixed) {
 			selectSQL.append("cbg_fixedcurrencies");
 		} else {
 			selectSQL.append("cbg_currenciesdate");
 		}
-		selectSQL.append("WHERE column_curr_date = ? and column_local = ?");
+		selectSQL.append(" WHERE COLUMN_CURR_DATE = ? and COLUMN_LOCALE = ?");
 
 		try {
 			preparedStatement = dbConnection.prepareStatement(selectSQL.toString());
@@ -354,7 +354,8 @@ public class DataSource implements DataSourceInterface {
 			}
 
 			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-			Type type = new TypeToken<List<CurrencyData>>() {}.getType();
+			Type type = new TypeToken<List<CurrencyData>>() {
+			}.getType();
 			json = gson.toJson(currencies, type);
 
 			System.out.println(json);
@@ -440,7 +441,8 @@ public class DataSource implements DataSourceInterface {
 			}
 
 			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-			Type type = new TypeToken<List<CurrencyData>>() {}.getType();
+			Type type = new TypeToken<List<CurrencyData>>() {
+			}.getType();
 			json = gson.toJson(currencies, type);
 
 			System.out.println(json);
@@ -506,7 +508,8 @@ public class DataSource implements DataSourceInterface {
 			}
 
 			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-			Type type = new TypeToken<List<CurrencyData>>() {}.getType();
+			Type type = new TypeToken<List<CurrencyData>>() {
+			}.getType();
 			json = gson.toJson(currencies, type);
 
 			System.out.println(json);
