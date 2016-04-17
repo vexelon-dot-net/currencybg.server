@@ -1,5 +1,6 @@
 package net.vexelon.currencybg.srv.api;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Map;
@@ -57,7 +58,7 @@ public class Currencies {
 			String currencies = source.getAllRatesByDate(dateFrom);
 			return Response.status(Status.OK).entity(currencies)
 					.header(HttpHeaders.CONTENT_TYPE, Defs.API_JSON_CONTENT_TYPE).build();
-		} catch (DataSourceException | ParseException e) {
+		} catch (IOException | DataSourceException | ParseException e) {
 			log.error("", e);
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
 		}
@@ -77,7 +78,7 @@ public class Currencies {
 			String currencies = source.getNonFixedRates(dateFrom);
 			return Response.status(Status.OK).entity(currencies)
 					.header(HttpHeaders.CONTENT_TYPE, Defs.API_JSON_CONTENT_TYPE).build();
-		} catch (DataSourceException | ParseException e) {
+		} catch (IOException | DataSourceException | ParseException e) {
 			log.error("", e);
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
 		}
@@ -98,7 +99,7 @@ public class Currencies {
 			return Response.status(Status.OK).entity(currencies)
 					.header(HttpHeaders.CONTENT_TYPE, Defs.API_JSON_CONTENT_TYPE).build();
 
-		} catch (DataSourceException | ParseException e) {
+		} catch (IOException | DataSourceException | ParseException e) {
 			log.error("", e);
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
 		}
