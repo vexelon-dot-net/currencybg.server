@@ -45,13 +45,13 @@ public class Currencies {
 
 	@GET
 	@Path("/{dateFrom}")
-	public Response getAllRatesByDate(@PathParam("dateFrom") String initialDate, @HeaderParam("APIKey") String APIValue)
-			throws Exception {
+	public Response getAllRatesByDate(@PathParam("dateFrom") String initialDate,
+			@HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
 
 		try (DataSourceInterface source = new DataSource()) {
 			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
 			source.dbConnect();
-			if (!source.isCheckAuthentication(APIValue)) {
+			if (!source.isCheckAuthentication(apiKey)) {
 				return Response.status(Response.Status.UNAUTHORIZED).build();
 			}
 			String currencies = source.getAllRatesByDate(dateFrom);
@@ -65,13 +65,13 @@ public class Currencies {
 
 	@GET
 	@Path("/nonfixed/{dateFrom}")
-	public Response getNonFixedRates(@PathParam("dateFrom") String initialDate, @HeaderParam("APIKey") String APIValue)
-			throws Exception {
+	public Response getNonFixedRates(@PathParam("dateFrom") String initialDate,
+			@HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
 
 		try (DataSourceInterface source = new DataSource()) {
 			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
 			source.dbConnect();
-			if (!source.isCheckAuthentication(APIValue)) {
+			if (!source.isCheckAuthentication(apiKey)) {
 				return Response.status(Response.Status.UNAUTHORIZED).build();
 			}
 			String currencies = source.getNonFixedRates(dateFrom);
@@ -85,13 +85,13 @@ public class Currencies {
 
 	@GET
 	@Path("/fixed/{dateFrom}")
-	public Response getFixedRates(@PathParam("dateFrom") String initialDate, @HeaderParam("APIKey") String APIValue)
-			throws Exception {
+	public Response getFixedRates(@PathParam("dateFrom") String initialDate,
+			@HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
 
 		try (DataSourceInterface source = new DataSource()) {
 			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
 			source.dbConnect();
-			if (!source.isCheckAuthentication(APIValue)) {
+			if (!source.isCheckAuthentication(apiKey)) {
 				return Response.status(Response.Status.UNAUTHORIZED).build();
 			}
 			String currencies = source.getFixedRates(dateFrom);

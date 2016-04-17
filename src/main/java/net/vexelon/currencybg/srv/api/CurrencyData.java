@@ -13,6 +13,7 @@ import javax.ws.rs.Produces;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Deprecated
 @Path("/currencydata")
 public class CurrencyData {
 
