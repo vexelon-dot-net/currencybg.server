@@ -18,6 +18,7 @@ apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'com.bmuschko.tomcat'
 
+def appVersion = '0.9'
 def tomcatVersion = '7.0.54'
 sourceCompatibility = JavaVersion.VERSION_1_7
 
@@ -77,7 +78,7 @@ war {
     		"Class-Path": manifestClasspath,
     		"Implementation-Vendor": 'Vexelon.NET Services',
     		"Implementation-Title": 'CurrencyBG Server',
-    		"Implementation-Version": '1.0'
+    		"Implementation-Version": appVersion
     	)		
 	}
 	exclude('src/main/webapp/META-INF/**')
