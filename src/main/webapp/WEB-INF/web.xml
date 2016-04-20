@@ -7,10 +7,6 @@
 	<display-name>CurrencyBG Server</display-name>
 
 	<servlet>
-		<servlet-name>TestServlet</servlet-name>
-		<servlet-class>net.vexelon.currencybg.srv.servlets.TestServlet</servlet-class>
-	</servlet>
-	<servlet>
 		<servlet-name>Jersey REST Service</servlet-name>
 		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
 		<init-param>
@@ -19,10 +15,6 @@
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-	<servlet-mapping>
-		<servlet-name>TestServlet</servlet-name>
-		<url-pattern>/test/*</url-pattern>
-	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>Jersey REST Service</servlet-name>
 		<url-pattern>/api/*</url-pattern>
