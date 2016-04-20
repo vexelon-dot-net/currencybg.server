@@ -9,9 +9,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +23,7 @@ import net.vexelon.currencybg.srv.db.DataSourceInterface;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 
 @Path(Currencies.JUNCTION_NAME)
-public class Currencies {
+public class Currencies extends AbstractJunction {
 
 	private static final Logger log = LoggerFactory.getLogger(Currencies.class);
 
@@ -50,17 +48,16 @@ public class Currencies {
 			@HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
 
 		try (DataSourceInterface source = new DataSource()) {
-			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
 			source.connect();
 			if (!source.isCheckAuthentication(apiKey)) {
-				return Response.status(Response.Status.UNAUTHORIZED).build();
+				return getCustomResponse(Response.Status.UNAUTHORIZED);
 			}
-			String currencies = source.getAllRatesByDate(dateFrom);
-			return Response.status(Status.OK).entity(currencies)
-					.header(HttpHeaders.CONTENT_TYPE, Defs.API_JSON_CONTENT_TYPE).build();
+
+			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
+			return getJsonResponse(source.getAllRatesByDate(dateFrom));
 		} catch (IOException | DataSourceException | ParseException e) {
 			log.error("", e);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+			return getErrorResponse();
 		}
 	}
 
@@ -70,17 +67,17 @@ public class Currencies {
 			@HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
 
 		try (DataSourceInterface source = new DataSource()) {
-			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
 			source.connect();
+
 			if (!source.isCheckAuthentication(apiKey)) {
-				return Response.status(Response.Status.UNAUTHORIZED).build();
+				return getCustomResponse(Response.Status.UNAUTHORIZED);
 			}
-			String currencies = source.getNonFixedRates(dateFrom);
-			return Response.status(Status.OK).entity(currencies)
-					.header(HttpHeaders.CONTENT_TYPE, Defs.API_JSON_CONTENT_TYPE).build();
+
+			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
+			return getJsonResponse(source.getNonFixedRates(dateFrom));
 		} catch (IOException | DataSourceException | ParseException e) {
 			log.error("", e);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+			return getErrorResponse();
 		}
 	}
 
@@ -90,18 +87,17 @@ public class Currencies {
 			@HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
 
 		try (DataSourceInterface source = new DataSource()) {
-			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
 			source.connect();
-			if (!source.isCheckAuthentication(apiKey)) {
-				return Response.status(Response.Status.UNAUTHORIZED).build();
-			}
-			String currencies = source.getFixedRates(dateFrom);
-			return Response.status(Status.OK).entity(currencies)
-					.header(HttpHeaders.CONTENT_TYPE, Defs.API_JSON_CONTENT_TYPE).build();
 
+			if (!source.isCheckAuthentication(apiKey)) {
+				return getCustomResponse(Response.Status.UNAUTHORIZED);
+			}
+
+			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
+			return getJsonResponse(source.getFixedRates(dateFrom));
 		} catch (IOException | DataSourceException | ParseException e) {
 			log.error("", e);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+			return getErrorResponse();
 		}
 	}
 
