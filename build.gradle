@@ -32,7 +32,6 @@ repositories {
 eclipse {
 	project {
 		natures 'org.eclipse.jdt.core.javanature',
-				'org.springsource.ide.eclipse.gradle.core.nature',
 				'org.eclipse.wst.common.modulecore.ModuleCoreNature',
 				'org.eclipse.wst.common.project.facet.core.nature',				
 				'org.eclipse.jem.workbench.JavaEMFNature',
