@@ -49,14 +49,15 @@ eclipse {
 }
 
 dependencies {
-	compile 'commons-io:commons-io:2.+',
-			'commons-lang:commons-lang:2.6',
+	compile 'commons-io:commons-io:2.5',
+			'org.apache.commons:commons-lang3:3.4',
 			'org.slf4j:slf4j-log4j12:1.7.+',
 			'com.google.guava:guava:19.+',
 			'com.google.code.gson:gson:2.6.+',
 			'com.sun.jersey:jersey-core:1.19',
 			'com.sun.jersey:jersey-servlet:1.19',
 			'com.sun.jersey:jersey-server:1.19',
+			'org.apache.httpcomponents:httpasyncclient:4.1.+',
 			'mysql:mysql-connector-java:5.1.+',
 			'org.jsoup:jsoup:1.8.+',
 			'xpp3:xpp3:1.1.3.+'
