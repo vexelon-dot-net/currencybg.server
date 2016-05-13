@@ -52,40 +52,53 @@ public abstract class AbstractSource implements Source, Closeable {
 		return client;
 	}
 
-	protected void doGet(URI uri, final ResponseCallback responseCallback) {
+	protected void doGet(URI uri, final HTTPCallback httpCallback) {
 		HttpGet httpGet = new HttpGet(uri);
 		getClient().execute(httpGet, new FutureCallback<HttpResponse>() {
 
 			@Override
 			public void failed(Exception e) {
-				responseCallback.onReqFailed(e);
+				httpCallback.onRequestFailed(e);
 			}
 
 			@Override
 			public void completed(HttpResponse response) {
-				responseCallback.onReqCompleted(response, false);
+				httpCallback.onRequestCompleted(response, false);
 			}
 
 			@Override
 			public void cancelled() {
-				responseCallback.onReqCompleted(null, false);
+				httpCallback.onRequestCompleted(null, false);
 			}
 		});
 	}
 
-	protected void doGet(String url, final ResponseCallback responseCallback) throws URISyntaxException {
+	protected void doGet(String url, final HTTPCallback responseCallback) throws URISyntaxException {
 		doGet(new URI(url), responseCallback);
 	}
 
-	public interface ResponseCallback {
+	/**
+	 * HTTP request callback
+	 *
+	 */
+	public interface HTTPCallback {
 
-		void onReqCompleted(final HttpResponse response, boolean isCanceled);
+		void onRequestCompleted(final HttpResponse response, boolean isCanceled);
 
-		void onReqFailed(Exception e);
+		void onRequestFailed(Exception e);
 	}
 
+	/**
+	 * Currencies download callback
+	 * 
+	 */
 	public interface Callback {
 
+		/**
+		 * Notifies the caller that currencies download has finished.
+		 * 
+		 * @param currencyDataList
+		 */
 		void onCompleted(List<CurrencyData> currencyDataList);
 
 	}

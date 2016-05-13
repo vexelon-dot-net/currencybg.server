@@ -2,9 +2,11 @@ package net.vexelon.currencybg.srv.remote;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -31,16 +33,19 @@ public class TarvexSource extends AbstractSource {
 
 	private void getRates(final String sourceUrl) throws SourceException {
 		try {
-			doGet(sourceUrl, new ResponseCallback() {
+			final AbstractSource source = this;
+			doGet(sourceUrl, new HTTPCallback() {
 
 				@Override
-				public void onReqFailed(Exception e) {
+				public void onRequestFailed(Exception e) {
 					// TODO Auto-generated method stub
+					callback.onCompleted(new ArrayList<CurrencyData>());
 
+					IOUtils.closeQuietly(source);
 				}
 
 				@Override
-				public void onReqCompleted(HttpResponse response, boolean isCanceled) {
+				public void onRequestCompleted(HttpResponse response, boolean isCanceled) {
 					List<CurrencyData> result = Lists.newArrayList();
 					if (!isCanceled) {
 						try {
@@ -53,18 +58,21 @@ public class TarvexSource extends AbstractSource {
 							for (Element el : divChildren) {
 								System.out.println(el.text());
 							}
-							callback.onCompleted(result); // TODO
 						} catch (IOException e) {
-
+							log.error("", e);
+							// TODO
 						}
 					} else {
-						// TODO
+						log.warn("Request was canceled! No currencies were downloaded.");
 					}
+
+					callback.onCompleted(result); // TODO
+
+					IOUtils.closeQuietly(source);
 				}
 			});
 		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new SourceException("Invalid source url - " + sourceUrl, e);
 		}
 	}
 
@@ -76,14 +84,15 @@ public class TarvexSource extends AbstractSource {
 
 	public static void main(String[] args) {
 		try {
-			new TarvexSource(new Callback() {
+			final TarvexSource tarvexSource = new TarvexSource(new Callback() {
 
 				@Override
 				public void onCompleted(List<CurrencyData> currencyDataList) {
 					// TODO Auto-generated method stub
 
 				}
-			}).downloadRates();
+			});
+			tarvexSource.downloadRates();
 		} catch (SourceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
