@@ -18,8 +18,8 @@ import net.vexelon.currencybg.srv.db.models.CurrencyData;
 
 public abstract class AbstractSource implements Source, Closeable {
 
-	protected static final int DEFAULT_SOCKET_TIMEOUT = 10 * 1000;
-	protected static final int DEFAULT_CONNECT_TIMEOUT = 10 * 1000;
+	protected static final int DEFAULT_SOCKET_TIMEOUT = 3 * 60 * 1000;
+	protected static final int DEFAULT_CONNECT_TIMEOUT = 1 * 60 * 1000;
 
 	protected Callback callback;
 	protected CloseableHttpAsyncClient client;
