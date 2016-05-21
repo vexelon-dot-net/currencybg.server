@@ -7,11 +7,13 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Maps;
+
 import net.vexelon.currencybg.srv.db.DataSource;
 import net.vexelon.currencybg.srv.db.DataSourceException;
 import net.vexelon.currencybg.srv.db.DataSourceInterface;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
-import net.vexelon.currencybg.srv.db.models.CurrencyLocales;
+import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.remote.BNBSource;
 import net.vexelon.currencybg.srv.remote.Source;
 import net.vexelon.currencybg.srv.remote.SourceException;
@@ -30,7 +32,8 @@ public class Heartbeat implements Runnable {
 
 		try (DataSourceInterface dataSource = new DataSource()) {
 			Source source = new BNBSource();
-			Map<CurrencyLocales, List<CurrencyData>> downloadRates = source.downloadRates();
+			Map<Integer, List<CurrencyData>> downloadRates = Maps.newHashMap();
+			downloadRates.put(Sources.BNB.getID(), source.downloadRates());
 
 			log.debug("Importing downloaded rates in database ...");
 			dataSource.connect();
@@ -38,10 +41,12 @@ public class Heartbeat implements Runnable {
 
 			if (log.isTraceEnabled()) {
 				// TODO: remove info
-				for (Map.Entry<CurrencyLocales, List<CurrencyData>> rates : downloadRates.entrySet()) {
+				for (Map.Entry<Integer, List<CurrencyData>> rates : downloadRates.entrySet()) {
 					log.trace("*** downloaded locale: {}", rates.getKey());
 					for (CurrencyData currency : rates.getValue()) {
-						log.trace("Currency: {} ({}) = {}", currency.getName(), currency.getCode(), currency.getRate());
+						// log.trace("Currency: {} ({}) = {}",
+						// currency.getName(), currency.getCode(),
+						// currency.getRate());
 					}
 				}
 			}

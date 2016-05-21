@@ -19,6 +19,8 @@ public final class Defs {
 	public static final String DB_USER = System.getenv("OPENSHIFT_MYSQL_DB_USERNAME");
 	public static final String DB_PASSWORD = System.getenv("OPENSHIFT_MYSQL_DB_PASSWORD");
 
+	public static final String DATEFORMAT_ISO_8601 = "yyyy-MM-dd'T'HH:mmZ";
+
 	/*
 	 * Currency update parameters
 	 */

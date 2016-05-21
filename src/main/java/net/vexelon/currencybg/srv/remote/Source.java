@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
-import net.vexelon.currencybg.srv.db.models.CurrencyLocales;
 
 public interface Source {
 
@@ -16,5 +15,5 @@ public interface Source {
 	 *         {@link CurrencyData} is available.
 	 * @throws SourceException
 	 */
-	Map<CurrencyLocales, List<CurrencyData>> downloadRates() throws SourceException;
+	List<CurrencyData> downloadRates() throws SourceException;
 }
