@@ -36,9 +36,8 @@ public class Currencies extends AbstractJunction {
 	 */
 	public static Map<String, String> getJunctionsList() {
 		Map<String, String> junctionsMap = Maps.newHashMap();
-		junctionsMap.put("currencies_fromdate_url", JUNCTION_NAME + "/{date}");
-		junctionsMap.put("currencies_fixed_fromdate_url", JUNCTION_NAME + "/fixed/{date}");
-		junctionsMap.put("currencies_nonfixed_fromdate_url", JUNCTION_NAME + "/nonfixed/{date}");
+		junctionsMap.put("currencies_from_date_url", JUNCTION_NAME + "/{date}");
+		junctionsMap.put("currencies_from_date&source_url", JUNCTION_NAME + "/{date}/{sourceid}");
 		return junctionsMap;
 	}
 
@@ -54,7 +53,7 @@ public class Currencies extends AbstractJunction {
 			}
 
 			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
-			return getJsonResponse(source.getAllRatesByDate(dateFrom));
+			return getJsonResponse(source.getAllRates(dateFrom));
 		} catch (IOException | DataSourceException | ParseException e) {
 			log.error("", e);
 			return getErrorResponse();
@@ -62,43 +61,21 @@ public class Currencies extends AbstractJunction {
 	}
 
 	@GET
-	@Path("/nonfixed/{dateFrom}")
-	public Response getNonFixedRates(@PathParam("dateFrom") String initialDate,
+	@Path("/{dateFrom}/{sourceId}")
+	public Response getAllRates(@PathParam("dateFrom") String initialDate, @PathParam("sourceId") Integer sourceId,
 			@HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
 
 		try (DataSourceInterface source = new DataSource()) {
 			source.connect();
-
 			if (!source.isCheckAuthentication(apiKey)) {
 				return getCustomResponse(Response.Status.UNAUTHORIZED);
 			}
 
 			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
-			return getJsonResponse(source.getNonFixedRates(dateFrom));
+			return getJsonResponse(source.getAllRates(sourceId, dateFrom));
 		} catch (IOException | DataSourceException | ParseException e) {
 			log.error("", e);
 			return getErrorResponse();
 		}
 	}
-
-	@GET
-	@Path("/fixed/{dateFrom}")
-	public Response getFixedRates(@PathParam("dateFrom") String initialDate,
-			@HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
-
-		try (DataSourceInterface source = new DataSource()) {
-			source.connect();
-
-			if (!source.isCheckAuthentication(apiKey)) {
-				return getCustomResponse(Response.Status.UNAUTHORIZED);
-			}
-
-			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
-			return getJsonResponse(source.getFixedRates(dateFrom));
-		} catch (IOException | DataSourceException | ParseException e) {
-			log.error("", e);
-			return getErrorResponse();
-		}
-	}
-
 }

@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
-import net.vexelon.currencybg.srv.db.models.CurrencyLocales;
 
 /**
  * Encapsulates the available read-write operations to and from an underlying
@@ -48,31 +47,23 @@ public interface DataSourceInterface extends Closeable {
 	Connection connect() throws DataSourceException;
 
 	/**
-	 * Fetches a list of nonfixed currencies by date
+	 * Fetches a list of currencies by date
 	 * 
 	 * @param dateFrom
 	 * @return
 	 * @throws DataSourceException
 	 */
-	String getNonFixedRates(Date dateFrom) throws DataSourceException;
+	String getAllRates(Date dateFrom) throws DataSourceException;
 
 	/**
-	 * Fetches a list of fixed currencies by date
+	 * Fetches a list of currencies by sourceId and date
 	 * 
+	 * @param sourceId
 	 * @param dateFrom
 	 * @return
 	 * @throws DataSourceException
 	 */
-	String getFixedRates(Date dateFrom) throws DataSourceException;
-
-	/**
-	 * Fetches a list of nonfixed and fixed currencies by date
-	 * 
-	 * @param dateFrom
-	 * @return
-	 * @throws DataSourceException
-	 */
-	String getAllRatesByDate(Date dateFrom) throws DataSourceException;
+	String getAllRates(Integer sourceId, Date dateFrom) throws DataSourceException;
 
 	/**
 	 * Check whether the authentication is valid
@@ -92,6 +83,6 @@ public interface DataSourceInterface extends Closeable {
 	 *            values.
 	 * @throws DataSourceException
 	 */
-	void addRates(Map<CurrencyLocales, List<CurrencyData>> rates) throws DataSourceException;
+	void addRates(Map<Integer, List<CurrencyData>> rates) throws DataSourceException;
 
 }
