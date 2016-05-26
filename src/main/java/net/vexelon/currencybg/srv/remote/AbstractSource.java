@@ -1,7 +1,5 @@
 package net.vexelon.currencybg.srv.remote;
 
-import java.io.Closeable;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -15,7 +13,7 @@ import org.apache.http.impl.nio.client.HttpAsyncClients;
 
 import net.vexelon.currencybg.srv.reports.Reporter;
 
-public abstract class AbstractSource implements Source, Closeable {
+public abstract class AbstractSource implements Source {
 
 	protected static final int DEFAULT_SOCKET_TIMEOUT = 3 * 60 * 1000;
 	protected static final int DEFAULT_CONNECT_TIMEOUT = 1 * 60 * 1000;
@@ -27,8 +25,7 @@ public abstract class AbstractSource implements Source, Closeable {
 		this.reporter = reporter;
 	}
 
-	@Override
-	public void close() throws IOException {
+	public void close() {
 		IOUtils.closeQuietly(client);
 	}
 

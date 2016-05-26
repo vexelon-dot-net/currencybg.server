@@ -6,7 +6,6 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.HttpResponse;
@@ -47,7 +46,7 @@ public class TavexSource extends AbstractSource {
 				public void onRequestFailed(Exception e) {
 					getReporter().write(TAG_NAME, "Connection failure= {}", ExceptionUtils.getStackTrace(e));
 
-					IOUtils.closeQuietly(source);
+					source.close();
 					callback.onFailed(e);
 				}
 
@@ -95,7 +94,7 @@ public class TavexSource extends AbstractSource {
 						getReporter().write(TAG_NAME, "Request was canceled! No currencies were downloaded.");
 					}
 
-					IOUtils.closeQuietly(source);
+					source.close();
 					callback.onCompleted(result);
 				}
 			});
