@@ -24,8 +24,8 @@ public abstract class AbstractReporter implements Reporter {
 
 	@Override
 	public void write(String tag, String format, String... arguments) {
-		buffer.append(formatTag(tag)).append(String.format(StringUtils.replace(format, "{}", "%s"), arguments))
-				.append(CLRF);
+		buffer.append(formatTag(tag))
+				.append(String.format(StringUtils.replace(format, "{}", "%s"), (Object[]) arguments)).append(CLRF);
 	}
 
 	@Override
