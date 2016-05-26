@@ -73,6 +73,12 @@ public class TavexSource extends AbstractSource {
 							Element tbody = doc
 									.select("#page-sub-content > tbody > tr > td.right > table:nth-child(5) > tbody")
 									.first();
+
+							if (!tbody.children().isEmpty()) {
+								// skip first row
+								tbody.children().remove(0);
+							}
+
 							for (Element tr : tbody.children()) {
 								CurrencyData currencyData = new CurrencyData();
 								try {
@@ -82,6 +88,7 @@ public class TavexSource extends AbstractSource {
 									currencyData.setSell(tr.child(4).text());
 									currencyData.setRatio(1);
 									currencyData.setSource(Sources.TAVEX.getID());
+									result.add(currencyData);
 								} catch (IndexOutOfBoundsException e) {
 									log.warn("Failed on row='{}', Exception={}", tr.text(), e.getMessage());
 									getReporter().write(TAG_NAME, "Could not process currency on row='{}'!", tr.text());
