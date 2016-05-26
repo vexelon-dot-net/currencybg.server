@@ -19,14 +19,23 @@ public enum Sources {
 		return id;
 	}
 
+	/**
+	 * Creates a new {@link Source} mapped via the {@link Sources} constant.
+	 * 
+	 * @param reporter
+	 * @return
+	 */
 	public Source newInstance(Reporter reporter) {
 		switch (id) {
 		// BNB
 		case 1:
-			return new BNBSource();
+			return new BNBSource(reporter);
+
 		// TAVEX
 		case 200:
 			return new TavexSource(reporter);
+
+		// <unknown>
 		default:
 			throw new RuntimeException("Invalid source id (" + id + ")!");
 		}

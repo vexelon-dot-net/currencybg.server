@@ -18,6 +18,12 @@ public interface Source {
 	void getRates(final Callback callback) throws SourceException;
 
 	/**
+	 * 
+	 * @return Source logical name.
+	 */
+	String getName();
+
+	/**
 	 * Currencies download callback
 	 * 
 	 */
