@@ -19,6 +19,7 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
+import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.reports.ConsoleReporter;
 import net.vexelon.currencybg.srv.reports.Reporter;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
@@ -80,6 +81,7 @@ public class TavexSource extends AbstractSource {
 									currencyData.setBuy(tr.child(3).text());
 									currencyData.setSell(tr.child(4).text());
 									currencyData.setRatio(1);
+									currencyData.setSource(Sources.TAVEX.getID());
 								} catch (IndexOutOfBoundsException e) {
 									log.warn("Failed on row='{}', Exception={}", tr.text(), e.getMessage());
 									getReporter().write(TAG_NAME, "Could not process currency on row='{}'!", tr.text());
@@ -101,6 +103,11 @@ public class TavexSource extends AbstractSource {
 		} catch (URISyntaxException e) {
 			throw new SourceException("Invalid source url - " + URL_SOURCE, e);
 		}
+	}
+
+	@Override
+	public String getName() {
+		return TAG_NAME;
 	}
 
 	/**
