@@ -5,9 +5,9 @@ import java.util.Date;
 public class CurrencyData {
 
 	private String code;
-	private int ratio;
-	private String buy;
-	private String sell;
+	private int ratio = 1; // default
+	private String buy = "0"; // default
+	private String sell = "0"; // default
 	private Date date;
 	private int source;
 
