@@ -36,6 +36,7 @@ public class Heartbeat implements Runnable {
 			 */
 			List<Sources> sourcesList = Lists.newArrayList();
 			sourcesList.add(Sources.TAVEX);
+			sourcesList.add(Sources.BNB);
 
 			/*
 			 * Fetch currencies for every active source
@@ -44,24 +45,24 @@ public class Heartbeat implements Runnable {
 				try {
 					// TODO: add proper reporter
 					final ConsoleReporter reporter = new ConsoleReporter();
-					sources.newInstance(reporter).getRates(new Source.Callback() {
+					final Source newSourceInstance = sources.newInstance(reporter);
+					newSourceInstance.getRates(new Source.Callback() {
 
 						@Override
 						public void onFailed(Exception e) {
-							log.error("Source download failed!", e);
-
+							log.error("{} - source download failed!", newSourceInstance.getName(), e);
 							if (!reporter.isEmpty()) {
 								try {
 									reporter.send();
 								} catch (IOException ioe) {
-									log.error("Failed sending report!", ioe);
+									log.error("{} - Failed sending report!", newSourceInstance.getName(), ioe);
 								}
 							}
 						}
 
 						@Override
 						public void onCompleted(List<CurrencyData> currencyDataList) {
-							log.debug("Source download succcesful.");
+							log.debug("{} - source download succcesful.", newSourceInstance.getName());
 
 							// TODO Remove this map and use another
 							Map<Integer, List<CurrencyData>> sourceToCurrencyMap = Maps.newHashMap();
@@ -73,7 +74,7 @@ public class Heartbeat implements Runnable {
 								}
 							}
 
-							log.debug("Importing downloaded rates in database ...");
+							log.debug("{} - importing downloaded rates in database ...", newSourceInstance.getName());
 							try (final DataSourceInterface dataSource = new DataSource()) {
 								dataSource.connect();
 								// TODO: use another method without Map
