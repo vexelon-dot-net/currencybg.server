@@ -15,6 +15,7 @@ import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
+import net.vexelon.currencybg.srv.reports.Reporter;
 
 public abstract class AbstractSource implements Source, Closeable {
 
@@ -22,10 +23,13 @@ public abstract class AbstractSource implements Source, Closeable {
 	protected static final int DEFAULT_CONNECT_TIMEOUT = 1 * 60 * 1000;
 
 	protected Callback callback;
-	protected CloseableHttpAsyncClient client;
 
-	public AbstractSource(Callback callback) {
+	private Reporter reporter;
+	private CloseableHttpAsyncClient client;
+
+	public AbstractSource(Callback callback, Reporter reporter) {
 		this.callback = callback;
+		this.reporter = reporter;
 	}
 
 	@Override
@@ -75,6 +79,10 @@ public abstract class AbstractSource implements Source, Closeable {
 
 	protected void doGet(String url, final HTTPCallback responseCallback) throws URISyntaxException {
 		doGet(new URI(url), responseCallback);
+	}
+
+	public Reporter getReporter() {
+		return reporter;
 	}
 
 	/**

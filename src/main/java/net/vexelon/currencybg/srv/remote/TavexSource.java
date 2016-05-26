@@ -6,10 +6,10 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.HttpResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -21,18 +21,20 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
-import net.vexelon.currencybg.srv.db.models.CurrencyLocales;
+import net.vexelon.currencybg.srv.reports.ConsoleReporter;
+import net.vexelon.currencybg.srv.reports.Reporter;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 
-public class TarvexSource extends AbstractSource {
+public class TavexSource extends AbstractSource {
 
-	private static final Logger log = LoggerFactory.getLogger(TarvexSource.class);
+	private static final Logger log = LoggerFactory.getLogger(TavexSource.class);
+	private static final String TAG_NAME = TavexSource.class.getSimpleName();
 
-	private final static String URL_SOURCE = "http://www.tavex.bg/?main=24";
-	private final static String DATE_FORMAT = "dd.MM.yyyy HH:mm";
+	private static final String URL_SOURCE = "http://www.tavex.sbg/?main=24";
+	private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
 
-	public TarvexSource(Callback callback) {
-		super(callback);
+	public TavexSource(Callback callback, Reporter reporter) {
+		super(callback, reporter);
 	}
 
 	private void getRates(final String sourceUrl) throws SourceException {
@@ -45,6 +47,13 @@ public class TarvexSource extends AbstractSource {
 					// TODO Auto-generated method stub
 					callback.onCompleted(new ArrayList<CurrencyData>());
 
+					try {
+						getReporter().write(TAG_NAME, "Connection failed= {}", ExceptionUtils.getStackTrace(e));
+						getReporter().send();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					IOUtils.closeQuietly(source);
 				}
 
@@ -73,25 +82,32 @@ public class TarvexSource extends AbstractSource {
 							for (Element tr : tbody.children()) {
 								CurrencyData currencyData = new CurrencyData();
 								try {
-									currencyData.setCurrDate(updateDate);
+									currencyData.setDate(updateDate);
 									currencyData.setCode(tr.child(1).text());
-									currencyData.setRate(tr.child(3).text());
-									currencyData.setReverseRate(tr.child(4).text());
+									currencyData.setBuy(tr.child(3).text());
+									currencyData.setSell(tr.child(4).text());
 									currencyData.setRatio(1);
 								} catch (IndexOutOfBoundsException e) {
-									// TODO report
+									log.warn("Failed on row='{}', Exception={}", tr.text(), e.getMessage());
+									getReporter().write(TAG_NAME, "Could not process currency on row='{}'!", tr.text());
 								}
 							}
 						} catch (IOException | ParseException e) {
-							// TODO report
 							log.error("Could not parse source data!", e);
+							getReporter().write(TAG_NAME, "Parse failed= {}", ExceptionUtils.getStackTrace(e));
 						}
 					} else {
-						// TODO report
 						log.warn("Request was canceled! No currencies were downloaded.");
+						getReporter().write(TAG_NAME, "Request was canceled! No currencies were downloaded.");
 					}
 
 					callback.onCompleted(result); // TODO
+					try {
+						getReporter().send();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 
 					IOUtils.closeQuietly(source);
 				}
@@ -102,22 +118,25 @@ public class TarvexSource extends AbstractSource {
 	}
 
 	@Override
-	public Map<CurrencyLocales, List<CurrencyData>> downloadRates() throws SourceException {
+	public List<CurrencyData> downloadRates() throws SourceException {
 		getRates(URL_SOURCE);
 		return null;
 	}
 
 	public static void main(String[] args) {
 		try {
-			final TarvexSource tarvexSource = new TarvexSource(new Callback() {
+			final TavexSource tavexSource = new TavexSource(new Callback() {
 
 				@Override
 				public void onCompleted(List<CurrencyData> currencyDataList) {
 					// TODO Auto-generated method stub
 					// IOUtils.closeQuietly(tarvexSource);
+
 				}
-			});
-			tarvexSource.downloadRates();
+			}, new ConsoleReporter());
+
+			tavexSource.downloadRates();
+
 		} catch (SourceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
