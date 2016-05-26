@@ -33,8 +33,10 @@ public interface Source {
 		/**
 		 * Notifies the caller that there was a server error.
 		 * 
+		 * @param exception
+		 *            {@link Exception} error.
 		 */
-		void onFailed();
+		void onFailed(Exception exception);
 
 	}
 }

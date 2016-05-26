@@ -48,7 +48,7 @@ public class TavexSource extends AbstractSource {
 					getReporter().write(TAG_NAME, "Connection failure= {}", ExceptionUtils.getStackTrace(e));
 
 					IOUtils.closeQuietly(source);
-					callback.onFailed();
+					callback.onFailed(e);
 				}
 
 				@Override
@@ -105,43 +105,37 @@ public class TavexSource extends AbstractSource {
 	}
 
 	/**
-	 * Test
+	 * ###Test###
 	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		try {
 			final ConsoleReporter reporter = new ConsoleReporter();
-			final TavexSource tavexSource = new TavexSource(reporter);
-			tavexSource.getRates(new Callback() {
+			new TavexSource(reporter).getRates(new Callback() {
 
 				@Override
 				public void onCompleted(List<CurrencyData> currencyDataList) {
-					// TODO Auto-generated method stub
 					try {
 						if (reporter.isEmpty()) {
 							reporter.send();
 						}
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
 
 				@Override
-				public void onFailed() {
+				public void onFailed(Exception e) {
+					e.printStackTrace();
 					try {
 						reporter.send();
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
-
 			});
-
 		} catch (SourceException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

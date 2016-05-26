@@ -7,6 +7,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import net.vexelon.currencybg.srv.db.DataSource;
@@ -16,7 +17,6 @@ import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.remote.Source;
 import net.vexelon.currencybg.srv.remote.SourceException;
-import net.vexelon.currencybg.srv.remote.TavexSource;
 import net.vexelon.currencybg.srv.reports.ConsoleReporter;
 
 /**
@@ -29,59 +29,64 @@ public class Heartbeat implements Runnable {
 
 	@Override
 	public void run() {
-		log.info("Updating rates from remote server ...");
+		log.info("Downloading rates from sources ...");
+
+		/*
+		 * TODO: Fetch all sources from db
+		 */
+		List<Sources> sourcesList = Lists.newArrayList();
+		sourcesList.add(Sources.TAVEX);
 
 		/*
 		 * Fetch currencies for every active source
 		 */
-		try (final DataSourceInterface dataSource = new DataSource()) {
-			final ConsoleReporter reporter = new ConsoleReporter();
-			new TavexSource(reporter).getRates(new Source.Callback() {
+		for (Sources sources : sourcesList) {
+			try {
+				// TODO: add proper reporter
+				final ConsoleReporter reporter = new ConsoleReporter();
+				sources.newInstance(reporter).getRates(new Source.Callback() {
 
-				@Override
-				public void onFailed() {
-					if (!reporter.isEmpty()) {
-						try {
-							reporter.send();
-						} catch (IOException e) {
-							log.error("Failed sending report!", e);
-						}
-					}
-				}
+					@Override
+					public void onFailed(Exception e) {
+						log.error("Source download failed!", e);
 
-				@Override
-				public void onCompleted(List<CurrencyData> currencyDataList) {
-					// TODO Remove this map and use another
-					Map<Integer, List<CurrencyData>> downloadRates = Maps.newHashMap();
-					downloadRates.put(Sources.Tavex.getID(), currencyDataList);
-
-					if (log.isTraceEnabled()) {
-						// TODO: remove info
-						for (Map.Entry<Integer, List<CurrencyData>> rates : downloadRates.entrySet()) {
-							log.trace("*** downloaded locale: {}", rates.getKey());
-							for (CurrencyData currency : rates.getValue()) {
-								// log.trace("Currency: {} ({}) = {}",
-								// currency.getName(), currency.getCode(),
-								// currency.getRate());
+						if (!reporter.isEmpty()) {
+							try {
+								reporter.send();
+							} catch (IOException ioe) {
+								log.error("Failed sending report!", ioe);
 							}
 						}
 					}
 
-					log.debug("Importing downloaded rates in database ...");
-					try {
-						dataSource.connect();
-						// TODO: use another method without Map
-						dataSource.addRates(downloadRates);
-					} catch (DataSourceException e) {
-						log.error("Could not connect to database!", e);
-					}
-				}
-			});
+					@Override
+					public void onCompleted(List<CurrencyData> currencyDataList) {
+						log.debug("Source download succcesful.");
 
-		} catch (SourceException e) {
-			log.error("Could not download currencies from remote!", e);
-		} catch (IOException e) {
-			log.error("Could not connect to database!", e);
+						// TODO Remove this map and use another
+						Map<Integer, List<CurrencyData>> sourceToCurrencyMap = Maps.newHashMap();
+						sourceToCurrencyMap.put(Sources.TAVEX.getID(), currencyDataList);
+
+						if (log.isTraceEnabled()) {
+							for (CurrencyData currency : currencyDataList) {
+								log.trace(currency.toString());
+							}
+						}
+
+						log.debug("Importing downloaded rates in database ...");
+						try (final DataSourceInterface dataSource = new DataSource()) {
+							dataSource.connect();
+							// TODO: use another method without Map
+							dataSource.addRates(sourceToCurrencyMap);
+						} catch (IOException | DataSourceException e) {
+							log.error("Could not connect to database!", e);
+						}
+					}
+				});
+			} catch (SourceException e) {
+				log.error("Failed fetching rates from source!", e);
+			}
 		}
+
 	}
 }
