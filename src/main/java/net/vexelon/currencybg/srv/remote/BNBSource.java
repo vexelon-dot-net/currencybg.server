@@ -151,9 +151,10 @@ public class BNBSource implements Source {
 	}
 
 	@Override
-	public List<CurrencyData> downloadRates() throws SourceException {
+	public void getRates(Callback callback) throws SourceException {
+		getBNBRates(URL_BNB_FORMAT_EN);
+		// TODO Auto-generated method stub
 
-		return getBNBRates(URL_BNB_FORMAT_EN);
 	}
 
 }

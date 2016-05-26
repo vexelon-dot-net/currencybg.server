@@ -4,7 +4,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
@@ -14,7 +13,6 @@ import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 
-import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.reports.Reporter;
 
 public abstract class AbstractSource implements Source, Closeable {
@@ -22,13 +20,10 @@ public abstract class AbstractSource implements Source, Closeable {
 	protected static final int DEFAULT_SOCKET_TIMEOUT = 3 * 60 * 1000;
 	protected static final int DEFAULT_CONNECT_TIMEOUT = 1 * 60 * 1000;
 
-	protected Callback callback;
-
 	private Reporter reporter;
 	private CloseableHttpAsyncClient client;
 
-	public AbstractSource(Callback callback, Reporter reporter) {
-		this.callback = callback;
+	public AbstractSource(Reporter reporter) {
 		this.reporter = reporter;
 	}
 
@@ -94,21 +89,6 @@ public abstract class AbstractSource implements Source, Closeable {
 		void onRequestCompleted(final HttpResponse response, boolean isCanceled);
 
 		void onRequestFailed(Exception e);
-	}
-
-	/**
-	 * Currencies download callback
-	 * 
-	 */
-	public interface Callback {
-
-		/**
-		 * Notifies the caller that currencies download has finished.
-		 * 
-		 * @param currencyDataList
-		 */
-		void onCompleted(List<CurrencyData> currencyDataList);
-
 	}
 
 }

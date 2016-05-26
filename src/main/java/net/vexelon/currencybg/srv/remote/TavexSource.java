@@ -3,7 +3,6 @@ package net.vexelon.currencybg.srv.remote;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,31 +29,26 @@ public class TavexSource extends AbstractSource {
 	private static final Logger log = LoggerFactory.getLogger(TavexSource.class);
 	private static final String TAG_NAME = TavexSource.class.getSimpleName();
 
-	private static final String URL_SOURCE = "http://www.tavex.sbg/?main=24";
+	private static final String URL_SOURCE = "http://www.tavex.bg/?main=24";
 	private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
 
-	public TavexSource(Callback callback, Reporter reporter) {
-		super(callback, reporter);
+	public TavexSource(Reporter reporter) {
+		super(reporter);
 	}
 
-	private void getRates(final String sourceUrl) throws SourceException {
+	@Override
+	public void getRates(final Callback callback) throws SourceException {
 		try {
 			final AbstractSource source = this;
-			doGet(sourceUrl, new HTTPCallback() {
+
+			doGet(URL_SOURCE, new HTTPCallback() {
 
 				@Override
 				public void onRequestFailed(Exception e) {
-					// TODO Auto-generated method stub
-					callback.onCompleted(new ArrayList<CurrencyData>());
+					getReporter().write(TAG_NAME, "Connection failure= {}", ExceptionUtils.getStackTrace(e));
 
-					try {
-						getReporter().write(TAG_NAME, "Connection failed= {}", ExceptionUtils.getStackTrace(e));
-						getReporter().send();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
 					IOUtils.closeQuietly(source);
+					callback.onFailed();
 				}
 
 				@Override
@@ -63,7 +57,7 @@ public class TavexSource extends AbstractSource {
 					if (!isCanceled) {
 						try {
 							Document doc = Jsoup.parse(response.getEntity().getContent(), Charsets.UTF_8.name(),
-									sourceUrl);
+									URL_SOURCE);
 
 							// parse update date
 							Date updateDate;
@@ -101,41 +95,50 @@ public class TavexSource extends AbstractSource {
 						getReporter().write(TAG_NAME, "Request was canceled! No currencies were downloaded.");
 					}
 
-					callback.onCompleted(result); // TODO
-					try {
-						getReporter().send();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-
 					IOUtils.closeQuietly(source);
+					callback.onCompleted(result);
 				}
 			});
 		} catch (URISyntaxException e) {
-			throw new SourceException("Invalid source url - " + sourceUrl, e);
+			throw new SourceException("Invalid source url - " + URL_SOURCE, e);
 		}
 	}
 
-	@Override
-	public List<CurrencyData> downloadRates() throws SourceException {
-		getRates(URL_SOURCE);
-		return null;
-	}
-
+	/**
+	 * Test
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		try {
-			final TavexSource tavexSource = new TavexSource(new Callback() {
+			final ConsoleReporter reporter = new ConsoleReporter();
+			final TavexSource tavexSource = new TavexSource(reporter);
+			tavexSource.getRates(new Callback() {
 
 				@Override
 				public void onCompleted(List<CurrencyData> currencyDataList) {
 					// TODO Auto-generated method stub
-					// IOUtils.closeQuietly(tarvexSource);
-
+					try {
+						if (reporter.isEmpty()) {
+							reporter.send();
+						}
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
-			}, new ConsoleReporter());
 
-			tavexSource.downloadRates();
+				@Override
+				public void onFailed() {
+					try {
+						reporter.send();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+
+			});
 
 		} catch (SourceException e) {
 			// TODO Auto-generated catch block
