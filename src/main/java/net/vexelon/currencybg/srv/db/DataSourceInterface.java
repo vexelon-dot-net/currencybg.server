@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
+import net.vexelon.currencybg.srv.db.models.CurrencySource;
 
 /**
  * Encapsulates the available read-write operations to and from an underlying
@@ -64,6 +65,24 @@ public interface DataSourceInterface extends Closeable {
 	 * @throws DataSourceException
 	 */
 	String getAllRates(Integer sourceId, Date dateFrom) throws DataSourceException;
+
+	/**
+	 * Fetches a list of sources in DB by id
+	 * 
+	 * @param id
+	 * @return
+	 * @throws DataSourceException
+	 */
+	CurrencySource getSourceById(int id) throws DataSourceException;
+
+	/**
+	 * Fetches a list of sources in DB
+	 * 
+	 * @return
+	 * @throws DataSourceException
+	 */
+
+	List<CurrencySource> getAllSources() throws DataSourceException;
 
 	/**
 	 * Check whether the authentication is valid
