@@ -14,6 +14,7 @@ import net.vexelon.currencybg.srv.db.DataSource;
 import net.vexelon.currencybg.srv.db.DataSourceException;
 import net.vexelon.currencybg.srv.db.DataSourceInterface;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
+import net.vexelon.currencybg.srv.db.models.CurrencySource;
 import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.remote.Source;
 import net.vexelon.currencybg.srv.remote.SourceException;
@@ -32,60 +33,69 @@ public class Heartbeat implements Runnable {
 		log.info("Downloading rates from sources ...");
 		try {
 			/*
-			 * TODO: Fetch all sources from db
+			 * Fetch all (active) sources from database
 			 */
-			List<Sources> sourcesList = Lists.newArrayList();
-			sourcesList.add(Sources.TAVEX);
-			sourcesList.add(Sources.BNB);
+			List<CurrencySource> allSources = Lists.newArrayList();
+			try (final DataSourceInterface dataSource = new DataSource()) {
+				dataSource.connect();
+				// TODO active param boolean
+				allSources = dataSource.getAllSources();
+			} catch (IOException | DataSourceException e) {
+				log.error("Could not connect to database!", e);
+			}
 
 			/*
 			 * Fetch currencies for every active source
 			 */
-			for (Sources sources : sourcesList) {
+			for (CurrencySource currencySource : allSources) {
 				try {
-					// TODO: add proper reporter
-					final ConsoleReporter reporter = new ConsoleReporter();
-					final Source newSourceInstance = sources.newInstance(reporter);
-					newSourceInstance.getRates(new Source.Callback() {
+					Sources sourceType = Sources.valueOf(currencySource.getSourceId());
+					if (sourceType != null) {
+						// TODO: add proper reporter
+						final ConsoleReporter reporter = new ConsoleReporter();
+						final Source source = sourceType.newInstance(reporter);
+						// TODO: set update flag in db
+						source.getRates(new Source.Callback() {
 
-						@Override
-						public void onFailed(Exception e) {
-							log.error("{} - source download failed!", newSourceInstance.getName(), e);
-							if (!reporter.isEmpty()) {
-								try {
-									reporter.send();
-								} catch (IOException ioe) {
-									log.error("{} - Failed sending report!", newSourceInstance.getName(), ioe);
-								}
-							}
-						}
-
-						@Override
-						public void onCompleted(List<CurrencyData> currencyDataList) {
-							log.debug("{} - source download succcesful.", newSourceInstance.getName());
-
-							// TODO Remove this map and use another
-							Map<Integer, List<CurrencyData>> sourceToCurrencyMap = Maps.newHashMap();
-							sourceToCurrencyMap.put(Sources.TAVEX.getID(), currencyDataList);
-
-							if (log.isTraceEnabled()) {
-								for (CurrencyData currency : currencyDataList) {
-									log.trace(currency.toString());
+							@Override
+							public void onFailed(Exception e) {
+								log.error("{} - source download failed!", source.getName(), e);
+								if (!reporter.isEmpty()) {
+									try {
+										reporter.send();
+									} catch (IOException ioe) {
+										log.error("{} - Failed sending report!", source.getName(), ioe);
+									}
 								}
 							}
 
-							log.debug("{} - importing downloaded rates in database ...", newSourceInstance.getName());
-							try (final DataSourceInterface dataSource = new DataSource()) {
-								dataSource.connect();
-								// TODO: use another method without Map
-								dataSource.addRates(sourceToCurrencyMap);
-							} catch (IOException | DataSourceException e) {
-								log.error("Could not connect to database!", e);
+							@Override
+							public void onCompleted(List<CurrencyData> currencyDataList) {
+								log.debug("{} - source download succcesful.", source.getName());
+
+								// TODO Remove this map and use another
+								Map<Integer, List<CurrencyData>> sourceToCurrencyMap = Maps.newHashMap();
+								sourceToCurrencyMap.put(Sources.TAVEX.getID(), currencyDataList);
+
+								if (log.isTraceEnabled()) {
+									for (CurrencyData currency : currencyDataList) {
+										log.trace(currency.toString());
+									}
+								}
+
+								log.debug("{} - importing downloaded rates in database ...", source.getName());
+								try (final DataSourceInterface dataSource = new DataSource()) {
+									dataSource.connect();
+									// TODO: use another method without Map
+									dataSource.addRates(sourceToCurrencyMap);
+								} catch (IOException | DataSourceException e) {
+									log.error("Could not connect to database!", e);
+								}
 							}
-						}
-					});
+						});
+					}
 				} catch (SourceException e) {
-					log.error("Failed fetching rates from '{}' source!", sources.name(), e);
+					log.error("Failed fetching rates for source id='{}'!", currencySource.getSourceId(), e);
 				}
 			}
 		} catch (Throwable t) {

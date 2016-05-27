@@ -20,6 +20,20 @@ public enum Sources {
 	}
 
 	/**
+	 * 
+	 * @param id
+	 * @return {@link Sources} or {@code null}.
+	 */
+	public static Sources valueOf(int id) {
+		for (Sources s : Sources.values()) {
+			if (s.getID() == id) {
+				return s;
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Creates a new {@link Source} mapped via the {@link Sources} constant.
 	 * 
 	 * @param reporter
