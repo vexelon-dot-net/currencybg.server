@@ -128,6 +128,49 @@ public class DataSource implements DataSourceInterface {
 	}
 
 	@Override
+	public void addRates(Integer sourceId, List<CurrencyData> currencies) throws DataSourceException {
+
+		if (!currencies.isEmpty() && currencies != null) {
+
+			PreparedStatement preparedStatement = null;
+			String insertSQL = "INSERT INTO cbg_currencies (CODE, RATIO, BUY, SELL, DATE, SOURCE) VALUES (?,?,?,?,?,?)";
+
+			try {
+				preparedStatement = dbConnection.prepareStatement(insertSQL);
+
+				for (int i = 0; i < currencies.size(); i++) {
+
+					preparedStatement.setString(1, currencies.get(i).getCode());
+					preparedStatement.setInt(2, currencies.get(i).getRatio());
+					preparedStatement.setString(3,
+							currencies.get(i).getBuy() == null ? "111" : currencies.get(i).getBuy());
+					preparedStatement.setString(4,
+							currencies.get(i).getSell() == null ? "222" : currencies.get(i).getSell());
+					preparedStatement.setDate(5, new java.sql.Date(currencies.get(i).getDate().getTime()));
+					preparedStatement.setInt(6, currencies.get(i).getSource());
+
+					preparedStatement.executeUpdate();
+
+				}
+
+			} catch (SQLException e) {
+				throw new DataSourceException("SQL Exception in method addRates!", e);
+			} finally {
+
+				if (preparedStatement != null) {
+					try {
+						preparedStatement.close();
+					} catch (SQLException e) {
+						log.error("Problem with close of PreparedStatement in method addRates!", e);
+					}
+				}
+
+			}
+		}
+
+	}
+
+	@Override
 	public boolean isCheckAuthentication(String authenticationKey) throws DataSourceException {
 
 		PreparedStatement preparedStatement = null;
