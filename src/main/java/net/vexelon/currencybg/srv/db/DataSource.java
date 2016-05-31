@@ -99,10 +99,8 @@ public class DataSource implements DataSourceInterface {
 
 					preparedStatement.setString(1, currencies.get(i).getCode());
 					preparedStatement.setInt(2, currencies.get(i).getRatio());
-					preparedStatement.setString(3,
-							currencies.get(i).getBuy() == null ? "111" : currencies.get(i).getBuy());
-					preparedStatement.setString(4,
-							currencies.get(i).getSell() == null ? "222" : currencies.get(i).getSell());
+					preparedStatement.setString(3, currencies.get(i).getBuy());
+					preparedStatement.setString(4, currencies.get(i).getSell());
 					preparedStatement.setDate(5, new java.sql.Date(currencies.get(i).getDate().getTime()));
 					preparedStatement.setInt(6, currencies.get(i).getSource());
 
@@ -142,10 +140,8 @@ public class DataSource implements DataSourceInterface {
 
 					preparedStatement.setString(1, currencies.get(i).getCode());
 					preparedStatement.setInt(2, currencies.get(i).getRatio());
-					preparedStatement.setString(3,
-							currencies.get(i).getBuy() == null ? "111" : currencies.get(i).getBuy());
-					preparedStatement.setString(4,
-							currencies.get(i).getSell() == null ? "222" : currencies.get(i).getSell());
+					preparedStatement.setString(3, currencies.get(i).getBuy());
+					preparedStatement.setString(4, currencies.get(i).getSell());
 					preparedStatement.setDate(5, new java.sql.Date(currencies.get(i).getDate().getTime()));
 					preparedStatement.setInt(6, currencies.get(i).getSource());
 
