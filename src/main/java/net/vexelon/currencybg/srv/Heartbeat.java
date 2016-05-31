@@ -2,13 +2,11 @@ package net.vexelon.currencybg.srv;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 import net.vexelon.currencybg.srv.db.DataSource;
 import net.vexelon.currencybg.srv.db.DataSourceException;
@@ -49,7 +47,7 @@ public class Heartbeat implements Runnable {
 			 */
 			for (CurrencySource currencySource : allSources) {
 				try {
-					Sources sourceType = Sources.valueOf(currencySource.getSourceId());
+					final Sources sourceType = Sources.valueOf(currencySource.getSourceId());
 					if (sourceType != null) {
 						// TODO: add proper reporter
 						final ConsoleReporter reporter = new ConsoleReporter();
@@ -73,11 +71,8 @@ public class Heartbeat implements Runnable {
 							public void onCompleted(List<CurrencyData> currencyDataList) {
 								log.debug("{} - source download succcesful.", source.getName());
 
-								// TODO Remove this map and use another
-								Map<Integer, List<CurrencyData>> sourceToCurrencyMap = Maps.newHashMap();
-								sourceToCurrencyMap.put(Sources.TAVEX.getID(), currencyDataList);
-
 								if (log.isTraceEnabled()) {
+									// TODO remove this trace log
 									for (CurrencyData currency : currencyDataList) {
 										log.trace(currency.toString());
 									}
@@ -86,8 +81,7 @@ public class Heartbeat implements Runnable {
 								log.debug("{} - importing downloaded rates in database ...", source.getName());
 								try (final DataSourceInterface dataSource = new DataSource()) {
 									dataSource.connect();
-									// TODO: use another method without Map
-									dataSource.addRates(sourceToCurrencyMap);
+									dataSource.addRates(sourceType.getID(), currencyDataList);
 								} catch (IOException | DataSourceException e) {
 									log.error("Could not connect to database!", e);
 								}
