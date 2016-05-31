@@ -95,7 +95,7 @@ public interface DataSourceInterface extends Closeable {
 	boolean isCheckAuthentication(String authenticationKey) throws DataSourceException;
 
 	/**
-	 * Adds exchange rates in DB.
+	 * Adds Map of exchange rates in DB.
 	 * 
 	 * @param rates
 	 *            A {@link Map} of language and {@link CurrencyData} list
@@ -103,5 +103,14 @@ public interface DataSourceInterface extends Closeable {
 	 * @throws DataSourceException
 	 */
 	void addRates(Map<Integer, List<CurrencyData>> rates) throws DataSourceException;
+
+	/**
+	 * Add rates from by one source
+	 * 
+	 * @param sourceId
+	 * @param rates
+	 * @throws DataSourceException
+	 */
+	void addRates(Integer sourceId, List<CurrencyData> rates) throws DataSourceException;
 
 }
