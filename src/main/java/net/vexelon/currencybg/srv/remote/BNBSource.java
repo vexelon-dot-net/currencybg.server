@@ -166,7 +166,7 @@ public class BNBSource extends AbstractSource {
 					}
 
 					source.close();
-					callback.onCompleted(result);
+					callback.onCompleted(normalizeCurrencyData(result));
 				}
 			});
 		} catch (URISyntaxException e) {

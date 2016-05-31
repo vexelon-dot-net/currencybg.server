@@ -85,6 +85,14 @@ public class Heartbeat implements Runnable {
 								} catch (IOException | DataSourceException e) {
 									log.error("Could not connect to database!", e);
 								}
+
+								if (!reporter.isEmpty()) {
+									try {
+										reporter.send();
+									} catch (IOException ioe) {
+										log.error("{} - Failed sending report!", source.getName(), ioe);
+									}
+								}
 							}
 						});
 					}
