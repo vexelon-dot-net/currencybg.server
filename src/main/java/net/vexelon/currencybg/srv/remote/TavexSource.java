@@ -12,6 +12,7 @@ import org.apache.http.HttpResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,12 +75,13 @@ public class TavexSource extends AbstractSource {
 									.select("#page-sub-content > tbody > tr > td.right > table:nth-child(5) > tbody")
 									.first();
 
-							if (!tbody.children().isEmpty()) {
+							Elements children = tbody.children();
+							if (!children.isEmpty()) {
 								// skip first row
-								tbody.children().remove(0);
+								children.remove(0);
 							}
 
-							for (Element tr : tbody.children()) {
+							for (Element tr : children) {
 								CurrencyData currencyData = new CurrencyData();
 								try {
 									currencyData.setDate(updateDate);
