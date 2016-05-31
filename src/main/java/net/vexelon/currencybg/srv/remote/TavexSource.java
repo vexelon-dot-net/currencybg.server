@@ -1,6 +1,7 @@
 package net.vexelon.currencybg.srv.remote;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.Date;
@@ -37,6 +38,57 @@ public class TavexSource extends AbstractSource {
 		super(reporter);
 	}
 
+	/**
+	 * Transforms Tavex HTML data into {@link CurrencyData} models.
+	 * 
+	 * @param input
+	 * @return
+	 * @throws IOException
+	 * @throws ParseException
+	 */
+	public List<CurrencyData> getTavexRates(InputStream input) throws IOException, ParseException {
+		List<CurrencyData> result = Lists.newArrayList();
+
+		Document doc = Jsoup.parse(input, Charsets.UTF_8.name(), URL_SOURCE);
+
+		// parse update date
+		Date updateDate;
+		Element span = doc.select("#page-sub-content > tbody > tr > td.right > span").first();
+		String[] components = StringUtils.split(span.text(), " ", 2);
+		if (components.length > 0) {
+			updateDate = DateTimeUtils.parseStringToDate(components[1], DATE_FORMAT);
+		} else {
+			throw new ParseException("Could not parse date - " + span.text(), 0);
+		}
+
+		// parse list of currencies
+		Element tbody = doc.select("#page-sub-content > tbody > tr > td.right > table:nth-child(5) > tbody").first();
+
+		Elements children = tbody.children();
+		if (!children.isEmpty()) {
+			// skip first row
+			children.remove(0);
+		}
+
+		for (Element tr : children) {
+			CurrencyData currencyData = new CurrencyData();
+			try {
+				currencyData.setDate(updateDate);
+				currencyData.setCode(tr.child(1).text());
+				currencyData.setBuy(tr.child(3).text());
+				currencyData.setSell(tr.child(4).text());
+				currencyData.setRatio(1);
+				currencyData.setSource(Sources.TAVEX.getID());
+				result.add(currencyData);
+			} catch (IndexOutOfBoundsException e) {
+				log.warn("Failed on row='{}', Exception={}", tr.text(), e.getMessage());
+				getReporter().write(TAG_NAME, "Could not process currency on row='{}'!", tr.text());
+			}
+		}
+
+		return result;
+	}
+
 	@Override
 	public void getRates(final Callback callback) throws SourceException {
 		try {
@@ -55,47 +107,10 @@ public class TavexSource extends AbstractSource {
 				@Override
 				public void onRequestCompleted(HttpResponse response, boolean isCanceled) {
 					List<CurrencyData> result = Lists.newArrayList();
+
 					if (!isCanceled) {
 						try {
-							Document doc = Jsoup.parse(response.getEntity().getContent(), Charsets.UTF_8.name(),
-									URL_SOURCE);
-
-							// parse update date
-							Date updateDate;
-							Element span = doc.select("#page-sub-content > tbody > tr > td.right > span").first();
-							String[] components = StringUtils.split(span.text(), " ", 2);
-							if (components.length > 0) {
-								updateDate = DateTimeUtils.parseStringToDate(components[1], DATE_FORMAT);
-							} else {
-								throw new ParseException("Could not parse date - " + span.text(), 0);
-							}
-
-							// parse list of currencies
-							Element tbody = doc
-									.select("#page-sub-content > tbody > tr > td.right > table:nth-child(5) > tbody")
-									.first();
-
-							Elements children = tbody.children();
-							if (!children.isEmpty()) {
-								// skip first row
-								children.remove(0);
-							}
-
-							for (Element tr : children) {
-								CurrencyData currencyData = new CurrencyData();
-								try {
-									currencyData.setDate(updateDate);
-									currencyData.setCode(tr.child(1).text());
-									currencyData.setBuy(tr.child(3).text());
-									currencyData.setSell(tr.child(4).text());
-									currencyData.setRatio(1);
-									currencyData.setSource(Sources.TAVEX.getID());
-									result.add(currencyData);
-								} catch (IndexOutOfBoundsException e) {
-									log.warn("Failed on row='{}', Exception={}", tr.text(), e.getMessage());
-									getReporter().write(TAG_NAME, "Could not process currency on row='{}'!", tr.text());
-								}
-							}
+							result = getTavexRates(response.getEntity().getContent());
 						} catch (IOException | ParseException e) {
 							log.error("Could not parse source data!", e);
 							getReporter().write(TAG_NAME, "Parse failed= {}", ExceptionUtils.getStackTrace(e));
