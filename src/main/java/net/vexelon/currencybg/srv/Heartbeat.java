@@ -36,8 +36,7 @@ public class Heartbeat implements Runnable {
 			List<CurrencySource> allSources = Lists.newArrayList();
 			try (final DataSourceInterface dataSource = new DataSource()) {
 				dataSource.connect();
-				// TODO active param boolean
-				allSources = dataSource.getAllSources();
+				allSources = dataSource.getAllSources(true);
 			} catch (IOException | DataSourceException e) {
 				log.error("Could not connect to database!", e);
 			}
@@ -81,7 +80,7 @@ public class Heartbeat implements Runnable {
 								log.debug("{} - importing downloaded rates in database ...", source.getName());
 								try (final DataSourceInterface dataSource = new DataSource()) {
 									dataSource.connect();
-									dataSource.addRates(sourceType.getID(), currencyDataList);
+									dataSource.addRates(currencyDataList);
 								} catch (IOException | DataSourceException e) {
 									log.error("Could not connect to database!", e);
 								}
