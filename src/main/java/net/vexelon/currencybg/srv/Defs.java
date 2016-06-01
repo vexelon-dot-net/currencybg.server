@@ -25,7 +25,7 @@ public final class Defs {
 	 * Currency update parameters
 	 */
 	public static final long UPDATE_FIRST_INTERVAL = 10; // 10 seconds
-	public static final long UPDATES_PERIODIC_INTERVAL = 6 * 60 * 60; // 6 hours
+	public static final long UPDATES_PERIODIC_INTERVAL = 5 * 60; // 5 minutes
 
 	/*
 	 * HTTP API specific
