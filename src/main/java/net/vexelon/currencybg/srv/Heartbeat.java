@@ -1,12 +1,12 @@
 package net.vexelon.currencybg.srv;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.Lists;
 
 import net.vexelon.currencybg.srv.db.DataSource;
 import net.vexelon.currencybg.srv.db.DataSourceException;
@@ -30,75 +30,89 @@ public class Heartbeat implements Runnable {
 	public void run() {
 		log.info("Downloading rates from sources ...");
 		try {
-			/*
-			 * Fetch all (active) sources from database
-			 */
-			List<CurrencySource> allSources = Lists.newArrayList();
+
 			try (final DataSourceInterface dataSource = new DataSource()) {
+				/*
+				 * Fetch all (active) sources from database
+				 */
 				dataSource.connect();
-				allSources = dataSource.getAllSources(true);
+				List<CurrencySource> allSources = dataSource.getAllSources(true);
+
+				/*
+				 * Fetch currencies for every active source
+				 */
+				Calendar nowCalendar = Calendar.getInstance();
+				for (CurrencySource currencySource : allSources) {
+
+					// checks if it is time to update this source entry
+					Calendar sourceCalendar = Calendar.getInstance();
+					sourceCalendar.setTimeInMillis(currencySource.getLastUpdate().getTime()
+							+ TimeUnit.SECONDS.toMillis(currencySource.getUpdatePeriod()));
+					if (sourceCalendar.after(nowCalendar)) {
+						log.debug("Source ({}) update skipped.", currencySource.getSourceId());
+						continue;
+					}
+
+					final Sources sourceType = Sources.valueOf(currencySource.getSourceId());
+					if (sourceType != null) {
+						try {
+							// TODO: add proper reporter
+							final ConsoleReporter reporter = new ConsoleReporter();
+							final Source source = sourceType.newInstance(reporter);
+							// TODO: set update flag in db
+
+							source.getRates(new Source.Callback() {
+
+								@Override
+								public void onFailed(Exception e) {
+									log.error("{} - source download failed!", source.getName(), e);
+									if (!reporter.isEmpty()) {
+										try {
+											reporter.send();
+										} catch (IOException ioe) {
+											log.error("{} - Failed sending report!", source.getName(), ioe);
+										}
+									}
+								}
+
+								@Override
+								public void onCompleted(List<CurrencyData> currencyDataList) {
+									log.debug("{} - source download succcesful.", source.getName());
+
+									if (log.isTraceEnabled()) {
+										// TODO remove this trace log
+										for (CurrencyData currency : currencyDataList) {
+											log.trace(currency.toString());
+										}
+									}
+
+									log.debug("{} - importing downloaded rates in database ...", source.getName());
+									try (final DataSourceInterface dataSource = new DataSource()) {
+										dataSource.connect();
+										dataSource.addRates(currencyDataList);
+									} catch (IOException | DataSourceException e) {
+										log.error("Could not connect to database!", e);
+									}
+
+									if (!reporter.isEmpty()) {
+										try {
+											reporter.send();
+										} catch (IOException ioe) {
+											log.error("{} - Failed sending report!", source.getName(), ioe);
+										}
+									}
+								}
+							});
+						} catch (SourceException e) {
+							log.error("Failed fetching rates for source id='{}'!", currencySource.getSourceId(), e);
+						}
+					}
+				}
+
 			} catch (IOException | DataSourceException e) {
 				log.error("Could not connect to database!", e);
 			}
 
-			/*
-			 * Fetch currencies for every active source
-			 */
-			for (CurrencySource currencySource : allSources) {
-				try {
-					final Sources sourceType = Sources.valueOf(currencySource.getSourceId());
-					if (sourceType != null) {
-						// TODO: add proper reporter
-						final ConsoleReporter reporter = new ConsoleReporter();
-						final Source source = sourceType.newInstance(reporter);
-						// TODO: set update flag in db
-						source.getRates(new Source.Callback() {
-
-							@Override
-							public void onFailed(Exception e) {
-								log.error("{} - source download failed!", source.getName(), e);
-								if (!reporter.isEmpty()) {
-									try {
-										reporter.send();
-									} catch (IOException ioe) {
-										log.error("{} - Failed sending report!", source.getName(), ioe);
-									}
-								}
-							}
-
-							@Override
-							public void onCompleted(List<CurrencyData> currencyDataList) {
-								log.debug("{} - source download succcesful.", source.getName());
-
-								if (log.isTraceEnabled()) {
-									// TODO remove this trace log
-									for (CurrencyData currency : currencyDataList) {
-										log.trace(currency.toString());
-									}
-								}
-
-								log.debug("{} - importing downloaded rates in database ...", source.getName());
-								try (final DataSourceInterface dataSource = new DataSource()) {
-									dataSource.connect();
-									dataSource.addRates(currencyDataList);
-								} catch (IOException | DataSourceException e) {
-									log.error("Could not connect to database!", e);
-								}
-
-								if (!reporter.isEmpty()) {
-									try {
-										reporter.send();
-									} catch (IOException ioe) {
-										log.error("{} - Failed sending report!", source.getName(), ioe);
-									}
-								}
-							}
-						});
-					}
-				} catch (SourceException e) {
-					log.error("Failed fetching rates for source id='{}'!", currencySource.getSourceId(), e);
-				}
-			}
 		} catch (Throwable t) {
 			/*
 			 * The executor swallows exceptions, so catch Throwable instead.
