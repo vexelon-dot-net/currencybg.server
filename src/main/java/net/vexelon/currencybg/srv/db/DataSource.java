@@ -99,10 +99,8 @@ public class DataSource implements DataSourceInterface {
 
 					preparedStatement.setString(1, currencies.get(i).getCode());
 					preparedStatement.setInt(2, currencies.get(i).getRatio());
-					preparedStatement.setString(3,
-							currencies.get(i).getBuy() == null ? "111" : currencies.get(i).getBuy());
-					preparedStatement.setString(4,
-							currencies.get(i).getSell() == null ? "222" : currencies.get(i).getSell());
+					preparedStatement.setString(3, currencies.get(i).getBuy());
+					preparedStatement.setString(4, currencies.get(i).getSell());
 					preparedStatement.setDate(5, new java.sql.Date(currencies.get(i).getDate().getTime()));
 					preparedStatement.setInt(6, currencies.get(i).getSource());
 
@@ -128,7 +126,7 @@ public class DataSource implements DataSourceInterface {
 	}
 
 	@Override
-	public void addRates(Integer sourceId, List<CurrencyData> currencies) throws DataSourceException {
+	public void addRates(List<CurrencyData> currencies) throws DataSourceException {
 
 		if (!currencies.isEmpty() && currencies != null) {
 
@@ -142,10 +140,8 @@ public class DataSource implements DataSourceInterface {
 
 					preparedStatement.setString(1, currencies.get(i).getCode());
 					preparedStatement.setInt(2, currencies.get(i).getRatio());
-					preparedStatement.setString(3,
-							currencies.get(i).getBuy() == null ? "111" : currencies.get(i).getBuy());
-					preparedStatement.setString(4,
-							currencies.get(i).getSell() == null ? "222" : currencies.get(i).getSell());
+					preparedStatement.setString(3, currencies.get(i).getBuy());
+					preparedStatement.setString(4, currencies.get(i).getSell());
 					preparedStatement.setDate(5, new java.sql.Date(currencies.get(i).getDate().getTime()));
 					preparedStatement.setInt(6, currencies.get(i).getSource());
 
@@ -401,16 +397,20 @@ public class DataSource implements DataSourceInterface {
 	}
 
 	@Override
-	public List<CurrencySource> getAllSources() throws DataSourceException {
+	public List<CurrencySource> getAllSources(boolean isActiveOnly) throws DataSourceException {
 		CurrencySource source = new CurrencySource();
 		List<CurrencySource> listSource = Lists.newArrayList();
 
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
-		String sqlSelect = "SELECT source_id, status, update_period, last_update FROM cbg_sources WHERE status = 0 ";
+		StringBuffer sqlSelect = new StringBuffer(
+				"SELECT source_id, status, update_period, last_update FROM cbg_sources ");
+		if (isActiveOnly) {
+			sqlSelect.append("WHERE status = 0 ");
+		}
 
 		try {
-			preparedStatement = dbConnection.prepareStatement(sqlSelect);
+			preparedStatement = dbConnection.prepareStatement(sqlSelect.toString());
 			rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {

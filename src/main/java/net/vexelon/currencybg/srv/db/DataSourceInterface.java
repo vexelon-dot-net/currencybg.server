@@ -82,7 +82,7 @@ public interface DataSourceInterface extends Closeable {
 	 * @throws DataSourceException
 	 */
 
-	List<CurrencySource> getAllSources() throws DataSourceException;
+	List<CurrencySource> getAllSources(boolean isActiveOnly) throws DataSourceException;
 
 	/**
 	 * Check whether the authentication is valid
@@ -111,6 +111,6 @@ public interface DataSourceInterface extends Closeable {
 	 * @param rates
 	 * @throws DataSourceException
 	 */
-	void addRates(Integer sourceId, List<CurrencyData> rates) throws DataSourceException;
+	void addRates(List<CurrencyData> rates) throws DataSourceException;
 
 }
