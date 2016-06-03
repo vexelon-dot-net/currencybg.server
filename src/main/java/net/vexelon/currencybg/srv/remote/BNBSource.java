@@ -131,7 +131,7 @@ public class BNBSource extends AbstractSource {
 			eventType = parser.next();
 		}
 
-		return result;
+		return normalizeCurrencyData(result);
 	}
 
 	@Override
@@ -166,7 +166,7 @@ public class BNBSource extends AbstractSource {
 					}
 
 					source.close();
-					callback.onCompleted(normalizeCurrencyData(result));
+					callback.onCompleted(result);
 				}
 			});
 		} catch (URISyntaxException e) {
