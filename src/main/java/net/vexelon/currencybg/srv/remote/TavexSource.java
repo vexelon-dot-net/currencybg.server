@@ -22,7 +22,6 @@ import com.google.common.collect.Lists;
 
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.Sources;
-import net.vexelon.currencybg.srv.reports.ConsoleReporter;
 import net.vexelon.currencybg.srv.reports.Reporter;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 
@@ -86,7 +85,7 @@ public class TavexSource extends AbstractSource {
 			}
 		}
 
-		return result;
+		return normalizeCurrencyData(result);
 	}
 
 	@Override
@@ -121,7 +120,7 @@ public class TavexSource extends AbstractSource {
 					}
 
 					source.close();
-					callback.onCompleted(normalizeCurrencyData(result));
+					callback.onCompleted(result);
 				}
 			});
 		} catch (URISyntaxException e) {
@@ -132,42 +131,6 @@ public class TavexSource extends AbstractSource {
 	@Override
 	public String getName() {
 		return TAG_NAME;
-	}
-
-	/**
-	 * ###Test###
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		try {
-			final ConsoleReporter reporter = new ConsoleReporter();
-			new TavexSource(reporter).getRates(new Callback() {
-
-				@Override
-				public void onCompleted(List<CurrencyData> currencyDataList) {
-					try {
-						if (reporter.isEmpty()) {
-							reporter.send();
-						}
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-				}
-
-				@Override
-				public void onFailed(Exception e) {
-					e.printStackTrace();
-					try {
-						reporter.send();
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-				}
-			});
-		} catch (SourceException e) {
-			e.printStackTrace();
-		}
 	}
 
 }
