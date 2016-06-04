@@ -167,6 +167,11 @@ public class DataSource implements DataSourceInterface {
 	}
 
 	@Override
+	public void updateSource(int sourceId, CurrencySource source) throws DataSourceException {
+		// TOOD - implement
+	}
+
+	@Override
 	public boolean isCheckAuthentication(String authenticationKey) throws DataSourceException {
 
 		PreparedStatement preparedStatement = null;

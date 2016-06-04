@@ -113,4 +113,13 @@ public interface DataSourceInterface extends Closeable {
 	 */
 	void addRates(List<CurrencyData> rates) throws DataSourceException;
 
+	/**
+	 * Update some or all fields in cbg_sources table
+	 * 
+	 * @param sourceId
+	 * @param source
+	 * @throws DataSourceException
+	 */
+	void updateSource(int sourceId, CurrencySource source) throws DataSourceException;
+
 }
