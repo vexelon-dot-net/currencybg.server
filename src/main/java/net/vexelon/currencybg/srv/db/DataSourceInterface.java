@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
+import net.vexelon.currencybg.srv.db.models.CurrencySource;
 
 /**
  * Encapsulates the available read-write operations to and from an underlying
@@ -66,6 +67,24 @@ public interface DataSourceInterface extends Closeable {
 	String getAllRates(Integer sourceId, Date dateFrom) throws DataSourceException;
 
 	/**
+	 * Fetches a list of sources in DB by id
+	 * 
+	 * @param id
+	 * @return
+	 * @throws DataSourceException
+	 */
+	CurrencySource getSourceById(int id) throws DataSourceException;
+
+	/**
+	 * Fetches a list of sources in DB
+	 * 
+	 * @return
+	 * @throws DataSourceException
+	 */
+
+	List<CurrencySource> getAllSources(boolean isActiveOnly) throws DataSourceException;
+
+	/**
 	 * Check whether the authentication is valid
 	 * 
 	 * @param headerName
@@ -76,7 +95,7 @@ public interface DataSourceInterface extends Closeable {
 	boolean isCheckAuthentication(String authenticationKey) throws DataSourceException;
 
 	/**
-	 * Adds exchange rates in DB.
+	 * Adds Map of exchange rates in DB.
 	 * 
 	 * @param rates
 	 *            A {@link Map} of language and {@link CurrencyData} list
@@ -84,5 +103,23 @@ public interface DataSourceInterface extends Closeable {
 	 * @throws DataSourceException
 	 */
 	void addRates(Map<Integer, List<CurrencyData>> rates) throws DataSourceException;
+
+	/**
+	 * Add rates from by one source
+	 * 
+	 * @param sourceId
+	 * @param rates
+	 * @throws DataSourceException
+	 */
+	void addRates(List<CurrencyData> rates) throws DataSourceException;
+
+	/**
+	 * Update some or all fields in cbg_sources table
+	 * 
+	 * @param sourceId
+	 * @param source
+	 * @throws DataSourceException
+	 */
+	void updateSource(int sourceId, CurrencySource source) throws DataSourceException;
 
 }

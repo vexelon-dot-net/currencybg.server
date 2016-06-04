@@ -22,6 +22,7 @@ import com.google.gson.reflect.TypeToken;
 import net.vexelon.currencybg.srv.Defs;
 import net.vexelon.currencybg.srv.api.Currencies;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
+import net.vexelon.currencybg.srv.db.models.CurrencySource;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 
 public class DataSource implements DataSourceInterface {
@@ -98,10 +99,8 @@ public class DataSource implements DataSourceInterface {
 
 					preparedStatement.setString(1, currencies.get(i).getCode());
 					preparedStatement.setInt(2, currencies.get(i).getRatio());
-					preparedStatement.setString(3,
-							currencies.get(i).getBuy() == null ? "111" : currencies.get(i).getBuy());
-					preparedStatement.setString(4,
-							currencies.get(i).getSell() == null ? "222" : currencies.get(i).getSell());
+					preparedStatement.setString(3, currencies.get(i).getBuy());
+					preparedStatement.setString(4, currencies.get(i).getSell());
 					preparedStatement.setDate(5, new java.sql.Date(currencies.get(i).getDate().getTime()));
 					preparedStatement.setInt(6, currencies.get(i).getSource());
 
@@ -124,6 +123,52 @@ public class DataSource implements DataSourceInterface {
 			}
 
 		}
+	}
+
+	@Override
+	public void addRates(List<CurrencyData> currencies) throws DataSourceException {
+
+		if (!currencies.isEmpty() && currencies != null) {
+
+			PreparedStatement preparedStatement = null;
+			String insertSQL = "INSERT INTO cbg_currencies (CODE, RATIO, BUY, SELL, DATE, SOURCE) VALUES (?,?,?,?,?,?)";
+
+			try {
+				preparedStatement = dbConnection.prepareStatement(insertSQL);
+
+				for (int i = 0; i < currencies.size(); i++) {
+
+					preparedStatement.setString(1, currencies.get(i).getCode());
+					preparedStatement.setInt(2, currencies.get(i).getRatio());
+					preparedStatement.setString(3, currencies.get(i).getBuy());
+					preparedStatement.setString(4, currencies.get(i).getSell());
+					preparedStatement.setDate(5, new java.sql.Date(currencies.get(i).getDate().getTime()));
+					preparedStatement.setInt(6, currencies.get(i).getSource());
+
+					preparedStatement.executeUpdate();
+
+				}
+
+			} catch (SQLException e) {
+				throw new DataSourceException("SQL Exception in method addRates!", e);
+			} finally {
+
+				if (preparedStatement != null) {
+					try {
+						preparedStatement.close();
+					} catch (SQLException e) {
+						log.error("Problem with close of PreparedStatement in method addRates!", e);
+					}
+				}
+
+			}
+		}
+
+	}
+
+	@Override
+	public void updateSource(int sourceId, CurrencySource source) throws DataSourceException {
+		// TOOD - implement
 	}
 
 	@Override
@@ -238,7 +283,7 @@ public class DataSource implements DataSourceInterface {
 
 	@Override
 	public String getAllRates(Date dateFrom) throws DataSourceException {
-		List<CurrencyData> currencies = new ArrayList<CurrencyData>();
+		List<CurrencyData> currencies = Lists.newArrayList();
 
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
@@ -308,6 +353,105 @@ public class DataSource implements DataSourceInterface {
 		}
 
 		return json;
+	}
+
+	@Override
+	public CurrencySource getSourceById(int id) throws DataSourceException {
+		CurrencySource source = new CurrencySource();
+
+		PreparedStatement preparedStatement = null;
+		ResultSet rs = null;
+		String sqlSelect = "SELECT source_id, status, update_period, last_update FROM cbg_sources WHERE source_id = ? and status = 0 ";
+
+		try {
+			preparedStatement = dbConnection.prepareStatement(sqlSelect);
+			preparedStatement.setInt(1, id);
+			rs = preparedStatement.executeQuery();
+
+			if (rs.next()) {
+				source.setSourceId(rs.getInt(1));
+				source.setStatus(rs.getInt(2));
+				source.setUpdatePeriod(rs.getInt(3));
+				source.setLastUpdate(rs.getTimestamp(4));
+
+			}
+
+		} catch (SQLException e) {
+			throw new DataSourceException("SQL Exception in method getSourceById!", e);
+
+		} finally {
+			// TODO - close 2 PreprareStatement
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					log.error("Problem with close of ResultSet(for selectSQL) in method getSourceById!", e);
+				}
+			}
+
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+					log.error("Problem with close of PreparedStatement(for selectSQL) in method getSourceById!", e);
+				}
+			}
+
+		}
+		return source;
+	}
+
+	@Override
+	public List<CurrencySource> getAllSources(boolean isActiveOnly) throws DataSourceException {
+		CurrencySource source = new CurrencySource();
+		List<CurrencySource> listSource = Lists.newArrayList();
+
+		PreparedStatement preparedStatement = null;
+		ResultSet rs = null;
+		StringBuffer sqlSelect = new StringBuffer(
+				"SELECT source_id, status, update_period, last_update FROM cbg_sources ");
+		if (isActiveOnly) {
+			sqlSelect.append("WHERE status = 0 ");
+		}
+
+		try {
+			preparedStatement = dbConnection.prepareStatement(sqlSelect.toString());
+			rs = preparedStatement.executeQuery();
+
+			while (rs.next()) {
+				source.setSourceId(rs.getInt(1));
+				source.setStatus(rs.getInt(2));
+				source.setUpdatePeriod(rs.getInt(3));
+				source.setLastUpdate(rs.getTimestamp(4));
+
+				listSource.add(source);
+				source = new CurrencySource();
+
+			}
+
+		} catch (SQLException e) {
+			throw new DataSourceException("SQL Exception in method getAllSources!", e);
+
+		} finally {
+			// TODO - close 2 PreprareStatement
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					log.error("Problem with close of ResultSet(for selectSQL) in method getAllSources!", e);
+				}
+			}
+
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+					log.error("Problem with close of PreparedStatement(for selectSQL) in method getAllSources!", e);
+				}
+			}
+
+		}
+		return listSource;
 	}
 
 }
