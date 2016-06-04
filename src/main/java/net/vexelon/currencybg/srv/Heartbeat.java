@@ -1,22 +1,22 @@
 package net.vexelon.currencybg.srv;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.Maps;
 
 import net.vexelon.currencybg.srv.db.DataSource;
 import net.vexelon.currencybg.srv.db.DataSourceException;
 import net.vexelon.currencybg.srv.db.DataSourceInterface;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
+import net.vexelon.currencybg.srv.db.models.CurrencySource;
 import net.vexelon.currencybg.srv.db.models.Sources;
-import net.vexelon.currencybg.srv.remote.BNBSource;
 import net.vexelon.currencybg.srv.remote.Source;
 import net.vexelon.currencybg.srv.remote.SourceException;
+import net.vexelon.currencybg.srv.reports.ConsoleReporter;
 
 /**
  * Fetches currencies from remote server and imports them into the database.
@@ -28,32 +28,98 @@ public class Heartbeat implements Runnable {
 
 	@Override
 	public void run() {
-		log.info("Updating rates from remote server ...");
+		log.info("Downloading rates from sources ...");
+		try {
 
-		try (DataSourceInterface dataSource = new DataSource()) {
-			Source source = new BNBSource();
-			Map<Integer, List<CurrencyData>> downloadRates = Maps.newHashMap();
-			downloadRates.put(Sources.BNB.getID(), source.downloadRates());
+			try (final DataSourceInterface dataSource = new DataSource()) {
+				/*
+				 * Fetch all (active) sources from database
+				 */
+				dataSource.connect();
+				List<CurrencySource> allSources = dataSource.getAllSources(true);
 
-			log.debug("Importing downloaded rates in database ...");
-			dataSource.connect();
-			dataSource.addRates(downloadRates);
+				/*
+				 * Fetch currencies for every active source
+				 */
+				Calendar nowCalendar = Calendar.getInstance();
+				for (CurrencySource currencySource : allSources) {
 
-			if (log.isTraceEnabled()) {
-				// TODO: remove info
-				for (Map.Entry<Integer, List<CurrencyData>> rates : downloadRates.entrySet()) {
-					log.trace("*** downloaded locale: {}", rates.getKey());
-					for (CurrencyData currency : rates.getValue()) {
-						// log.trace("Currency: {} ({}) = {}",
-						// currency.getName(), currency.getCode(),
-						// currency.getRate());
+					// checks if it is time to update this source entry
+					Calendar sourceCalendar = Calendar.getInstance();
+					sourceCalendar.setTimeInMillis(currencySource.getLastUpdate().getTime()
+							+ TimeUnit.SECONDS.toMillis(currencySource.getUpdatePeriod()));
+					if (sourceCalendar.after(nowCalendar)) {
+						log.debug("Source ({}) update skipped.", currencySource.getSourceId());
+						continue;
+					}
+
+					final Sources sourceType = Sources.valueOf(currencySource.getSourceId());
+					if (sourceType != null) {
+						try {
+							// TODO: add proper reporter
+							final ConsoleReporter reporter = new ConsoleReporter();
+							final Source source = sourceType.newInstance(reporter);
+							// TODO: set update flag in db
+
+							source.getRates(new Source.Callback() {
+
+								@Override
+								public void onFailed(Exception e) {
+									log.error("{} - source download failed!", source.getName(), e);
+									if (!reporter.isEmpty()) {
+										try {
+											reporter.send();
+										} catch (IOException ioe) {
+											log.error("{} - Failed sending report!", source.getName(), ioe);
+										}
+									}
+								}
+
+								@Override
+								public void onCompleted(List<CurrencyData> currencyDataList) {
+									log.debug("{} - source download succcesful.", source.getName());
+
+									if (log.isTraceEnabled()) {
+										// TODO remove this trace log
+										for (CurrencyData currency : currencyDataList) {
+											log.trace(currency.toString());
+										}
+									}
+
+									log.debug("{} - importing downloaded rates in database ...", source.getName());
+									try (final DataSourceInterface dataSource = new DataSource()) {
+										dataSource.connect();
+										dataSource.addRates(currencyDataList);
+									} catch (IOException | DataSourceException e) {
+										log.error("Could not connect to database!", e);
+									}
+
+									if (!reporter.isEmpty()) {
+										try {
+											reporter.send();
+										} catch (IOException ioe) {
+											log.error("{} - Failed sending report!", source.getName(), ioe);
+										}
+									}
+								}
+							});
+						} catch (SourceException e) {
+							log.error("Failed fetching rates for source id='{}'!", currencySource.getSourceId(), e);
+						}
 					}
 				}
+
+			} catch (IOException | DataSourceException e) {
+				log.error("Could not connect to database!", e);
 			}
-		} catch (SourceException e) {
-			log.error("Could not download currencies from remote!", e);
-		} catch (IOException | DataSourceException e) {
-			log.error("Could not connect to database!", e);
+
+		} catch (Throwable t) {
+			/*
+			 * The executor swallows exceptions, so catch Throwable instead.
+			 * 
+			 * @see http://stackoverflow.com/a/24902026
+			 */
+			log.error("Fatal hearbeat error!", t);
 		}
 	}
 }

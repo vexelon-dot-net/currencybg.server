@@ -1,67 +1,81 @@
 package net.vexelon.currencybg.srv.remote;
 
+import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
-import com.google.common.io.ByteStreams;
 
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.Sources;
+import net.vexelon.currencybg.srv.reports.Reporter;
 
-public class BNBSource implements Source {
+public class BNBSource extends AbstractSource {
 
 	private static final Logger log = LoggerFactory.getLogger(BNBSource.class);
+	private static final String TAG_NAME = BNBSource.class.getSimpleName();
 
 	// Addresses on BNB for get on XML file
-	public final static String URL_BNB_FORMAT_BG = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=BG";
-	public final static String URL_BNB_FORMAT_EN = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=EN";
-	public final static String URL_BNB_INDEX = "http://www.bnb.bg/index.htm";
-	public final static String URL_BNB_FIXED_RATES = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERFixed/index.htm?toLang=_";
+	public static final String URL_BNB_FORMAT_BG = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=BG";
+	public static final String URL_BNB_FORMAT_EN = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=EN";
+	public static final String URL_BNB_INDEX = "http://www.bnb.bg/index.htm";
+	public static final String URL_BNB_FIXED_RATES = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERFixed/index.htm?toLang=_";
 
-	public final static String XML_TAG_ROWSET = "ROWSET";
-	public final static String XML_TAG_ROW = "ROW";
-	public final static String XML_TAG_GOLD = "GOLD";
-	public final static String XML_TAG_NAME = "NAME_";
-	public final static String XML_TAG_CODE = "CODE";
-	public final static String XML_TAG_RATIO = "RATIO";
-	public final static String XML_TAG_REVERSERATE = "REVERSERATE";
-	public final static String XML_TAG_RATE = "RATE";
-	public final static String XML_TAG_EXTRAINFO = "EXTRAINFO";
-	public final static String XML_TAG_CURR_DATE = "CURR_DATE";
-	public final static String XML_TAG_TITLE = "TITLE";
-	public final static String XML_TAG_F_STAR = "F_STAR";
+	private static final String DATE_FORMAT = "dd.MM.yyyy";
 
-	public BNBSource() {
+	private static final String XML_TAG_ROWSET = "ROWSET";
+	private static final String XML_TAG_ROW = "ROW";
+	private static final String XML_TAG_GOLD = "GOLD";
+	private static final String XML_TAG_NAME = "NAME_";
+	private static final String XML_TAG_CODE = "CODE";
+	private static final String XML_TAG_RATIO = "RATIO";
+	private static final String XML_TAG_REVERSERATE = "REVERSERATE";
+	private static final String XML_TAG_RATE = "RATE";
+	private static final String XML_TAG_EXTRAINFO = "EXTRAINFO";
+	private static final String XML_TAG_CURR_DATE = "CURR_DATE";
+	private static final String XML_TAG_TITLE = "TITLE";
+	private static final String XML_TAG_F_STAR = "F_STAR";
+
+	public BNBSource(Reporter reporter) {
+		super(reporter);
 	}
 
-	public List<CurrencyData> getBNBRates(InputStream input) throws Exception {
-		List<CurrencyData> listCurrencyData = Lists.newArrayList();
+	/**
+	 * Transforms XML data into {@link CurrencyData} models.
+	 * 
+	 * @param input
+	 * @return
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	public List<CurrencyData> getBNBRates(InputStream input) throws IOException, XmlPullParserException {
+		List<CurrencyData> result = Lists.newArrayList();
 
 		XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
 		factory.setNamespaceAware(true);
 		XmlPullParser parser = factory.newPullParser();
 		parser.setInput(input, Charsets.UTF_8.name());
 
-		DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-		CurrencyData currencyData = new CurrencyData();
+		DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 		boolean isHeaderParsed = false;
-		int eventType = parser.getEventType();
 		StringBuilder buffer = new StringBuilder();
+		CurrencyData currencyData = new CurrencyData();
+
+		int eventType = parser.getEventType();
 
 		while (eventType != XmlPullParser.END_DOCUMENT) {
 			String tagName = parser.getName();
@@ -70,9 +84,6 @@ public class BNBSource implements Source {
 				if (XML_TAG_ROW.equalsIgnoreCase(tagName)) {
 					if (isHeaderParsed) {
 						currencyData = new CurrencyData();
-						// defaults
-						// currencyData.setRate("0");
-						// currencyData.setReverseRate("0");
 					}
 				}
 				buffer.setLength(0);
@@ -95,25 +106,18 @@ public class BNBSource implements Source {
 					} else if (tagName.equalsIgnoreCase(XML_TAG_RATE)) {
 						currencyData.setSell(buffer.toString());
 					} else if (tagName.equalsIgnoreCase(XML_TAG_CURR_DATE)) {
-						Date currencyDate;
 						try {
-							currencyDate = dateFormat.parse(buffer.toString());
+							currencyData.setDate(dateFormat.parse(buffer.toString()));
 						} catch (ParseException e1) {
-							log.debug("Could not parse date from buffer '{}'!", buffer.toString(), e1);
+							log.warn("Could not parse date from buffer!", e1);
+							getReporter().write(TAG_NAME, "Could not parse date from buffer - '{}'! ({})",
+									buffer.toString(), e1.getMessage());
 							// use default (today)
-							currencyDate = new Date();
+							currencyData.setDate(new Date());
 						}
-						currencyData.setDate(currencyDate);
 					} else if (XML_TAG_ROW.equalsIgnoreCase(tagName)) {
-						// add to list of parsed items
-						// TODO - hardcode set of some elements
-						// Sources sources = Sources.BNB;
-						// currencyData.setSource(Sources.BNB.getID());
 						currencyData.setSource(Sources.BNB.getID());
-						// currencyData.setBuy("0");
-						// currencyData.setSell("0");
-
-						listCurrencyData.add(currencyData);
+						result.add(currencyData);
 					}
 				}
 				if (!isHeaderParsed && XML_TAG_ROW.equalsIgnoreCase(tagName)) {
@@ -127,33 +131,52 @@ public class BNBSource implements Source {
 			eventType = parser.next();
 		}
 
-		return listCurrencyData;
+		return normalizeCurrencyData(result);
 	}
 
-	private List<CurrencyData> getBNBRates(String sourceUrl) throws SourceException {
-		InputStream input = null;
+	@Override
+	public void getRates(final Callback callback) throws SourceException {
 		try {
-			URLConnection connection = new URL(sourceUrl).openConnection();
-			connection.setDoInput(true);
-			HttpURLConnection httpConn = (HttpURLConnection) connection;
-			if (httpConn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-				// read error and throw it to caller
-				input = httpConn.getErrorStream();
-				throw new SourceException(new String(ByteStreams.toByteArray(input), Charsets.UTF_8.name()));
-			}
-			input = httpConn.getInputStream();
-			return getBNBRates(input);
-		} catch (Exception e) {
-			throw new SourceException("Failed loading currencies from BNB source!", e);
-		} finally {
-			IOUtils.closeQuietly(input);
+			final AbstractSource source = this;
+
+			doGet(URL_BNB_FORMAT_EN, new HTTPCallback() {
+
+				@Override
+				public void onRequestFailed(Exception e) {
+					getReporter().write(TAG_NAME, "Connection failure= {}", ExceptionUtils.getStackTrace(e));
+
+					source.close();
+					callback.onFailed(e);
+				}
+
+				@Override
+				public void onRequestCompleted(HttpResponse response, boolean isCanceled) {
+					List<CurrencyData> result = Lists.newArrayList();
+
+					if (!isCanceled) {
+						try {
+							result = getBNBRates(response.getEntity().getContent());
+						} catch (IOException e) {
+							log.error("Could not parse source data!", e);
+							getReporter().write(TAG_NAME, "Parse failed= {}", ExceptionUtils.getStackTrace(e));
+						} catch (XmlPullParserException e) {
+							log.error("Could not parse XML data!", e);
+							getReporter().write(TAG_NAME, "XML parse failed= {}", ExceptionUtils.getStackTrace(e));
+						}
+					}
+
+					source.close();
+					callback.onCompleted(result);
+				}
+			});
+		} catch (URISyntaxException e) {
+			throw new SourceException("Invalid source url - " + URL_BNB_FORMAT_EN, e);
 		}
 	}
 
 	@Override
-	public List<CurrencyData> downloadRates() throws SourceException {
-
-		return getBNBRates(URL_BNB_FORMAT_EN);
+	public String getName() {
+		return TAG_NAME;
 	}
 
 }
