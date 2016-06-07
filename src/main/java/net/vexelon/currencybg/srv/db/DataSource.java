@@ -101,7 +101,7 @@ public class DataSource implements DataSourceInterface {
 					preparedStatement.setInt(2, currencies.get(i).getRatio());
 					preparedStatement.setString(3, currencies.get(i).getBuy());
 					preparedStatement.setString(4, currencies.get(i).getSell());
-					preparedStatement.setDate(5, new java.sql.Date(currencies.get(i).getDate().getTime()));
+					preparedStatement.setTimestamp(5, new java.sql.Timestamp(currencies.get(i).getDate().getTime()));
 					preparedStatement.setInt(6, currencies.get(i).getSource());
 
 					preparedStatement.executeUpdate();
@@ -142,7 +142,7 @@ public class DataSource implements DataSourceInterface {
 					preparedStatement.setInt(2, currencies.get(i).getRatio());
 					preparedStatement.setString(3, currencies.get(i).getBuy());
 					preparedStatement.setString(4, currencies.get(i).getSell());
-					preparedStatement.setDate(5, new java.sql.Date(currencies.get(i).getDate().getTime()));
+					preparedStatement.setTimestamp(5, new java.sql.Timestamp(currencies.get(i).getDate().getTime()));
 					preparedStatement.setInt(6, currencies.get(i).getSource());
 
 					preparedStatement.executeUpdate();
@@ -168,7 +168,53 @@ public class DataSource implements DataSourceInterface {
 
 	@Override
 	public void updateSource(int sourceId, CurrencySource source) throws DataSourceException {
-		// TOOD - implement
+		PreparedStatement preparedStatement = null;
+		String insertSQL = "UPDATE cbg_sources SET NAME=COALESCE(?, NAME), STATUS=COALESCE(?, STATUS), UPDATE_PERIOD=COALESCE(?, UPDATE_PERIOD), LAST_UPDATE=COALESCE(?, LAST_UPDATE) WHERE SOURCE_ID = ?";
+
+		try {
+			preparedStatement = dbConnection.prepareStatement(insertSQL);
+
+			if (source.getSourceName() != null) {
+				preparedStatement.setString(1, source.getSourceName());
+			} else {
+				preparedStatement.setNull(1, java.sql.Types.VARCHAR);
+			}
+
+			if (source.getStatus() != 0) {
+				preparedStatement.setInt(2, source.getStatus());
+			} else {
+				preparedStatement.setNull(2, java.sql.Types.INTEGER);
+			}
+
+			if (source.getUpdatePeriod() != 0) {
+				preparedStatement.setInt(3, source.getUpdatePeriod());
+			} else {
+				preparedStatement.setNull(3, java.sql.Types.INTEGER);
+			}
+
+			if (source.getLastUpdate() != null) {
+				preparedStatement.setTimestamp(4, new java.sql.Timestamp(source.getLastUpdate().getTime()));
+			} else {
+				preparedStatement.setNull(4, java.sql.Types.DATE);
+			}
+
+			preparedStatement.setInt(5, sourceId);
+
+			preparedStatement.executeUpdate();
+
+		} catch (SQLException e) {
+			throw new DataSourceException("SQL Exception in method addRates!", e);
+		} finally {
+
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+					log.error("Problem with close of PreparedStatement in method addRates!", e);
+				}
+			}
+
+		}
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import java.util.Date;
 public class CurrencySource {
 
 	private int sourceId;
+	private String sourceName;
 	private int status;
 	private int updatePeriod;
 	private Date lastUpdate;
@@ -13,9 +14,10 @@ public class CurrencySource {
 
 	}
 
-	public CurrencySource(int sourceId, int status, int updatePeriod, Date lastUpdate) {
+	public CurrencySource(int sourceId, String sourceName, int status, int updatePeriod, Date lastUpdate) {
 		super();
 		this.sourceId = sourceId;
+		this.sourceName = sourceName;
 		this.status = status;
 		this.updatePeriod = updatePeriod;
 		this.lastUpdate = lastUpdate;
@@ -27,6 +29,14 @@ public class CurrencySource {
 
 	public void setSourceId(int sourceId) {
 		this.sourceId = sourceId;
+	}
+
+	public String getSourceName() {
+		return sourceName;
+	}
+
+	public void setSourceName(String sourceName) {
+		this.sourceName = sourceName;
 	}
 
 	public int getStatus() {
@@ -55,8 +65,8 @@ public class CurrencySource {
 
 	@Override
 	public String toString() {
-		return "CurrencySource [sourceId=" + sourceId + ", status=" + status + ", updatePeriod=" + updatePeriod
-				+ ", lastUpdate=" + lastUpdate + "]";
+		return "CurrencySource [sourceId=" + sourceId + ", sourceName=" + sourceName + ", status=" + status
+				+ ", updatePeriod=" + updatePeriod + ", lastUpdate=" + lastUpdate + "]";
 	}
 
 }
