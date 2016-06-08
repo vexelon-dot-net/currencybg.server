@@ -67,6 +67,7 @@ public class Currencies extends AbstractJunction {
 
 		try (DataSourceInterface source = new DataSource()) {
 			source.connect();
+
 			if (!source.isCheckAuthentication(apiKey)) {
 				return getCustomResponse(Response.Status.UNAUTHORIZED);
 			}
