@@ -1,6 +1,7 @@
 package net.vexelon.currencybg.srv.db.models;
 
 import net.vexelon.currencybg.srv.remote.BNBSource;
+import net.vexelon.currencybg.srv.remote.FIBSource;
 import net.vexelon.currencybg.srv.remote.Source;
 import net.vexelon.currencybg.srv.remote.TavexSource;
 import net.vexelon.currencybg.srv.reports.Reporter;
@@ -44,6 +45,10 @@ public enum Sources {
 		// BNB
 		case 1:
 			return new BNBSource(reporter);
+
+		// BNB
+		case 100:
+			return new FIBSource(reporter);
 
 		// TAVEX
 		case 200:
