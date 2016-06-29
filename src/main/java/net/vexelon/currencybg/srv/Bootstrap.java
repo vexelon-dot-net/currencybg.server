@@ -1,5 +1,11 @@
 package net.vexelon.currencybg.srv;
 
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.configuration2.builder.fluent.Parameters;
+import org.apache.commons.configuration2.builder.fluent.PropertiesBuilderParameters;
+import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +19,24 @@ public class Bootstrap {
 		log.trace("Running sanity tests ...");
 
 		testEncoding();
+	}
+
+	private void loadConfiguration() {
+		PropertiesBuilderParameters parameters = new Parameters().properties().setFileName("myconfig.properties")
+				.setThrowExceptionOnMissing(true).setListDelimiterHandler(new DefaultListDelimiterHandler(';'))
+				.setIncludesAllowed(false);
+
+		FileBasedConfigurationBuilder<PropertiesConfiguration> builder = new FileBasedConfigurationBuilder<PropertiesConfiguration>(
+				PropertiesConfiguration.class).configure(parameters);
+
+		try {
+			PropertiesConfiguration config = builder.getConfiguration();
+			config.setProperty("maintenance.enabled", false);
+
+		} catch (ConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void testEncoding() {
