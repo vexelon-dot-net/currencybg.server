@@ -1,5 +1,6 @@
 /**
- * CurrencyBG App build script
+ * CurrencyBG Server Build Script
+ *
  */
  
 buildscript {
