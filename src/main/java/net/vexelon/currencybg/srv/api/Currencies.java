@@ -47,9 +47,11 @@ public class Currencies extends AbstractJunction {
 			@HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
 
 		try (DataSourceInterface source = new DataSource()) {
+			verifyAccess();
+
 			source.connect();
 			if (!source.isCheckAuthentication(apiKey)) {
-				return getCustomResponse(Response.Status.UNAUTHORIZED);
+				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
 			}
 
 			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
@@ -57,6 +59,9 @@ public class Currencies extends AbstractJunction {
 		} catch (IOException | DataSourceException | ParseException e) {
 			log.error("", e);
 			return getErrorResponse();
+		} catch (ApiAccessException e) {
+			log.debug(e.getMessage());
+			return getCustomResponse(e.getStatus());
 		}
 	}
 
@@ -66,10 +71,11 @@ public class Currencies extends AbstractJunction {
 			@HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
 
 		try (DataSourceInterface source = new DataSource()) {
-			source.connect();
+			verifyAccess();
 
+			source.connect();
 			if (!source.isCheckAuthentication(apiKey)) {
-				return getCustomResponse(Response.Status.UNAUTHORIZED);
+				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
 			}
 
 			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
@@ -77,6 +83,10 @@ public class Currencies extends AbstractJunction {
 		} catch (IOException | DataSourceException | ParseException e) {
 			log.error("", e);
 			return getErrorResponse();
+		} catch (ApiAccessException e) {
+			log.debug(e.getMessage());
+			return getCustomResponse(e.getStatus());
 		}
+
 	}
 }
