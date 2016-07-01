@@ -8,6 +8,9 @@ import javax.ws.rs.core.MediaType;
  */
 public final class Defs {
 
+	public static final String CONFIG_PATH = System.getenv("CBG_CFG_PATH");
+	public static final String CONFIG_FILENAME = "cbg.properties";
+
 	/*
 	 * Database parameters
 	 */

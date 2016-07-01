@@ -1,11 +1,10 @@
 package net.vexelon.currencybg.srv;
 
-import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
-import org.apache.commons.configuration2.builder.fluent.Parameters;
-import org.apache.commons.configuration2.builder.fluent.PropertiesBuilderParameters;
-import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
-import org.apache.commons.configuration2.ex.ConfigurationException;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,27 +14,31 @@ public class Bootstrap {
 
 	private static final Logger log = LoggerFactory.getLogger(Bootstrap.class);
 
+	/**
+	 * 
+	 * @throws RuntimeException
+	 *             On configuration loading errors.
+	 */
 	public void init() {
 		log.trace("Running sanity tests ...");
-
 		testEncoding();
-	}
 
-	private void loadConfiguration() {
-		PropertiesBuilderParameters parameters = new Parameters().properties().setFileName("myconfig.properties")
-				.setThrowExceptionOnMissing(true).setListDelimiterHandler(new DefaultListDelimiterHandler(';'))
-				.setIncludesAllowed(false);
+		log.trace("Loading configuratons ...");
+		if (StringUtils.isEmpty(Defs.CONFIG_PATH)) {
+			throw new RuntimeException("Fatal error. Global configuration env variable 'CBG_CFG_PATH' not defined!");
+		}
 
-		FileBasedConfigurationBuilder<PropertiesConfiguration> builder = new FileBasedConfigurationBuilder<PropertiesConfiguration>(
-				PropertiesConfiguration.class).configure(parameters);
+		File configFile = Paths.get(Defs.CONFIG_PATH, Defs.CONFIG_FILENAME).toFile();
+		if (!configFile.exists()) {
+			try {
+				configFile.createNewFile();
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 
-		try {
-			PropertiesConfiguration config = builder.getConfiguration();
-			config.setProperty("maintenance.enabled", false);
-
-		} catch (ConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			GlobalConfig.INSTANCE.createDefault(configFile);
+		} else {
+			GlobalConfig.INSTANCE.load(configFile);
 		}
 	}
 
