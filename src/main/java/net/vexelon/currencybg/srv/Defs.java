@@ -13,7 +13,7 @@ public final class Defs {
 	 */
 	public static final String CONFIG_PATH = System.getenv("CBG_CFG_PATH");
 	public static final String CONFIG_FILENAME = "cbg.properties";
-	public static final long CONFIG_RELOAD_INTERVAL = 30; // 1 minute
+	public static final long CONFIG_RELOAD_INTERVAL = 10; // 10 seconds
 
 	/*
 	 * Database parameters

@@ -3,6 +3,8 @@ package net.vexelon.currencybg.srv;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -15,11 +17,11 @@ public class Bootstrap {
 	private static final Logger log = LoggerFactory.getLogger(Bootstrap.class);
 
 	/**
-	 * 
+	 * @param executor
 	 * @throws RuntimeException
 	 *             On configuration loading errors.
 	 */
-	public void init() {
+	public void start(ScheduledExecutorService executor) {
 		log.trace("Running sanity tests ...");
 		testEncoding();
 
@@ -36,10 +38,18 @@ public class Bootstrap {
 				throw new RuntimeException(e);
 			}
 
-			GlobalConfig.INSTANCE.createDefault(configFile);
+			GlobalConfig.INSTANCE.createDefault(configFile, executor);
 		} else {
-			GlobalConfig.INSTANCE.load(configFile);
+			GlobalConfig.INSTANCE.load(configFile, executor);
 		}
+
+		log.trace("Booting threads ...");
+		executor.scheduleWithFixedDelay(new Heartbeat(), Defs.UPDATE_FIRST_INTERVAL, Defs.UPDATES_PERIODIC_INTERVAL,
+				TimeUnit.SECONDS);
+	}
+
+	public void stop() {
+		GlobalConfig.INSTANCE.close();
 	}
 
 	private void testEncoding() {
