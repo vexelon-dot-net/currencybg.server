@@ -1,13 +1,16 @@
 package net.vexelon.currencybg.srv;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.configuration2.builder.ReloadingFileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.apache.commons.configuration2.builder.fluent.PropertiesBuilderParameters;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.configuration2.reloading.PeriodicReloadingTrigger;
 
 import com.google.common.base.Charsets;
 
@@ -71,8 +74,13 @@ public enum GlobalConfig {
 				.setEncoding(Charsets.UTF_8.name()).setThrowExceptionOnMissing(true)
 				.setListDelimiterHandler(new DefaultListDelimiterHandler(';')).setIncludesAllowed(false);
 
-		FileBasedConfigurationBuilder<PropertiesConfiguration> builder = new FileBasedConfigurationBuilder<PropertiesConfiguration>(
+		ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> builder = new ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration>(
 				PropertiesConfiguration.class).configure(parameters);
+
+		// setup reloading interval
+		PeriodicReloadingTrigger trigger = new PeriodicReloadingTrigger(builder.getReloadingController(), null,
+				Defs.CONFIG_RELOAD_INTERVAL, TimeUnit.SECONDS);
+		trigger.start();
 
 		return builder;
 	}
