@@ -2,6 +2,7 @@ package net.vexelon.currencybg.srv;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -59,7 +60,10 @@ public class Heartbeat implements Runnable {
 							// TODO: add proper reporter
 							final ConsoleReporter reporter = new ConsoleReporter();
 							final Source source = sourceType.newInstance(reporter);
-							// TODO: set update flag in db
+
+							// set update datetime flag
+							currencySource.setLastUpdate(new Date());
+							dataSource.updateSource(currencySource.getSourceId(), currencySource);
 
 							source.getRates(new Source.Callback() {
 
