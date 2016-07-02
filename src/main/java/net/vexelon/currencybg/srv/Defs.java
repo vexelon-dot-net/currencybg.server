@@ -9,6 +9,13 @@ import javax.ws.rs.core.MediaType;
 public final class Defs {
 
 	/*
+	 * Global configuration
+	 */
+	public static final String CONFIG_PATH = System.getenv("CBG_CFG_PATH");
+	public static final String CONFIG_FILENAME = "cbg.properties";
+	public static final long CONFIG_RELOAD_INTERVAL = 10; // 10 seconds
+
+	/*
 	 * Database parameters
 	 */
 	public static final String DB_DRIVER = "com.mysql.jdbc.Driver";

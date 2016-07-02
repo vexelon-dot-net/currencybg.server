@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import net.vexelon.currencybg.srv.Defs;
+import net.vexelon.currencybg.srv.GlobalConfig;
 
 /**
  * Wraps common functionalities for all API junctions
@@ -31,6 +32,17 @@ public abstract class AbstractJunction {
 
 	protected Response getErrorResponse() {
 		return getCustomResponse(Response.Status.INTERNAL_SERVER_ERROR);
+	}
+
+	/**
+	 * Verifies API is accessible
+	 * 
+	 * @throws ApiAccessException
+	 */
+	protected void verifyAccess() throws ApiAccessException {
+		if (GlobalConfig.INSTANCE.isMaintenanceEnabled()) {
+			throw new ApiAccessException(Status.SERVICE_UNAVAILABLE, "Server maintenance enabled!");
+		}
 	}
 
 }
