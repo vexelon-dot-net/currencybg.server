@@ -408,7 +408,8 @@ public class DataSource implements DataSourceInterface {
 
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
-		String sqlSelect = "SELECT source_id, status, update_period, last_update, update_props FROM cbg_sources WHERE source_id = ? and status = 0 ";
+		String sqlSelect = "SELECT source_id, status, update_period, last_update, update_props FROM cbg_sources "
+				+ " WHERE source_id = ? and status = 0 ";
 
 		try {
 			preparedStatement = dbConnection.prepareStatement(sqlSelect);
@@ -463,10 +464,10 @@ public class DataSource implements DataSourceInterface {
 
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
-		StringBuffer sqlSelect = new StringBuffer(
-				"SELECT source_id, status, update_period, last_update, update_props FROM cbg_sources ");
+
+		String sqlSelect = "SELECT source_id, status, update_period, last_update, update_props FROM cbg_sources ";
 		if (isActiveOnly) {
-			sqlSelect.append("WHERE status = 0 ");
+			sqlSelect += "WHERE status = 0 ";
 		}
 
 		try {
