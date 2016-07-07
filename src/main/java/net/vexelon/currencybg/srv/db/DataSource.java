@@ -17,12 +17,14 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
 import net.vexelon.currencybg.srv.Defs;
 import net.vexelon.currencybg.srv.api.Currencies;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.CurrencySource;
+import net.vexelon.currencybg.srv.db.models.SourceUpdateInfo;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 
 public class DataSource implements DataSourceInterface {
@@ -33,7 +35,6 @@ public class DataSource implements DataSourceInterface {
 
 	@Override
 	public Connection connect() throws DataSourceException {
-
 		try {
 
 			Class.forName(Defs.DB_DRIVER);
@@ -56,9 +57,8 @@ public class DataSource implements DataSourceInterface {
 			// System.out.println(e.getMessage());
 
 		}
-
 		// return dbConnection;
-	};
+	}
 
 	@Override
 	public void close() {
@@ -289,7 +289,8 @@ public class DataSource implements DataSourceInterface {
 			}
 
 			Gson gson = new GsonBuilder().setDateFormat(Defs.DATEFORMAT_ISO_8601).create();
-			Type type = new TypeToken<List<CurrencyData>>() {}.getType();
+			Type type = new TypeToken<List<CurrencyData>>() {
+			}.getType();
 			json = gson.toJson(currencies, type);
 
 			System.out.println(json);
@@ -363,10 +364,10 @@ public class DataSource implements DataSourceInterface {
 			// Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd
 			// hh:mm:ss").create();
 			Gson gson = new GsonBuilder().setDateFormat(Defs.DATEFORMAT_ISO_8601).create();
-			Type type = new TypeToken<List<CurrencyData>>() {}.getType();
+			Type type = new TypeToken<List<CurrencyData>>() {
+			}.getType();
 			json = gson.toJson(currencies, type);
 
-			System.out.println(json);
 			List<CurrencyData> fromJson = gson.fromJson(json, type);
 
 			// for (CurrencyData task : fromJson) {
@@ -407,7 +408,7 @@ public class DataSource implements DataSourceInterface {
 
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
-		String sqlSelect = "SELECT source_id, status, update_period, last_update FROM cbg_sources WHERE source_id = ? and status = 0 ";
+		String sqlSelect = "SELECT source_id, status, update_period, last_update, update_props FROM cbg_sources WHERE source_id = ? and status = 0 ";
 
 		try {
 			preparedStatement = dbConnection.prepareStatement(sqlSelect);
@@ -419,12 +420,20 @@ public class DataSource implements DataSourceInterface {
 				source.setStatus(rs.getInt(2));
 				source.setUpdatePeriod(rs.getInt(3));
 				source.setLastUpdate(rs.getTimestamp(4));
-
+				if (rs.getString(5) != null) {
+					SourceUpdateInfo updateInfo = new Gson().fromJson(rs.getString(5),
+							new TypeToken<SourceUpdateInfo>() {
+							}.getType());
+					source.setUpdateInfo(updateInfo);
+				} else {
+					source.setUpdateInfo(SourceUpdateInfo.empty());
+				}
 			}
 
+		} catch (JsonParseException e) {
+			throw new DataSourceException(id + " - could not parse update info JSON data for currency!", e);
 		} catch (SQLException e) {
-			throw new DataSourceException("SQL Exception in method getSourceById!", e);
-
+			throw new DataSourceException(id + " - SQL Exception in method getSourceById!", e);
 		} finally {
 			// TODO - close 2 PreprareStatement
 			if (rs != null) {
@@ -455,7 +464,7 @@ public class DataSource implements DataSourceInterface {
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
 		StringBuffer sqlSelect = new StringBuffer(
-				"SELECT source_id, status, update_period, last_update FROM cbg_sources ");
+				"SELECT source_id, status, update_period, last_update, update_props FROM cbg_sources ");
 		if (isActiveOnly) {
 			sqlSelect.append("WHERE status = 0 ");
 		}
@@ -470,14 +479,27 @@ public class DataSource implements DataSourceInterface {
 				source.setUpdatePeriod(rs.getInt(3));
 				source.setLastUpdate(rs.getTimestamp(4));
 
-				listSource.add(source);
-				source = new CurrencySource();
+				try {
+					if (rs.getString(5) != null) {
+						SourceUpdateInfo updateInfo = new Gson().fromJson(rs.getString(5),
+								new TypeToken<SourceUpdateInfo>() {
+								}.getType());
+						source.setUpdateInfo(updateInfo);
+					} else {
+						source.setUpdateInfo(SourceUpdateInfo.empty());
+					}
 
+					listSource.add(source);
+				} catch (JsonParseException e) {
+					throw new DataSourceException(
+							source.getSourceId() + " - could not parse update info JSON data for currency!", e);
+				}
+
+				source = new CurrencySource();
 			}
 
 		} catch (SQLException e) {
 			throw new DataSourceException("SQL Exception in method getAllSources!", e);
-
 		} finally {
 			// TODO - close 2 PreprareStatement
 			if (rs != null) {

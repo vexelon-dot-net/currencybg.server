@@ -14,6 +14,7 @@ import net.vexelon.currencybg.srv.db.DataSourceException;
 import net.vexelon.currencybg.srv.db.DataSourceInterface;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.CurrencySource;
+import net.vexelon.currencybg.srv.db.models.SourceUpdateInfo;
 import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.remote.Source;
 import net.vexelon.currencybg.srv.remote.SourceException;
@@ -44,6 +45,13 @@ public class Heartbeat implements Runnable {
 				 */
 				Calendar nowCalendar = Calendar.getInstance();
 				for (CurrencySource currencySource : allSources) {
+
+					// check if update is allowed on this date
+					SourceUpdateInfo updateInfo = currencySource.getUpdateInfo();
+					if (!updateInfo.isEmpty()) {
+						// TODO
+						log.debug("*** UPDATE INFO: {}", updateInfo.toString());
+					}
 
 					// checks if it is time to update this source entry
 					Calendar sourceCalendar = Calendar.getInstance();

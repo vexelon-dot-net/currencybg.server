@@ -25,6 +25,16 @@ public class SourceUpdateInfo {
 	@SerializedName("sundays")
 	private boolean enabledOnSunday;
 
+	private final boolean isEmpty;
+
+	public static SourceUpdateInfo empty() {
+		return new SourceUpdateInfo(true);
+	}
+
+	private SourceUpdateInfo(boolean isEmpty) {
+		this.isEmpty = isEmpty;
+	}
+
 	private Calendar parseTime(String value) throws ParseException {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(TIME_FORMAT);
 		Date date = dateFormat.parse(value);
@@ -88,6 +98,16 @@ public class SourceUpdateInfo {
 
 	public void setEnabledOnSunday(boolean enabledOnSunday) {
 		this.enabledOnSunday = enabledOnSunday;
+	}
+
+	public boolean isEmpty() {
+		return isEmpty;
+	}
+
+	@Override
+	public String toString() {
+		return "SourceUpdateInfo [notBefore=" + notBefore + ", notAfter=" + notAfter + ", enabledOnWeekends="
+				+ enabledOnWeekends + ", enabledOnSunday=" + enabledOnSunday + "]";
 	}
 
 }
