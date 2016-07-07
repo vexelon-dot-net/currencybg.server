@@ -1,0 +1,6 @@
+{
+	"notBefore": "1:13",
+	"notAfter": "23:59",
+	"weekends": false,
+	"sundays": true
+}

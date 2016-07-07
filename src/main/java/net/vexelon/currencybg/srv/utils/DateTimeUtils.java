@@ -25,18 +25,9 @@ public class DateTimeUtils {
 	public static int getYearByDate(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
-		int year = cal.get(Calendar.YEAR);
-
-		return year;
+		return cal.get(Calendar.YEAR);
 	}
 
-	/**
-	 * Р”Р°С‚Р°С‚Р° СЃРµ СЃРµС‚РІР°, РєР°С‚Рѕ СЃРµ РІР·РµРјРµ С‚РµРєСѓС‰Р°С‚Р°
-	 * РіРѕРґРёРЅР° Рё СЃРµ РґРѕР±Р°РІРё 01.01.
-	 * Р�Р·РїРѕР»Р·РІР° СЃРµ Р·Р° С„РёРєСЃРёСЂР°РЅРёС‚Рµ РІР°Р»СѓС‚Рё.
-	 * 
-	 * @return
-	 */
 	public static Date getStartOfYear() {
 		int year = Calendar.getInstance().get(Calendar.YEAR);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
@@ -50,4 +41,11 @@ public class DateTimeUtils {
 		}
 		return currentYear;
 	}
+
+	public static Calendar getCalToday() {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
+		return cal;
+	}
+
 }

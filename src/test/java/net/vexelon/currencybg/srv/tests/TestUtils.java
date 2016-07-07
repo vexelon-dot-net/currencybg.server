@@ -19,7 +19,6 @@ public final class TestUtils {
 		cal.set(Calendar.YEAR, y);
 		cal.set(Calendar.MONTH, m - 1);
 		cal.set(Calendar.DAY_OF_MONTH, d);
-		System.out.println(cal.getTime());
 		return cal.getTime();
 	}
 
@@ -32,7 +31,22 @@ public final class TestUtils {
 		cal.set(Calendar.YEAR, y);
 		cal.set(Calendar.MONTH, m - 1);
 		cal.set(Calendar.DAY_OF_MONTH, d);
-		System.out.println(cal.getTime());
 		return cal.getTime();
 	}
+
+	public static Calendar newCal(int hour, int minute) {
+		Calendar cal = Calendar.getInstance();
+		Date now = new Date();
+		cal.setTime(now);
+		cal.set(Calendar.HOUR_OF_DAY, hour);
+		cal.set(Calendar.MINUTE, minute);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal;
+	}
+
+	public static Date newDate(int hour, int minute) {
+		return newCal(hour, minute).getTime();
+	}
+
 }
