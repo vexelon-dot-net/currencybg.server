@@ -9,15 +9,36 @@ import com.google.gson.annotations.SerializedName;
 
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 
+/**
+ * Json model representation of currency source restrictions
+ * 
+ * <pre>
+ * { 
+ * 	"wdNotBefore": "06:00", 
+ * 	"wdNotAfter": "23:00", 
+ * 	"weNotBefore": "06:00",
+ * 	"weNotAfter": "23:00", 
+ * 	"weekends": true, 
+ * 	"sundays": false 
+ * }
+ * </pre>
+ *
+ */
 public class SourceUpdateRestrictions {
 
 	public static final String TIME_FORMAT = "HH:mm";
 
-	@SerializedName("notBefore")
-	private String notBefore;
+	@SerializedName("wdNotBefore")
+	private String weekdaysNotBefore;
 
-	@SerializedName("notAfter")
-	private String notAfter;
+	@SerializedName("wdNotAfter")
+	private String weekdaysNotAfter;
+
+	@SerializedName("weNotBefore")
+	private String weekendsNotBefore;
+
+	@SerializedName("weNotAfter")
+	private String weekendsNotAfter;
 
 	@SerializedName("weekends")
 	private boolean enabledOnWeekends;
@@ -50,38 +71,72 @@ public class SourceUpdateRestrictions {
 		return calendar;
 	}
 
-	public String getNotAfter() {
-		return notAfter;
+	public String getWeekdaysNotAfter() {
+		return weekdaysNotAfter;
 	}
 
 	/**
 	 * 
-	 * @return today's time and minute at which to stop updating
+	 * @return week day time and minute at which to stop updating
 	 * @throws ParseException
 	 */
-	public Calendar getNotAfterCalendar() throws ParseException {
-		return parseTime(notAfter);
+	public Calendar getWeekdaysNotAfterCalendar() throws ParseException {
+		return parseTime(weekdaysNotAfter);
 	}
 
-	public void setNotAfter(String notAfter) {
-		this.notAfter = notAfter;
+	public void setWeekdaysNotAfter(String notAfter) {
+		this.weekdaysNotAfter = notAfter;
 	}
 
-	public String getNotBefore() {
-		return notBefore;
+	public String getWeekdaysNotBefore() {
+		return weekdaysNotBefore;
 	}
 
 	/**
 	 * 
-	 * @return today's time and minute at which to start updating
+	 * @return week day time and minute at which to start updating
 	 * @throws ParseException
 	 */
-	public Calendar getNotBeforeCalendar() throws ParseException {
-		return parseTime(notBefore);
+	public Calendar getWeekdaysNotBeforeCalendar() throws ParseException {
+		return parseTime(weekdaysNotBefore);
 	}
 
-	public void setNotBefore(String notBefore) {
-		this.notBefore = notBefore;
+	public void setWeekdaysNotBefore(String notBefore) {
+		this.weekdaysNotBefore = notBefore;
+	}
+
+	public String getWeekendsNotAfter() {
+		return weekendsNotAfter;
+	}
+
+	/**
+	 * 
+	 * @return weekend time and minute at which to stop updating
+	 * @throws ParseException
+	 */
+	public Calendar getWeekendsNotAfterCalendar() throws ParseException {
+		return parseTime(weekendsNotAfter);
+	}
+
+	public void setWeekendsNotAfter(String weekendsNotAfter) {
+		this.weekendsNotAfter = weekendsNotAfter;
+	}
+
+	public String getWeekendsNotBefore() {
+		return weekendsNotBefore;
+	}
+
+	/**
+	 * 
+	 * @return weekend time and minute at which to start updating
+	 * @throws ParseException
+	 */
+	public Calendar getWeekendsNotBeforeCalendar() throws ParseException {
+		return parseTime(weekendsNotBefore);
+	}
+
+	public void setWeekendsNotBefore(String weekendsNotBefore) {
+		this.weekendsNotBefore = weekendsNotBefore;
 	}
 
 	public boolean isEnabledOnWeekends() {
@@ -106,8 +161,10 @@ public class SourceUpdateRestrictions {
 
 	@Override
 	public String toString() {
-		return "SourceUpdateInfo [notBefore=" + notBefore + ", notAfter=" + notAfter + ", enabledOnWeekends="
-				+ enabledOnWeekends + ", enabledOnSunday=" + enabledOnSunday + "]";
+		return "SourceUpdateRestrictions [weekDaysNotBefore=" + weekdaysNotBefore + ", weekDaysNotAfter="
+				+ weekdaysNotAfter + ", weekendsNotBefore=" + weekendsNotBefore + ", weekendsNotAfter="
+				+ weekendsNotAfter + ", enabledOnWeekends=" + enabledOnWeekends + ", enabledOnSunday=" + enabledOnSunday
+				+ ", isEmpty=" + isEmpty + "]";
 	}
 
 }

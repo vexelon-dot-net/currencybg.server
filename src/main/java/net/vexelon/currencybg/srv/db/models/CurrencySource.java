@@ -12,6 +12,7 @@ public class CurrencySource {
 	private SourceUpdateRestrictions updateRestrictions;
 
 	public CurrencySource() {
+		// empty
 	}
 
 	public CurrencySource(int sourceId, String sourceName, int status, int updatePeriod, Date lastUpdate) {

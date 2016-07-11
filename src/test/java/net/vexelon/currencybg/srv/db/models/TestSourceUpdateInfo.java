@@ -35,11 +35,13 @@ public class TestSourceUpdateInfo {
 			SourceUpdateRestrictions updateInfo = gson
 					.fromJson(new InputStreamReader(TestUtils.getTestResource("/sourceupdateinfo_01.json")), type);
 
-			assertEquals("09:00", updateInfo.getNotBefore());
-			assertTrue(updateInfo.getNotBeforeCalendar().getTime().equals(TestUtils.newDate(9, 0)));
-			assertEquals("18:00", updateInfo.getNotAfter());
-			assertTrue(updateInfo.getNotAfterCalendar().getTime().equals(TestUtils.newDate(18, 0)));
-			assertTrue(updateInfo.getNotAfterCalendar().equals(TestUtils.newCal(18, 0)));
+			assertEquals("09:00", updateInfo.getWeekdaysNotBefore());
+			assertTrue(updateInfo.getWeekdaysNotBeforeCalendar().getTime().equals(TestUtils.newDate(9, 0)));
+			assertEquals("18:00", updateInfo.getWeekdaysNotAfter());
+			assertTrue(updateInfo.getWeekdaysNotAfterCalendar().getTime().equals(TestUtils.newDate(18, 0)));
+			assertTrue(updateInfo.getWeekdaysNotAfterCalendar().equals(TestUtils.newCal(18, 0)));
+			assertTrue(updateInfo.getWeekendsNotBeforeCalendar().getTime().equals(TestUtils.newDate(12, 0)));
+			assertTrue(updateInfo.getWeekendsNotAfterCalendar().getTime().equals(TestUtils.newDate(23, 0)));
 
 			assertTrue(updateInfo.isEnabledOnSunday());
 			assertTrue(updateInfo.isEnabledOnWeekends());
@@ -56,10 +58,10 @@ public class TestSourceUpdateInfo {
 			SourceUpdateRestrictions updateInfo = gson
 					.fromJson(new InputStreamReader(TestUtils.getTestResource("/sourceupdateinfo_02.json")), type);
 
-			assertEquals("1:13", updateInfo.getNotBefore());
-			assertTrue(updateInfo.getNotBeforeCalendar().equals(TestUtils.newCal(1, 13)));
-			assertEquals("23:59", updateInfo.getNotAfter());
-			assertTrue(updateInfo.getNotAfterCalendar().equals(TestUtils.newCal(23, 59)));
+			assertEquals("1:13", updateInfo.getWeekdaysNotBefore());
+			assertTrue(updateInfo.getWeekdaysNotBeforeCalendar().equals(TestUtils.newCal(1, 13)));
+			assertEquals("23:59", updateInfo.getWeekdaysNotAfter());
+			assertTrue(updateInfo.getWeekdaysNotAfterCalendar().equals(TestUtils.newCal(23, 59)));
 
 			assertTrue(updateInfo.isEnabledOnSunday());
 			assertFalse(updateInfo.isEnabledOnWeekends());
