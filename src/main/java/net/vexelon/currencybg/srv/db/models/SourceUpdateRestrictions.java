@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 
-public class SourceUpdateInfo {
+public class SourceUpdateRestrictions {
 
 	public static final String TIME_FORMAT = "HH:mm";
 
@@ -27,11 +27,11 @@ public class SourceUpdateInfo {
 
 	private final boolean isEmpty;
 
-	public static SourceUpdateInfo empty() {
-		return new SourceUpdateInfo(true);
+	public static SourceUpdateRestrictions empty() {
+		return new SourceUpdateRestrictions(true);
 	}
 
-	private SourceUpdateInfo(boolean isEmpty) {
+	private SourceUpdateRestrictions(boolean isEmpty) {
 		this.isEmpty = isEmpty;
 	}
 

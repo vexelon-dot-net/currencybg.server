@@ -9,7 +9,7 @@ public class CurrencySource {
 	private int status;
 	private int updatePeriod;
 	private Date lastUpdate;
-	private SourceUpdateInfo updateInfo;
+	private SourceUpdateRestrictions updateRestrictions;
 
 	public CurrencySource() {
 	}
@@ -62,19 +62,19 @@ public class CurrencySource {
 		this.lastUpdate = lastUpdate;
 	}
 
-	public SourceUpdateInfo getUpdateInfo() {
-		return updateInfo;
+	public SourceUpdateRestrictions getUpdateRestrictions() {
+		return updateRestrictions;
 	}
 
-	public void setUpdateInfo(SourceUpdateInfo updateInfo) {
-		this.updateInfo = updateInfo;
+	public void setUpdateRestrictions(SourceUpdateRestrictions updateInfo) {
+		this.updateRestrictions = updateInfo;
 	}
 
 	@Override
 	public String toString() {
 		return "CurrencySource [sourceId=" + sourceId + ", sourceName=" + sourceName + ", status=" + status
-				+ ", updatePeriod=" + updatePeriod + ", lastUpdate=" + lastUpdate + ", updateInfo="
-				+ (updateInfo != null ? updateInfo.toString() : "") + "]";
+				+ ", updatePeriod=" + updatePeriod + ", lastUpdate=" + lastUpdate + ", updateRestrictions="
+				+ (updateRestrictions != null ? updateRestrictions.toString() : "") + "]";
 	}
 
 }

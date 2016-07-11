@@ -14,7 +14,7 @@ import net.vexelon.currencybg.srv.db.DataSourceException;
 import net.vexelon.currencybg.srv.db.DataSourceInterface;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.CurrencySource;
-import net.vexelon.currencybg.srv.db.models.SourceUpdateInfo;
+import net.vexelon.currencybg.srv.db.models.SourceUpdateRestrictions;
 import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.remote.Source;
 import net.vexelon.currencybg.srv.remote.SourceException;
@@ -47,7 +47,7 @@ public class Heartbeat implements Runnable {
 				for (CurrencySource currencySource : allSources) {
 
 					// check if update is allowed on this date
-					SourceUpdateInfo updateInfo = currencySource.getUpdateInfo();
+					SourceUpdateRestrictions updateInfo = currencySource.getUpdateRestrictions();
 					if (!updateInfo.isEmpty()) {
 						// TODO
 						log.debug("*** UPDATE INFO: {}", updateInfo.toString());

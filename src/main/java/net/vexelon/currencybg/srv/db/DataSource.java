@@ -24,7 +24,7 @@ import net.vexelon.currencybg.srv.Defs;
 import net.vexelon.currencybg.srv.api.Currencies;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.CurrencySource;
-import net.vexelon.currencybg.srv.db.models.SourceUpdateInfo;
+import net.vexelon.currencybg.srv.db.models.SourceUpdateRestrictions;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 
 public class DataSource implements DataSourceInterface {
@@ -408,7 +408,7 @@ public class DataSource implements DataSourceInterface {
 
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
-		String sqlSelect = "SELECT source_id, status, update_period, last_update, update_props FROM cbg_sources "
+		String sqlSelect = "SELECT source_id, status, update_period, last_update, update_restrictions FROM cbg_sources "
 				+ " WHERE source_id = ? and status = 0 ";
 
 		try {
@@ -422,12 +422,12 @@ public class DataSource implements DataSourceInterface {
 				source.setUpdatePeriod(rs.getInt(3));
 				source.setLastUpdate(rs.getTimestamp(4));
 				if (rs.getString(5) != null) {
-					SourceUpdateInfo updateInfo = new Gson().fromJson(rs.getString(5),
-							new TypeToken<SourceUpdateInfo>() {
+					SourceUpdateRestrictions updateInfo = new Gson().fromJson(rs.getString(5),
+							new TypeToken<SourceUpdateRestrictions>() {
 							}.getType());
-					source.setUpdateInfo(updateInfo);
+					source.setUpdateRestrictions(updateInfo);
 				} else {
-					source.setUpdateInfo(SourceUpdateInfo.empty());
+					source.setUpdateRestrictions(SourceUpdateRestrictions.empty());
 				}
 			}
 
@@ -465,7 +465,7 @@ public class DataSource implements DataSourceInterface {
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
 
-		String sqlSelect = "SELECT source_id, status, update_period, last_update, update_props FROM cbg_sources ";
+		String sqlSelect = "SELECT source_id, status, update_period, last_update, update_restrictions FROM cbg_sources ";
 		if (isActiveOnly) {
 			sqlSelect += "WHERE status = 0 ";
 		}
@@ -482,12 +482,12 @@ public class DataSource implements DataSourceInterface {
 
 				try {
 					if (rs.getString(5) != null) {
-						SourceUpdateInfo updateInfo = new Gson().fromJson(rs.getString(5),
-								new TypeToken<SourceUpdateInfo>() {
+						SourceUpdateRestrictions updateInfo = new Gson().fromJson(rs.getString(5),
+								new TypeToken<SourceUpdateRestrictions>() {
 								}.getType());
-						source.setUpdateInfo(updateInfo);
+						source.setUpdateRestrictions(updateInfo);
 					} else {
-						source.setUpdateInfo(SourceUpdateInfo.empty());
+						source.setUpdateRestrictions(SourceUpdateRestrictions.empty());
 					}
 
 					listSource.add(source);

@@ -23,7 +23,7 @@ public class TestSourceUpdateInfo {
 
 	@BeforeClass
 	public static void before() {
-		type = new TypeToken<SourceUpdateInfo>() {
+		type = new TypeToken<SourceUpdateRestrictions>() {
 		}.getType();
 
 		gson = new Gson();
@@ -32,7 +32,7 @@ public class TestSourceUpdateInfo {
 	@Test
 	public void test_Parse01() {
 		try {
-			SourceUpdateInfo updateInfo = gson
+			SourceUpdateRestrictions updateInfo = gson
 					.fromJson(new InputStreamReader(TestUtils.getTestResource("/sourceupdateinfo_01.json")), type);
 
 			assertEquals("09:00", updateInfo.getNotBefore());
@@ -53,7 +53,7 @@ public class TestSourceUpdateInfo {
 	@Test
 	public void test_Parse02() {
 		try {
-			SourceUpdateInfo updateInfo = gson
+			SourceUpdateRestrictions updateInfo = gson
 					.fromJson(new InputStreamReader(TestUtils.getTestResource("/sourceupdateinfo_02.json")), type);
 
 			assertEquals("1:13", updateInfo.getNotBefore());
