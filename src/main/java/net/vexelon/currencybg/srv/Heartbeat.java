@@ -18,7 +18,7 @@ import net.vexelon.currencybg.srv.db.models.SourceUpdateRestrictions;
 import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.remote.Source;
 import net.vexelon.currencybg.srv.remote.SourceException;
-import net.vexelon.currencybg.srv.reports.ConsoleReporter;
+import net.vexelon.currencybg.srv.reports.TelegramReporter;
 
 /**
  * Fetches currencies from remote server and imports them into the database.
@@ -66,7 +66,9 @@ public class Heartbeat implements Runnable {
 					if (sourceType != null) {
 						try {
 							// TODO: add proper reporter
-							final ConsoleReporter reporter = new ConsoleReporter();
+							// final ConsoleReporter reporter = new
+							// ConsoleReporter();
+							final TelegramReporter reporter = new TelegramReporter();
 							final Source source = sourceType.newInstance(reporter);
 
 							// set update datetime flag
