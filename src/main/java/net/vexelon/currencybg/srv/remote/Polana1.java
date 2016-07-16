@@ -62,6 +62,7 @@ public class Polana1 extends AbstractSource {
 			row++;
 			CurrencyData currencyData = new CurrencyData();
 			try {
+
 				currencyData.setDate(updateDate);
 				currencyData.setCode(child.child(1).text().replace("\u00a0", ""));
 				currencyData.setBuy(child.child(3).text().replace("\u00a0", ""));
