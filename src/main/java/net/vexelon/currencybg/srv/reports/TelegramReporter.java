@@ -35,16 +35,14 @@ public class TelegramReporter extends AbstractReporter {
 				buffer.toString().getBytes("UTF-8")), new Callback<SendDocument, SendResponse>() {
 					@Override
 					public void onFailure(SendDocument request, IOException e) {
-						log.error("Fail Telegram SendDocument: ", e);
+						log.error("Telegram SendDocument failed!", e);
 					};
 
 					@Override
 					public void onResponse(SendDocument request, SendResponse response) {
-
+						// do nothing
 					};
 				});
-
-		// System.out.println("Telegram: " + buffer.toString());
 	}
 
 }
