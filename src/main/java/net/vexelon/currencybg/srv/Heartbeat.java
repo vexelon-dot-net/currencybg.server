@@ -62,7 +62,6 @@ public class Heartbeat implements Runnable {
 					/*
 					 * Week days
 					 */
-
 					if (calToday.before(updateRestrictions.getWeekdaysNotBeforeCalendar())
 							|| calToday.after(updateRestrictions.getWeekdaysNotAfterCalendar())) {
 						return false;

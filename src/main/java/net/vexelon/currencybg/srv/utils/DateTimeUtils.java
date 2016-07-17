@@ -76,7 +76,7 @@ public class DateTimeUtils {
 	}
 
 	public boolean isWeekend(Date date) {
-		return isSaturday(date) && isSunday(date);
+		return isSaturday(date) || isSunday(date);
 	}
 
 	public boolean isWeekday(Date date) {
