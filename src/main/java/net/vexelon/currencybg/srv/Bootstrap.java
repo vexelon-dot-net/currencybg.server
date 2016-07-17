@@ -3,6 +3,7 @@ package net.vexelon.currencybg.srv;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.TimeZone;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -41,6 +42,25 @@ public class Bootstrap {
 			GlobalConfig.INSTANCE.createDefault(configFile, executor);
 		} else {
 			GlobalConfig.INSTANCE.load(configFile, executor);
+		}
+
+		// verify configuration
+		boolean zoneOK = false;
+		for (String zoneId : TimeZone.getAvailableIDs()) {
+			if (zoneId.equals(GlobalConfig.INSTANCE.getServerTimeZone())) {
+				zoneOK = true;
+				break;
+			}
+		}
+		if (!zoneOK) {
+			throw new RuntimeException(GlobalConfig.INSTANCE.getServerTimeZone() + " - time zone not found!");
+		}
+
+		if (GlobalConfig.INSTANCE.getBotToken().isEmpty()) {
+			log.warn("Telegram bot token is not set!");
+		}
+		if (GlobalConfig.INSTANCE.getBotChannel().isEmpty()) {
+			log.warn("Telegram bot channel is not set!");
 		}
 
 		log.trace("Booting threads ...");
