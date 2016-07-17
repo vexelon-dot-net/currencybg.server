@@ -31,7 +31,7 @@ public class Heartbeat implements Runnable {
 
 	private static final Logger log = LoggerFactory.getLogger(Heartbeat.class);
 
-	private boolean isUpdateRestricted(SourceUpdateRestrictions updateRestrictions) {
+	private boolean isUpdateGo(SourceUpdateRestrictions updateRestrictions) {
 		if (!updateRestrictions.isEmpty()) {
 			if (log.isTraceEnabled()) {
 				log.trace("Source Update Restrictions: {}", updateRestrictions.toString());
@@ -45,38 +45,38 @@ public class Heartbeat implements Runnable {
 
 				if (dateTimeUtils.isWeekend(today)) {
 					/*
-					 * Weekend
+					 * Weekends
 					 */
 					if (!updateRestrictions.isEnabledOnWeekends()) {
-						return true;
+						return false;
 					} else if (dateTimeUtils.isSunday(today) && !updateRestrictions.isEnabledOnSunday()) {
-						return true;
+						return false;
 					}
 
 					if (calToday.before(updateRestrictions.getWeekendsNotBeforeCalendar())
 							|| calToday.after(updateRestrictions.getWeekendsNotAfterCalendar())) {
-						return true;
+						return false;
 					}
 
 				} else if (dateTimeUtils.isWeekday(today)) {
 					/*
-					 * Week day
+					 * Week days
 					 */
 
 					if (calToday.before(updateRestrictions.getWeekdaysNotBeforeCalendar())
 							|| calToday.after(updateRestrictions.getWeekdaysNotAfterCalendar())) {
-						return true;
+						return false;
 					}
 				}
 			} catch (ParseException e) {
 				log.warn("Incorrect update restrictions format!", e);
 				// do not update, if time restrictions could not be parsed!
-				return true;
+				return false;
 			}
 		}
 
 		// all OK!
-		return false;
+		return true;
 	}
 
 	@Override
@@ -108,7 +108,7 @@ public class Heartbeat implements Runnable {
 
 					// check if update is allowed on this date
 					SourceUpdateRestrictions updateRestrictions = currencySource.getUpdateRestrictions();
-					if (isUpdateRestricted(updateRestrictions)) {
+					if (!isUpdateGo(updateRestrictions)) {
 						log.trace("Source ({}) updates are disabled for the current time/date!",
 								currencySource.getSourceId());
 						continue;

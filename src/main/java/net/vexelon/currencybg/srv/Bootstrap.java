@@ -26,7 +26,7 @@ public class Bootstrap {
 		log.trace("Running sanity tests ...");
 		testEncoding();
 
-		log.trace("Loading configuratons ...");
+		log.info("Loading configuratons ...");
 		if (StringUtils.isEmpty(Defs.CONFIG_PATH)) {
 			throw new RuntimeException("Fatal error. Global configuration env variable 'CBG_CFG_PATH' not defined!");
 		}
@@ -52,7 +52,9 @@ public class Bootstrap {
 				break;
 			}
 		}
-		if (!zoneOK) {
+		if (zoneOK) {
+			log.info("Server time zone is '{}'", GlobalConfig.INSTANCE.getServerTimeZone());
+		} else {
 			throw new RuntimeException(GlobalConfig.INSTANCE.getServerTimeZone() + " - time zone not found!");
 		}
 
@@ -63,7 +65,7 @@ public class Bootstrap {
 			log.warn("Telegram bot channel is not set!");
 		}
 
-		log.trace("Booting threads ...");
+		log.info("Booting threads ...");
 		executor.scheduleWithFixedDelay(new Heartbeat(), Defs.UPDATE_FIRST_INTERVAL, Defs.UPDATES_PERIODIC_INTERVAL,
 				TimeUnit.SECONDS);
 	}

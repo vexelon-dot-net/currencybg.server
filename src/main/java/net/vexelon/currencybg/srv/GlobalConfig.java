@@ -75,7 +75,9 @@ public enum GlobalConfig {
 	}
 
 	public void close() {
-		trigger.shutdown(false);
+		if (trigger != null) {
+			trigger.shutdown(false);
+		}
 	}
 
 	private ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> createConfigurationBuilder(File file,
