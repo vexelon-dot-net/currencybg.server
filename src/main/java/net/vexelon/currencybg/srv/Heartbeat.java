@@ -53,8 +53,11 @@ public class Heartbeat implements Runnable {
 						return false;
 					}
 
-					if (calToday.before(updateRestrictions.getWeekendsNotBeforeCalendar())
-							|| calToday.after(updateRestrictions.getWeekendsNotAfterCalendar())) {
+					if (calToday
+							.before(dateTimeUtils.toCalendar(updateRestrictions.getWeekendsNotBefore(),
+									Defs.DATETIME_RESTR_FORMAT))
+							|| calToday.after(dateTimeUtils.toCalendar(updateRestrictions.getWeekendsNotAfter(),
+									Defs.DATETIME_RESTR_FORMAT))) {
 						return false;
 					}
 
@@ -62,8 +65,11 @@ public class Heartbeat implements Runnable {
 					/*
 					 * Week days
 					 */
-					if (calToday.before(updateRestrictions.getWeekdaysNotBeforeCalendar())
-							|| calToday.after(updateRestrictions.getWeekdaysNotAfterCalendar())) {
+					if (calToday
+							.before(dateTimeUtils.toCalendar(updateRestrictions.getWeekdaysNotBefore(),
+									Defs.DATETIME_RESTR_FORMAT))
+							|| calToday.after(dateTimeUtils.toCalendar(updateRestrictions.getWeekdaysNotAfter(),
+									Defs.DATETIME_RESTR_FORMAT))) {
 						return false;
 					}
 				}

@@ -13,6 +13,7 @@ public final class Defs {
 	 */
 	public static final String DATETIME_DEFAULT_TIMEZONE = "Europe/Sofia";
 	public static final String DATETIME_FORMAT = "yyyy-MM-dd";
+	public static final String DATETIME_RESTR_FORMAT = "HH:mm";
 
 	/*
 	 * Global configuration

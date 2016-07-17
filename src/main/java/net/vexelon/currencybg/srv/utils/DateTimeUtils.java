@@ -57,6 +57,19 @@ public class DateTimeUtils {
 		return currentYear;
 	}
 
+	public Calendar toCalendar(String value, String format) throws ParseException {
+		SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+		Date date = dateFormat.parse(value);
+		Calendar calendar = getCal(date);
+
+		Calendar today = getCalToday();
+		calendar.set(Calendar.YEAR, today.get(Calendar.YEAR));
+		calendar.set(Calendar.MONTH, today.get(Calendar.MONTH));
+		calendar.set(Calendar.DATE, today.get(Calendar.DATE));
+
+		return calendar;
+	}
+
 	public Calendar getCal(Date date) {
 		Calendar cal = Calendar.getInstance(timeZone);
 		cal.setTime(date);

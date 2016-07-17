@@ -7,6 +7,9 @@ import static org.junit.Assert.fail;
 
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -14,7 +17,9 @@ import org.junit.Test;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import net.vexelon.currencybg.srv.Defs;
 import net.vexelon.currencybg.srv.tests.TestUtils;
+import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 
 public class TestSourceUpdateInfo {
 
@@ -29,6 +34,10 @@ public class TestSourceUpdateInfo {
 		gson = new Gson();
 	}
 
+	private Calendar toCal(String value) throws ParseException {
+		return new DateTimeUtils(TimeZone.getDefault()).toCalendar(value, Defs.DATETIME_RESTR_FORMAT);
+	}
+
 	@Test
 	public void test_Parse01() {
 		try {
@@ -36,12 +45,12 @@ public class TestSourceUpdateInfo {
 					.fromJson(new InputStreamReader(TestUtils.getTestResource("/sourceupdateinfo_01.json")), type);
 
 			assertEquals("09:00", updateInfo.getWeekdaysNotBefore());
-			assertTrue(updateInfo.getWeekdaysNotBeforeCalendar().getTime().equals(TestUtils.newDate(9, 0)));
+			assertTrue(toCal(updateInfo.getWeekdaysNotBefore()).getTime().equals(TestUtils.newDate(9, 0)));
 			assertEquals("18:00", updateInfo.getWeekdaysNotAfter());
-			assertTrue(updateInfo.getWeekdaysNotAfterCalendar().getTime().equals(TestUtils.newDate(18, 0)));
-			assertTrue(updateInfo.getWeekdaysNotAfterCalendar().equals(TestUtils.newCal(18, 0)));
-			assertTrue(updateInfo.getWeekendsNotBeforeCalendar().getTime().equals(TestUtils.newDate(12, 0)));
-			assertTrue(updateInfo.getWeekendsNotAfterCalendar().getTime().equals(TestUtils.newDate(23, 0)));
+			assertTrue(toCal(updateInfo.getWeekdaysNotAfter()).getTime().equals(TestUtils.newDate(18, 0)));
+			assertTrue(toCal(updateInfo.getWeekdaysNotAfter()).equals(TestUtils.newCal(18, 0)));
+			assertTrue(toCal(updateInfo.getWeekendsNotBefore()).getTime().equals(TestUtils.newDate(12, 0)));
+			assertTrue(toCal(updateInfo.getWeekendsNotAfter()).getTime().equals(TestUtils.newDate(23, 0)));
 
 			assertTrue(updateInfo.isEnabledOnSunday());
 			assertTrue(updateInfo.isEnabledOnWeekends());
@@ -59,9 +68,9 @@ public class TestSourceUpdateInfo {
 					.fromJson(new InputStreamReader(TestUtils.getTestResource("/sourceupdateinfo_02.json")), type);
 
 			assertEquals("1:13", updateInfo.getWeekdaysNotBefore());
-			assertTrue(updateInfo.getWeekdaysNotBeforeCalendar().equals(TestUtils.newCal(1, 13)));
+			assertTrue(toCal(updateInfo.getWeekdaysNotBefore()).equals(TestUtils.newCal(1, 13)));
 			assertEquals("23:59", updateInfo.getWeekdaysNotAfter());
-			assertTrue(updateInfo.getWeekdaysNotAfterCalendar().equals(TestUtils.newCal(23, 59)));
+			assertTrue(toCal(updateInfo.getWeekdaysNotAfter()).equals(TestUtils.newCal(23, 59)));
 
 			assertTrue(updateInfo.isEnabledOnSunday());
 			assertFalse(updateInfo.isEnabledOnWeekends());
