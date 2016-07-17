@@ -9,7 +9,10 @@ import net.vexelon.currencybg.srv.reports.Reporter;
 
 public enum Sources {
 
-	BNB(1), FIB(100), TAVEX(200), POLANA1(300);
+	BNB(1),
+	FIB(100),
+	TAVEX(200),
+	POLANA1(300);
 
 	private int id;
 

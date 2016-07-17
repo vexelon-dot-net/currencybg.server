@@ -7,6 +7,7 @@ import java.util.Date;
 
 import com.google.gson.annotations.SerializedName;
 
+import net.vexelon.currencybg.srv.GlobalConfig;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 
 /**
@@ -63,7 +64,7 @@ public class SourceUpdateRestrictions {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
 
-		Calendar today = DateTimeUtils.getCalToday();
+		Calendar today = new DateTimeUtils(GlobalConfig.INSTANCE.getServerTimeZone()).getCalToday();
 		calendar.set(Calendar.YEAR, today.get(Calendar.YEAR));
 		calendar.set(Calendar.MONTH, today.get(Calendar.MONTH));
 		calendar.set(Calendar.DATE, today.get(Calendar.DATE));

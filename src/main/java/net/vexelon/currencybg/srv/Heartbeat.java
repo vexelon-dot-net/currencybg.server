@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -37,17 +38,18 @@ public class Heartbeat implements Runnable {
 			}
 
 			try {
-
+				DateTimeUtils dateTimeUtils = new DateTimeUtils(
+						TimeZone.getTimeZone(GlobalConfig.INSTANCE.getServerTimeZone()));
 				Date today = new Date();
-				Calendar calToday = DateTimeUtils.getCal(today);
+				Calendar calToday = dateTimeUtils.getCal(today);
 
-				if (DateTimeUtils.isWeekend(today)) {
+				if (dateTimeUtils.isWeekend(today)) {
 					/*
 					 * Weekend
 					 */
 					if (!updateRestrictions.isEnabledOnWeekends()) {
 						return true;
-					} else if (DateTimeUtils.isSunday(today) && !updateRestrictions.isEnabledOnSunday()) {
+					} else if (dateTimeUtils.isSunday(today) && !updateRestrictions.isEnabledOnSunday()) {
 						return true;
 					}
 
@@ -56,7 +58,7 @@ public class Heartbeat implements Runnable {
 						return true;
 					}
 
-				} else if (DateTimeUtils.isWeekday(today)) {
+				} else if (dateTimeUtils.isWeekday(today)) {
 					/*
 					 * Week day
 					 */
