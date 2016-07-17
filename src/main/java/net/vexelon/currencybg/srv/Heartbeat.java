@@ -1,6 +1,7 @@
 package net.vexelon.currencybg.srv;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -19,6 +20,7 @@ import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.remote.Source;
 import net.vexelon.currencybg.srv.remote.SourceException;
 import net.vexelon.currencybg.srv.reports.TelegramReporter;
+import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 
 /**
  * Fetches currencies from remote server and imports them into the database.
@@ -27,6 +29,53 @@ import net.vexelon.currencybg.srv.reports.TelegramReporter;
 public class Heartbeat implements Runnable {
 
 	private static final Logger log = LoggerFactory.getLogger(Heartbeat.class);
+
+	private boolean isUpdateRestricted(SourceUpdateRestrictions updateRestrictions) {
+		if (!updateRestrictions.isEmpty()) {
+			if (log.isTraceEnabled()) {
+				log.trace("Source Update Restrictions: {}", updateRestrictions.toString());
+			}
+
+			try {
+
+				Date today = new Date();
+				Calendar calToday = DateTimeUtils.getCal(today);
+
+				if (DateTimeUtils.isWeekend(today)) {
+					/*
+					 * Weekend
+					 */
+					if (!updateRestrictions.isEnabledOnWeekends()) {
+						return true;
+					} else if (DateTimeUtils.isSunday(today) && !updateRestrictions.isEnabledOnSunday()) {
+						return true;
+					}
+
+					if (calToday.before(updateRestrictions.getWeekendsNotBeforeCalendar())
+							|| calToday.after(updateRestrictions.getWeekendsNotAfterCalendar())) {
+						return true;
+					}
+
+				} else if (DateTimeUtils.isWeekday(today)) {
+					/*
+					 * Week day
+					 */
+
+					if (calToday.before(updateRestrictions.getWeekdaysNotBeforeCalendar())
+							|| calToday.after(updateRestrictions.getWeekdaysNotAfterCalendar())) {
+						return true;
+					}
+				}
+			} catch (ParseException e) {
+				log.warn("Incorrect update restrictions format!", e);
+				// do not update, if time restrictions could not be parsed!
+				return true;
+			}
+		}
+
+		// all OK!
+		return false;
+	}
 
 	@Override
 	public void run() {
@@ -46,19 +95,20 @@ public class Heartbeat implements Runnable {
 				Calendar nowCalendar = Calendar.getInstance();
 				for (CurrencySource currencySource : allSources) {
 
-					// check if update is allowed on this date
-					SourceUpdateRestrictions updateInfo = currencySource.getUpdateRestrictions();
-					if (!updateInfo.isEmpty()) {
-						// TODO
-						log.debug("*** UPDATE INFO: {}", updateInfo.toString());
-					}
-
 					// checks if it is time to update this source entry
 					Calendar sourceCalendar = Calendar.getInstance();
 					sourceCalendar.setTimeInMillis(currencySource.getLastUpdate().getTime()
 							+ TimeUnit.SECONDS.toMillis(currencySource.getUpdatePeriod()));
 					if (sourceCalendar.after(nowCalendar)) {
-						log.debug("Source ({}) update skipped.", currencySource.getSourceId());
+						log.trace("Source ({}) update skipped.", currencySource.getSourceId());
+						continue;
+					}
+
+					// check if update is allowed on this date
+					SourceUpdateRestrictions updateRestrictions = currencySource.getUpdateRestrictions();
+					if (isUpdateRestricted(updateRestrictions)) {
+						log.trace("Source ({}) updates are disabled for the current time/date!",
+								currencySource.getSourceId());
 						continue;
 					}
 

@@ -42,10 +42,29 @@ public class DateTimeUtils {
 		return currentYear;
 	}
 
-	public static Calendar getCalToday() {
+	public static Calendar getCal(Date date) {
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(new Date());
+		cal.setTime(date);
 		return cal;
 	}
 
+	public static Calendar getCalToday() {
+		return getCal(new Date());
+	}
+
+	public static boolean isSaturday(Date date) {
+		return getCal(date).get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY;
+	}
+
+	public static boolean isSunday(Date date) {
+		return getCal(date).get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY;
+	}
+
+	public static boolean isWeekend(Date date) {
+		return isSaturday(date) && isSunday(date);
+	}
+
+	public static boolean isWeekday(Date date) {
+		return !isWeekend(date);
+	}
 }
