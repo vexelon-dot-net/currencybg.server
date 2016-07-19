@@ -28,6 +28,7 @@ public enum GlobalConfig {
 	 *
 	 */
 	public enum Options {
+		TIMEZONE_SERVER("timezone.server"),
 		MAINTENANCE_ENABLED("maintenance.enabled"),
 		TELEGRAM_BOT_TOKEN("telegram.bot"),
 		TELEGRAM_CHANNEL("telegram.channel");
@@ -51,6 +52,7 @@ public enum GlobalConfig {
 			builder = createConfigurationBuilder(file, executor);
 
 			// defaults
+			setServerTimeZone(Defs.DATETIME_DEFAULT_TIMEZONE);
 			setMaintenanceEnabled(false);
 			setBotToken("");
 			setBotChannel("");
@@ -73,7 +75,9 @@ public enum GlobalConfig {
 	}
 
 	public void close() {
-		trigger.shutdown(false);
+		if (trigger != null) {
+			trigger.shutdown(false);
+		}
 	}
 
 	private ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> createConfigurationBuilder(File file,
@@ -99,6 +103,22 @@ public enum GlobalConfig {
 		} catch (ConfigurationException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	/**
+	 * 
+	 * @param timeZone
+	 */
+	public void setServerTimeZone(String timeZone) {
+		getConfig().setProperty(Options.TIMEZONE_SERVER.getName(), timeZone);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getServerTimeZone() {
+		return getConfig().getString(Options.TIMEZONE_SERVER.getName());
 	}
 
 	/**

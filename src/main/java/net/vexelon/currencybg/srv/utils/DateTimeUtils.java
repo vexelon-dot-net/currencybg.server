@@ -5,8 +5,23 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class DateTimeUtils {
+
+	protected TimeZone timeZone;
+
+	/**
+	 * 
+	 * @param timeZone
+	 */
+	public DateTimeUtils(TimeZone timeZone) {
+		this.timeZone = timeZone;
+	}
+
+	public DateTimeUtils(String timeZone) {
+		this(TimeZone.getTimeZone(timeZone));
+	}
 
 	public static Date parseStringToDate(String date, String format) throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat(format);
@@ -42,10 +57,42 @@ public class DateTimeUtils {
 		return currentYear;
 	}
 
-	public static Calendar getCalToday() {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(new Date());
+	public Calendar toCalendar(String value, String format) throws ParseException {
+		SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+		Date date = dateFormat.parse(value);
+		Calendar calendar = getCal(date);
+
+		Calendar today = getCalToday();
+		calendar.set(Calendar.YEAR, today.get(Calendar.YEAR));
+		calendar.set(Calendar.MONTH, today.get(Calendar.MONTH));
+		calendar.set(Calendar.DATE, today.get(Calendar.DATE));
+
+		return calendar;
+	}
+
+	public Calendar getCal(Date date) {
+		Calendar cal = Calendar.getInstance(timeZone);
+		cal.setTime(date);
 		return cal;
 	}
 
+	public Calendar getCalToday() {
+		return getCal(new Date());
+	}
+
+	public boolean isSaturday(Date date) {
+		return getCal(date).get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY;
+	}
+
+	public boolean isSunday(Date date) {
+		return getCal(date).get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY;
+	}
+
+	public boolean isWeekend(Date date) {
+		return isSaturday(date) || isSunday(date);
+	}
+
+	public boolean isWeekday(Date date) {
+		return !isWeekend(date);
+	}
 }

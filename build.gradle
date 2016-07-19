@@ -80,7 +80,7 @@ war {
 		def manifestClasspath = configurations.compile.collect { it.getName() }.join(',')
     	attributes (
     		"Class-Path": manifestClasspath,
-    		"Implementation-Vendor": 'Vexelon.NET Services',
+    		"Implementation-Vendor": 'Vexelon Net Services',
     		"Implementation-Title": 'CurrencyBG Server',
     		"Implementation-Version": appVersion
     	)		

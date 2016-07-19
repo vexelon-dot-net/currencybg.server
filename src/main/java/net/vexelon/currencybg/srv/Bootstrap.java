@@ -3,6 +3,7 @@ package net.vexelon.currencybg.srv;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.TimeZone;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -25,7 +26,7 @@ public class Bootstrap {
 		log.trace("Running sanity tests ...");
 		testEncoding();
 
-		log.trace("Loading configuratons ...");
+		log.info("Loading configuratons ...");
 		if (StringUtils.isEmpty(Defs.CONFIG_PATH)) {
 			throw new RuntimeException("Fatal error. Global configuration env variable 'CBG_CFG_PATH' not defined!");
 		}
@@ -43,7 +44,28 @@ public class Bootstrap {
 			GlobalConfig.INSTANCE.load(configFile, executor);
 		}
 
-		log.trace("Booting threads ...");
+		// verify configuration
+		boolean zoneOK = false;
+		for (String zoneId : TimeZone.getAvailableIDs()) {
+			if (zoneId.equals(GlobalConfig.INSTANCE.getServerTimeZone())) {
+				zoneOK = true;
+				break;
+			}
+		}
+		if (zoneOK) {
+			log.info("Server time zone is '{}'", GlobalConfig.INSTANCE.getServerTimeZone());
+		} else {
+			throw new RuntimeException(GlobalConfig.INSTANCE.getServerTimeZone() + " - time zone not found!");
+		}
+
+		if (GlobalConfig.INSTANCE.getBotToken().isEmpty()) {
+			log.warn("Telegram bot token is not set!");
+		}
+		if (GlobalConfig.INSTANCE.getBotChannel().isEmpty()) {
+			log.warn("Telegram bot channel is not set!");
+		}
+
+		log.info("Booting threads ...");
 		executor.scheduleWithFixedDelay(new Heartbeat(), Defs.UPDATE_FIRST_INTERVAL, Defs.UPDATES_PERIODIC_INTERVAL,
 				TimeUnit.SECONDS);
 	}
