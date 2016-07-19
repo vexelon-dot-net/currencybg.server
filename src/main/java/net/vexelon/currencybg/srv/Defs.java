@@ -40,6 +40,7 @@ public final class Defs {
 	public static final String HEADER_APIKEY = "APIKey";
 	public static final String API_JSON_CONTENT_TYPE = MediaType.APPLICATION_JSON_TYPE + ";charset=utf-8";
 
-	public static final String DATETIME_FORMAT = "yyyy-MM-dd";
+	public static final String DATE_FORMAT = "yyyy-MM-dd";
+	public static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
 }

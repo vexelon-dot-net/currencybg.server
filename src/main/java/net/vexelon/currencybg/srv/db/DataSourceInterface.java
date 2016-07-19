@@ -48,6 +48,27 @@ public interface DataSourceInterface extends Closeable {
 	Connection connect() throws DataSourceException;
 
 	/**
+	 * Fetches a list of currencies for the current date which are after
+	 * DateTime
+	 * 
+	 * @param timeFrom
+	 * @return
+	 * @throws DataSourceException
+	 */
+	String getAllCurrentRatesAfter(Date timeFrom) throws DataSourceException;
+
+	/**
+	 * Fetches a list of currencies for the current date which are after
+	 * DateTime by sourceId
+	 * 
+	 * @param sourceId
+	 * @param timeFrom
+	 * @return
+	 * @throws DataSourceException
+	 */
+	String getAllCurrentRatesAfter(Integer sourceId, Date timeFrom) throws DataSourceException;
+
+	/**
 	 * Fetches a list of currencies by date
 	 * 
 	 * @param dateFrom

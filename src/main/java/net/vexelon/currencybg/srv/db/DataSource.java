@@ -257,6 +257,97 @@ public class DataSource implements DataSourceInterface {
 	}
 
 	@Override
+	public String getAllCurrentRatesAfter(Date timeFrom) throws DataSourceException {
+		List<CurrencyData> currencies = Lists.newArrayList();
+		currencies = getCurrentRatesAfter(null, timeFrom);
+
+		Gson gson = new GsonBuilder().setDateFormat(Defs.DATEFORMAT_ISO_8601).create();
+		Type type = new TypeToken<List<CurrencyData>>() {
+		}.getType();
+		String json = gson.toJson(currencies, type);
+
+		return json;
+	}
+
+	@Override
+	public String getAllCurrentRatesAfter(Integer sourceId, Date timeFrom) throws DataSourceException {
+
+		List<CurrencyData> currencies = Lists.newArrayList();
+		currencies = getCurrentRatesAfter(sourceId, timeFrom);
+
+		Gson gson = new GsonBuilder().setDateFormat(Defs.DATEFORMAT_ISO_8601).create();
+		Type type = new TypeToken<List<CurrencyData>>() {
+		}.getType();
+		String json = gson.toJson(currencies, type);
+
+		return json;
+	}
+
+	private List<CurrencyData> getCurrentRatesAfter(Integer sourceId, Date timeFrom) throws DataSourceException {
+
+		List<CurrencyData> currencies = Lists.newArrayList();
+
+		PreparedStatement preparedStatement = null;
+		ResultSet rs = null;
+
+		// TODO - add and of the date
+		StringBuffer sqlSelect = new StringBuffer(
+				" SELECT code, ratio,  buy,  sell, date, source FROM cbg_currencies  WHERE date > ? ");
+		if (sourceId != null) {
+			sqlSelect.append("AND source = ? ");
+		}
+
+		sqlSelect.append("ORDER BY date asc");
+
+		log.trace("Selected rows {} in {}", sqlSelect, sqlSelect);
+
+		try {
+
+			preparedStatement = dbConnection.prepareStatement(sqlSelect.toString());
+			// TODO fix the problem with hours
+			preparedStatement.setDate(1, DateTimeUtils.convertJavaDateToSqlDate(timeFrom));
+			if (sourceId != null) {
+				preparedStatement.setInt(2, sourceId);
+			}
+
+			rs = preparedStatement.executeQuery();
+
+			while (rs.next()) {
+
+				currencies.add(new CurrencyData(rs.getString(1), rs.getInt(2), rs.getString(3), rs.getString(4),
+						rs.getTimestamp(5), rs.getInt(6)));
+
+			}
+
+			return currencies;
+
+		} catch (SQLException e) {
+			throw new DataSourceException("SQL Exception in method getCurrentRatesAfter!", e);
+
+		} finally {
+			// TODO - close 2 PreprareStatement
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					log.error("Problem with close of ResultSet(for selectSQL) in method getCurrentRatesAfter!", e);
+				}
+			}
+
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+					log.error("Problem with close of PreparedStatement(for selectSQL) in method getCurrentRatesAfter!",
+							e);
+				}
+			}
+
+		}
+
+	}
+
+	@Override
 	public String getAllRates(Integer sourceId, Date dateFrom) throws DataSourceException {
 		List<CurrencyData> currencies = Lists.newArrayList();
 
@@ -289,7 +380,8 @@ public class DataSource implements DataSourceInterface {
 			}
 
 			Gson gson = new GsonBuilder().setDateFormat(Defs.DATEFORMAT_ISO_8601).create();
-			Type type = new TypeToken<List<CurrencyData>>() {}.getType();
+			Type type = new TypeToken<List<CurrencyData>>() {
+			}.getType();
 			json = gson.toJson(currencies, type);
 
 			System.out.println(json);
@@ -363,7 +455,8 @@ public class DataSource implements DataSourceInterface {
 			// Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd
 			// hh:mm:ss").create();
 			Gson gson = new GsonBuilder().setDateFormat(Defs.DATEFORMAT_ISO_8601).create();
-			Type type = new TypeToken<List<CurrencyData>>() {}.getType();
+			Type type = new TypeToken<List<CurrencyData>>() {
+			}.getType();
 			json = gson.toJson(currencies, type);
 
 			System.out.println(json);
