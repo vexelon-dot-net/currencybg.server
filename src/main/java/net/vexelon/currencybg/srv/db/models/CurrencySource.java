@@ -9,13 +9,13 @@ public class CurrencySource {
 	private int status;
 	private int updatePeriod;
 	private Date lastUpdate;
+	private SourceUpdateRestrictions updateRestrictions;
 
 	public CurrencySource() {
-
+		// empty
 	}
 
 	public CurrencySource(int sourceId, String sourceName, int status, int updatePeriod, Date lastUpdate) {
-		super();
 		this.sourceId = sourceId;
 		this.sourceName = sourceName;
 		this.status = status;
@@ -63,10 +63,19 @@ public class CurrencySource {
 		this.lastUpdate = lastUpdate;
 	}
 
+	public SourceUpdateRestrictions getUpdateRestrictions() {
+		return updateRestrictions;
+	}
+
+	public void setUpdateRestrictions(SourceUpdateRestrictions updateInfo) {
+		this.updateRestrictions = updateInfo;
+	}
+
 	@Override
 	public String toString() {
 		return "CurrencySource [sourceId=" + sourceId + ", sourceName=" + sourceName + ", status=" + status
-				+ ", updatePeriod=" + updatePeriod + ", lastUpdate=" + lastUpdate + "]";
+				+ ", updatePeriod=" + updatePeriod + ", lastUpdate=" + lastUpdate + ", updateRestrictions="
+				+ (updateRestrictions != null ? updateRestrictions.toString() : "") + "]";
 	}
 
 }

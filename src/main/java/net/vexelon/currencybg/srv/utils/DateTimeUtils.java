@@ -5,8 +5,23 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class DateTimeUtils {
+
+	protected TimeZone timeZone;
+
+	/**
+	 * 
+	 * @param timeZone
+	 */
+	public DateTimeUtils(TimeZone timeZone) {
+		this.timeZone = timeZone;
+	}
+
+	public DateTimeUtils(String timeZone) {
+		this(TimeZone.getTimeZone(timeZone));
+	}
 
 	public static Date parseStringToDate(String date, String format) throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat(format);
@@ -25,18 +40,9 @@ public class DateTimeUtils {
 	public static int getYearByDate(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
-		int year = cal.get(Calendar.YEAR);
-
-		return year;
+		return cal.get(Calendar.YEAR);
 	}
 
-	/**
-	 * Р”Р°С‚Р°С‚Р° СЃРµ СЃРµС‚РІР°, РєР°С‚Рѕ СЃРµ РІР·РµРјРµ С‚РµРєСѓС‰Р°С‚Р°
-	 * РіРѕРґРёРЅР° Рё СЃРµ РґРѕР±Р°РІРё 01.01.
-	 * Р�Р·РїРѕР»Р·РІР° СЃРµ Р·Р° С„РёРєСЃРёСЂР°РЅРёС‚Рµ РІР°Р»СѓС‚Рё.
-	 * 
-	 * @return
-	 */
 	public static Date getStartOfYear() {
 		int year = Calendar.getInstance().get(Calendar.YEAR);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
@@ -49,5 +55,44 @@ public class DateTimeUtils {
 			// use default (today)
 		}
 		return currentYear;
+	}
+
+	public Calendar toCalendar(String value, String format) throws ParseException {
+		SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+		Date date = dateFormat.parse(value);
+		Calendar calendar = getCal(date);
+
+		Calendar today = getCalToday();
+		calendar.set(Calendar.YEAR, today.get(Calendar.YEAR));
+		calendar.set(Calendar.MONTH, today.get(Calendar.MONTH));
+		calendar.set(Calendar.DATE, today.get(Calendar.DATE));
+
+		return calendar;
+	}
+
+	public Calendar getCal(Date date) {
+		Calendar cal = Calendar.getInstance(timeZone);
+		cal.setTime(date);
+		return cal;
+	}
+
+	public Calendar getCalToday() {
+		return getCal(new Date());
+	}
+
+	public boolean isSaturday(Date date) {
+		return getCal(date).get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY;
+	}
+
+	public boolean isSunday(Date date) {
+		return getCal(date).get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY;
+	}
+
+	public boolean isWeekend(Date date) {
+		return isSaturday(date) || isSunday(date);
+	}
+
+	public boolean isWeekday(Date date) {
+		return !isWeekend(date);
 	}
 }

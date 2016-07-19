@@ -9,6 +9,13 @@ import javax.ws.rs.core.MediaType;
 public final class Defs {
 
 	/*
+	 * DateTime
+	 */
+	public static final String DATETIME_DEFAULT_TIMEZONE = "Europe/Sofia";
+	public static final String DATETIME_FORMAT = "yyyy-MM-dd";
+	public static final String DATETIME_RESTR_FORMAT = "HH:mm";
+
+	/*
 	 * Global configuration
 	 */
 	public static final String CONFIG_PATH = System.getenv("CBG_CFG_PATH");
@@ -40,7 +47,10 @@ public final class Defs {
 	public static final String HEADER_APIKEY = "APIKey";
 	public static final String API_JSON_CONTENT_TYPE = MediaType.APPLICATION_JSON_TYPE + ";charset=utf-8";
 
+<<<<<<< HEAD
 	public static final String DATE_FORMAT = "yyyy-MM-dd";
 	public static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
+=======
+>>>>>>> 56386dda70d81386c7604ec8c25c153601cc3d0f
 }

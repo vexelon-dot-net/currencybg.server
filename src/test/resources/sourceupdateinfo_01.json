@@ -1,0 +1,8 @@
+{
+	"wdNotBefore": "09:00",
+	"wdNotAfter": "18:00",
+	"weNotBefore": "12:00",
+	"weNotAfter": "23:00",	
+	"weekends": true,
+	"sundays": true
+}

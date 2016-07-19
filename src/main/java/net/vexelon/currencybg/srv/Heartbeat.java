@@ -1,9 +1,11 @@
 package net.vexelon.currencybg.srv;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -14,10 +16,12 @@ import net.vexelon.currencybg.srv.db.DataSourceException;
 import net.vexelon.currencybg.srv.db.DataSourceInterface;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.CurrencySource;
+import net.vexelon.currencybg.srv.db.models.SourceUpdateRestrictions;
 import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.remote.Source;
 import net.vexelon.currencybg.srv.remote.SourceException;
 import net.vexelon.currencybg.srv.reports.TelegramReporter;
+import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 
 /**
  * Fetches currencies from remote server and imports them into the database.
@@ -26,6 +30,59 @@ import net.vexelon.currencybg.srv.reports.TelegramReporter;
 public class Heartbeat implements Runnable {
 
 	private static final Logger log = LoggerFactory.getLogger(Heartbeat.class);
+
+	private boolean isUpdateGo(SourceUpdateRestrictions updateRestrictions) {
+		if (!updateRestrictions.isEmpty()) {
+			if (log.isTraceEnabled()) {
+				log.trace("Source Update Restrictions: {}", updateRestrictions.toString());
+			}
+
+			try {
+				DateTimeUtils dateTimeUtils = new DateTimeUtils(
+						TimeZone.getTimeZone(GlobalConfig.INSTANCE.getServerTimeZone()));
+				Date today = new Date();
+				Calendar calToday = dateTimeUtils.getCal(today);
+
+				if (dateTimeUtils.isWeekend(today)) {
+					/*
+					 * Weekends
+					 */
+					if (!updateRestrictions.isEnabledOnWeekends()) {
+						return false;
+					} else if (dateTimeUtils.isSunday(today) && !updateRestrictions.isEnabledOnSunday()) {
+						return false;
+					}
+
+					if (calToday
+							.before(dateTimeUtils.toCalendar(updateRestrictions.getWeekendsNotBefore(),
+									Defs.DATETIME_RESTR_FORMAT))
+							|| calToday.after(dateTimeUtils.toCalendar(updateRestrictions.getWeekendsNotAfter(),
+									Defs.DATETIME_RESTR_FORMAT))) {
+						return false;
+					}
+
+				} else if (dateTimeUtils.isWeekday(today)) {
+					/*
+					 * Week days
+					 */
+					if (calToday
+							.before(dateTimeUtils.toCalendar(updateRestrictions.getWeekdaysNotBefore(),
+									Defs.DATETIME_RESTR_FORMAT))
+							|| calToday.after(dateTimeUtils.toCalendar(updateRestrictions.getWeekdaysNotAfter(),
+									Defs.DATETIME_RESTR_FORMAT))) {
+						return false;
+					}
+				}
+			} catch (ParseException e) {
+				log.warn("Incorrect update restrictions format!", e);
+				// do not update, if time restrictions could not be parsed!
+				return false;
+			}
+		}
+
+		// all OK!
+		return true;
+	}
 
 	@Override
 	public void run() {
@@ -50,7 +107,15 @@ public class Heartbeat implements Runnable {
 					sourceCalendar.setTimeInMillis(currencySource.getLastUpdate().getTime()
 							+ TimeUnit.SECONDS.toMillis(currencySource.getUpdatePeriod()));
 					if (sourceCalendar.after(nowCalendar)) {
-						log.debug("Source ({}) update skipped.", currencySource.getSourceId());
+						log.trace("Source ({}) update skipped.", currencySource.getSourceId());
+						continue;
+					}
+
+					// check if update is allowed on this date
+					SourceUpdateRestrictions updateRestrictions = currencySource.getUpdateRestrictions();
+					if (!isUpdateGo(updateRestrictions)) {
+						log.trace("Source ({}) updates are disabled for the current time/date!",
+								currencySource.getSourceId());
 						continue;
 					}
 

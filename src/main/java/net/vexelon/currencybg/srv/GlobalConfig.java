@@ -28,7 +28,10 @@ public enum GlobalConfig {
 	 *
 	 */
 	public enum Options {
-		MAINTENANCE_ENABLED("maintenance.enabled");
+		TIMEZONE_SERVER("timezone.server"),
+		MAINTENANCE_ENABLED("maintenance.enabled"),
+		TELEGRAM_BOT_TOKEN("telegram.bot"),
+		TELEGRAM_CHANNEL("telegram.channel");
 
 		private String optName;
 
@@ -42,56 +45,6 @@ public enum GlobalConfig {
 	}
 
 	/**
-	 * Available configuration for Telegram bot
-	 * 
-	 * @author Tsvetoslav
-	 *
-	 */
-	public enum BOT_TOKEN {
-		TELEGRAM_BOT_TOKEN("telegram.bot");
-
-		private String botToken;
-
-		private BOT_TOKEN(String botToken) {
-			this.botToken = botToken;
-		}
-
-		public String getBotToken() {
-			return botToken;
-		}
-
-		public void setBotToken(String botToken) {
-			this.botToken = botToken;
-		}
-
-	}
-
-	/**
-	 * Available configuration for Telegram channel
-	 * 
-	 * @author Tsvetoslav
-	 *
-	 */
-	public enum CHANNEL {
-		TELEGRAM_CHANNEL("telegram.channel");
-
-		private String channel;
-
-		private CHANNEL(String channel) {
-			this.channel = channel;
-		}
-
-		public String getChannel() {
-			return channel;
-		}
-
-		public void setChannel(String channel) {
-			this.channel = channel;
-		}
-
-	}
-
-	/**
 	 * Set default server configurations
 	 */
 	public void createDefault(File file, ScheduledExecutorService executor) {
@@ -99,7 +52,10 @@ public enum GlobalConfig {
 			builder = createConfigurationBuilder(file, executor);
 
 			// defaults
+			setServerTimeZone(Defs.DATETIME_DEFAULT_TIMEZONE);
 			setMaintenanceEnabled(false);
+			setBotToken("");
+			setBotChannel("");
 
 			builder.save();
 			builder.setAutoSave(true);
@@ -119,7 +75,9 @@ public enum GlobalConfig {
 	}
 
 	public void close() {
-		trigger.shutdown(false);
+		if (trigger != null) {
+			trigger.shutdown(false);
+		}
 	}
 
 	private ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> createConfigurationBuilder(File file,
@@ -149,6 +107,22 @@ public enum GlobalConfig {
 
 	/**
 	 * 
+	 * @param timeZone
+	 */
+	public void setServerTimeZone(String timeZone) {
+		getConfig().setProperty(Options.TIMEZONE_SERVER.getName(), timeZone);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getServerTimeZone() {
+		return getConfig().getString(Options.TIMEZONE_SERVER.getName());
+	}
+
+	/**
+	 * 
 	 * @return
 	 */
 	public boolean isMaintenanceEnabled() {
@@ -168,15 +142,31 @@ public enum GlobalConfig {
 	 * @return Telegram bot token
 	 */
 	public String getBotToken() {
-		return getConfig().getString(BOT_TOKEN.TELEGRAM_BOT_TOKEN.getBotToken());
+		return getConfig().getString(Options.TELEGRAM_BOT_TOKEN.getName());
+	}
+
+	/**
+	 * 
+	 * @param token
+	 */
+	public void setBotToken(String token) {
+		getConfig().setProperty(Options.TELEGRAM_BOT_TOKEN.getName(), token);
 	}
 
 	/**
 	 * 
 	 * @return Telegram channel
 	 */
-	public String getChannel() {
-		return getConfig().getString(CHANNEL.TELEGRAM_CHANNEL.getChannel());
+	public String getBotChannel() {
+		return getConfig().getString(Options.TELEGRAM_CHANNEL.getName());
+	}
+
+	/**
+	 * 
+	 * @param channel
+	 */
+	public void setBotChannel(String channel) {
+		getConfig().setProperty(Options.TELEGRAM_CHANNEL.getName(), channel);
 	}
 
 }

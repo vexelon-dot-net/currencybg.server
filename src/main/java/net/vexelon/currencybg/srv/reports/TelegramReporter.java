@@ -31,20 +31,18 @@ public class TelegramReporter extends AbstractReporter {
 		TelegramBot bot = TelegramBotAdapter
 				.build(/* "264497873:AAGjShbt3-CJkuSHJLwyMccTbvh-0PxNZ68" */GlobalConfig.INSTANCE.getBotToken());
 
-		bot.execute(new SendDocument(/* "@ceco88" */GlobalConfig.INSTANCE.getChannel(),
+		bot.execute(new SendDocument(/* "@ceco88" */GlobalConfig.INSTANCE.getBotChannel(),
 				buffer.toString().getBytes("UTF-8")), new Callback<SendDocument, SendResponse>() {
 					@Override
 					public void onFailure(SendDocument request, IOException e) {
-						log.error("Fail Telegram SendDocument: ", e);
+						log.error("Telegram SendDocument failed!", e);
 					};
 
 					@Override
 					public void onResponse(SendDocument request, SendResponse response) {
-
+						// do nothing
 					};
 				});
-
-		// System.out.println("Telegram: " + buffer.toString());
 	}
 
 }
