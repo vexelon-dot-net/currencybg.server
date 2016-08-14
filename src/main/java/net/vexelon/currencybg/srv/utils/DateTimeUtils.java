@@ -7,6 +7,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import net.vexelon.currencybg.srv.Defs;
+
 public class DateTimeUtils {
 
 	protected TimeZone timeZone;
@@ -35,6 +37,70 @@ public class DateTimeUtils {
 
 	public static java.sql.Date convertJavaDateToSqlDate(java.util.Date date) {
 		return new java.sql.Date(date.getTime());
+	}
+
+	/**
+	 * Add define days to some date
+	 * 
+	 * @param date
+	 * @param days
+	 * @return
+	 */
+	public static Date addDays(Date date, int days) {
+
+		SimpleDateFormat sdf = new SimpleDateFormat(Defs.DATE_FORMAT);
+		try {
+			date = sdf.parse(sdf.format(date));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.DATE, days);
+
+		return cal.getTime();
+	}
+
+	/**
+	 * Modify Date format. Example: "yyyy-MM-dd'T'HH:mm:ssZ => yyyy-MM-dd
+	 * HH:mm:ss
+	 * 
+	 * @param inputDate
+	 * @param inputFormatTimeFormat
+	 * @param outputFormatTimeFormat
+	 * @return
+	 * @throws ParseException
+	 */
+	public static String modifyDateLayout(String inputDate, String inputFormatTimeFormat, String outputFormatTimeFormat)
+			throws ParseException {
+
+		Date date = new SimpleDateFormat(inputFormatTimeFormat).parse(inputDate);
+		return new SimpleDateFormat(outputFormatTimeFormat).format(date);
+	}
+
+	/**
+	 * Convert Date from one timezone to another timezone
+	 * 
+	 * @param phoneTimeZone
+	 * @param currentTimeZone
+	 * @param formatTimeZone
+	 * @return
+	 * @throws ParseException
+	 */
+	public static String convertPhoneToCurrentTimeZone(String phoneTimeZone, String currentTimeZone,
+			String formatTimeZone) throws ParseException {
+
+		DateFormat dateFormat = new SimpleDateFormat(formatTimeZone);
+
+		TimeZone tzInBulgaria = TimeZone.getTimeZone(currentTimeZone);
+
+		dateFormat.setTimeZone(tzInBulgaria);
+		String sDateInBulgaria = dateFormat.format(parseStringToDate(phoneTimeZone, formatTimeZone));
+
+		return sDateInBulgaria;
+
 	}
 
 	public static int getYearByDate(Date date) {

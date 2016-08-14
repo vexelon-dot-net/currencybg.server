@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -290,24 +291,24 @@ public class DataSource implements DataSourceInterface {
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
 
-		// TODO - add and of the date
-		StringBuffer sqlSelect = new StringBuffer(
-				" SELECT code, ratio,  buy,  sell, date, source FROM cbg_currencies  WHERE date > ? ");
-		if (sourceId != null) {
-			sqlSelect.append("AND source = ? ");
-		}
+		Date nextDay = DateTimeUtils.addDays(timeFrom, 1);
 
-		sqlSelect.append("ORDER BY date asc");
+		String sqlSelect = " SELECT code, ratio,  buy,  sell, date, source FROM cbg_currencies  WHERE date > ? AND date < ? ";
+		if (sourceId != null) {
+			sqlSelect += "AND source = ? ORDER BY date asc";
+		} else {
+			sqlSelect += "ORDER BY date asc";
+		}
 
 		log.trace("Selected rows {} in {}", sqlSelect, sqlSelect);
 
 		try {
 
 			preparedStatement = dbConnection.prepareStatement(sqlSelect.toString());
-			// TODO fix the problem with hours
-			preparedStatement.setDate(1, DateTimeUtils.convertJavaDateToSqlDate(timeFrom));
+			preparedStatement.setTimestamp(1, new Timestamp(timeFrom.getTime()));
+			preparedStatement.setDate(2, DateTimeUtils.convertJavaDateToSqlDate(nextDay));
 			if (sourceId != null) {
-				preparedStatement.setInt(2, sourceId);
+				preparedStatement.setInt(3, sourceId);
 			}
 
 			rs = preparedStatement.executeQuery();

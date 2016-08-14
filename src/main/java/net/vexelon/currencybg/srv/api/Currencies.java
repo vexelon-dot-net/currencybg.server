@@ -2,7 +2,6 @@ package net.vexelon.currencybg.srv.api;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -92,7 +91,7 @@ public class Currencies extends AbstractJunction {
 	}
 
 	@GET
-	@Path("/current/{timeFrom}/{sourceId}")
+	@Path("/today/{timeFrom}/{sourceId}")
 	public Response getAllCurrentRatesAfter(@PathParam("timeFrom") String ilitialTime,
 			@PathParam("sourceId") Integer sourceId, @HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
 
@@ -100,15 +99,18 @@ public class Currencies extends AbstractJunction {
 			verifyAccess();
 
 			source.connect();
+
 			if (!source.isCheckAuthentication(apiKey)) {
 				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
 			}
 
-			// TODO - Да се види какво ще се прави с дата, която се подава към
-			// базата
-			Date dateFrom = DateTimeUtils.parseStringToDate(ilitialTime, Defs.DATETIME_FORMAT);
+			String sDateZone = DateTimeUtils.convertPhoneToCurrentTimeZone(ilitialTime, Defs.CURRENT_TIME_ZONE,
+					Defs.DATETIME_ZONE_FORMAT);
+			String sDate = DateTimeUtils.modifyDateLayout(sDateZone, Defs.DATETIME_ZONE_FORMAT, Defs.DATETIME_FORMAT);
 
-			return getJsonResponse(source.getAllCurrentRatesAfter(sourceId, dateFrom));
+			Date date = DateTimeUtils.parseStringToDate(sDate, Defs.DATETIME_FORMAT);
+
+			return getJsonResponse(source.getAllCurrentRatesAfter(sourceId, date));
 		} catch (IOException | DataSourceException | ParseException e) {
 			log.error("", e);
 			return getErrorResponse();
@@ -131,14 +133,11 @@ public class Currencies extends AbstractJunction {
 				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
 			}
 
-			// TODO - Да се види какво ще се прави с дата, която се подава към
-			// базата
-			// Date dateFrom = DateTimeUtils.parseStringToDate(ilitialTime,
-			// Defs.DATETIME_FORMAT);
+			String sDateZone = DateTimeUtils.convertPhoneToCurrentTimeZone(ilitialTime, Defs.CURRENT_TIME_ZONE,
+					Defs.DATETIME_ZONE_FORMAT);
+			String sDate = DateTimeUtils.modifyDateLayout(sDateZone, Defs.DATETIME_ZONE_FORMAT, Defs.DATETIME_FORMAT);
 
-			SimpleDateFormat sdf = new SimpleDateFormat(Defs.DATETIME_FORMAT);
-			String dateInString = "2016-07-16 20:55:00";
-			Date date = sdf.parse(dateInString);
+			Date date = DateTimeUtils.parseStringToDate(sDate, Defs.DATETIME_FORMAT);
 
 			return getJsonResponse(source.getAllCurrentRatesAfter(date));
 		} catch (IOException | DataSourceException | ParseException e) {
