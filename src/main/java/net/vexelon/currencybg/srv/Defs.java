@@ -12,7 +12,6 @@ public final class Defs {
 	 * DateTime
 	 */
 	public static final String DATETIME_DEFAULT_TIMEZONE = "Europe/Sofia";
-	public static final String DATETIME_FORMAT = "yyyy-MM-dd";
 	public static final String DATETIME_RESTR_FORMAT = "HH:mm";
 
 	/*
@@ -47,4 +46,8 @@ public final class Defs {
 	public static final String HEADER_APIKEY = "APIKey";
 	public static final String API_JSON_CONTENT_TYPE = MediaType.APPLICATION_JSON_TYPE + ";charset=utf-8";
 
+	public static final String DATE_FORMAT = "yyyy-MM-dd";
+	public static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+	public static final String DATETIME_ZONE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
+	public static final String CURRENT_TIME_ZONE = "Europe/Sofia";
 }

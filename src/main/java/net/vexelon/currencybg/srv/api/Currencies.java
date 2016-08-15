@@ -54,7 +54,7 @@ public class Currencies extends AbstractJunction {
 				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
 			}
 
-			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
+			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATE_FORMAT);
 			return getJsonResponse(source.getAllRates(dateFrom));
 		} catch (IOException | DataSourceException | ParseException e) {
 			log.error("", e);
@@ -78,7 +78,7 @@ public class Currencies extends AbstractJunction {
 				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
 			}
 
-			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
+			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATE_FORMAT);
 			return getJsonResponse(source.getAllRates(sourceId, dateFrom));
 		} catch (IOException | DataSourceException | ParseException e) {
 			log.error("", e);
@@ -88,5 +88,64 @@ public class Currencies extends AbstractJunction {
 			return getCustomResponse(e.getStatus());
 		}
 
+	}
+
+	@GET
+	@Path("/today/{timeFrom}/{sourceId}")
+	public Response getAllCurrentRatesAfter(@PathParam("timeFrom") String ilitialTime,
+			@PathParam("sourceId") Integer sourceId, @HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
+
+		try (DataSourceInterface source = new DataSource()) {
+			verifyAccess();
+
+			source.connect();
+
+			if (!source.isCheckAuthentication(apiKey)) {
+				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
+			}
+
+			String sDateZone = DateTimeUtils.convertPhoneToCurrentTimeZone(ilitialTime, Defs.CURRENT_TIME_ZONE,
+					Defs.DATETIME_ZONE_FORMAT);
+			String sDate = DateTimeUtils.modifyDateLayout(sDateZone, Defs.DATETIME_ZONE_FORMAT, Defs.DATETIME_FORMAT);
+
+			Date date = DateTimeUtils.parseStringToDate(sDate, Defs.DATETIME_FORMAT);
+
+			return getJsonResponse(source.getAllCurrentRatesAfter(sourceId, date));
+		} catch (IOException | DataSourceException | ParseException e) {
+			log.error("", e);
+			return getErrorResponse();
+		} catch (ApiAccessException e) {
+			log.debug(e.getMessage());
+			return getCustomResponse(e.getStatus());
+		}
+	}
+
+	@GET
+	@Path("/today/{timeFrom}")
+	public Response getAllCurrentRatesAfter(@PathParam("timeFrom") String ilitialTime,
+			@HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
+
+		try (DataSourceInterface source = new DataSource()) {
+			verifyAccess();
+
+			source.connect();
+			if (!source.isCheckAuthentication(apiKey)) {
+				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
+			}
+
+			String sDateZone = DateTimeUtils.convertPhoneToCurrentTimeZone(ilitialTime, Defs.CURRENT_TIME_ZONE,
+					Defs.DATETIME_ZONE_FORMAT);
+			String sDate = DateTimeUtils.modifyDateLayout(sDateZone, Defs.DATETIME_ZONE_FORMAT, Defs.DATETIME_FORMAT);
+
+			Date date = DateTimeUtils.parseStringToDate(sDate, Defs.DATETIME_FORMAT);
+
+			return getJsonResponse(source.getAllCurrentRatesAfter(date));
+		} catch (IOException | DataSourceException | ParseException e) {
+			log.error("", e);
+			return getErrorResponse();
+		} catch (ApiAccessException e) {
+			log.debug(e.getMessage());
+			return getCustomResponse(e.getStatus());
+		}
 	}
 }
