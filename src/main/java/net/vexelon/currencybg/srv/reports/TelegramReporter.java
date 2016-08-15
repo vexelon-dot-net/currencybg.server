@@ -27,22 +27,23 @@ public class TelegramReporter extends AbstractReporter {
 
 	@Override
 	public void send() throws IOException {
+		if (!GlobalConfig.INSTANCE.getBotToken().isEmpty() && !GlobalConfig.INSTANCE.getBotChannel().isEmpty()) {
 
-		TelegramBot bot = TelegramBotAdapter
-				.build(/* "264497873:AAGjShbt3-CJkuSHJLwyMccTbvh-0PxNZ68" */GlobalConfig.INSTANCE.getBotToken());
+			TelegramBot bot = TelegramBotAdapter.build(GlobalConfig.INSTANCE.getBotToken());
 
-		bot.execute(new SendDocument(/* "@ceco88" */GlobalConfig.INSTANCE.getBotChannel(),
-				buffer.toString().getBytes("UTF-8")), new Callback<SendDocument, SendResponse>() {
-					@Override
-					public void onFailure(SendDocument request, IOException e) {
-						log.error("Telegram SendDocument failed!", e);
-					};
+			bot.execute(new SendDocument(/* "@ceco88" */GlobalConfig.INSTANCE.getBotChannel(),
+					buffer.toString().getBytes("UTF-8")), new Callback<SendDocument, SendResponse>() {
+						@Override
+						public void onFailure(SendDocument request, IOException e) {
+							log.error("Telegram SendDocument failed!", e);
+						};
 
-					@Override
-					public void onResponse(SendDocument request, SendResponse response) {
-						// do nothing
-					};
-				});
+						@Override
+						public void onResponse(SendDocument request, SendResponse response) {
+							// do nothing
+						};
+					});
+		}
 	}
 
 }
