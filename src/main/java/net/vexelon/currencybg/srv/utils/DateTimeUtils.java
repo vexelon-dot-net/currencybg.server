@@ -73,10 +73,23 @@ public class DateTimeUtils {
 	 * @return
 	 * @throws ParseException
 	 */
+	// public static String modifyDateLayout(String inputDate, String
+	// inputFormatTimeFormat, String outputFormatTimeFormat)
+	// throws ParseException {
+	//
+	// Date date = new SimpleDateFormat(inputFormatTimeFormat).parse(inputDate);
+	// return new SimpleDateFormat(outputFormatTimeFormat).format(date);
+	// }
+
 	public static String modifyDateLayout(String inputDate, String inputFormatTimeFormat, String outputFormatTimeFormat)
 			throws ParseException {
 
-		Date date = new SimpleDateFormat(inputFormatTimeFormat).parse(inputDate);
+		SimpleDateFormat dateFormatter = new SimpleDateFormat(inputFormatTimeFormat);
+
+		Date date = dateFormatter.parse(inputDate);
+
+		// Date date = new
+		// SimpleDateFormat(inputFormatTimeFormat).parse(inputDate);
 		return new SimpleDateFormat(outputFormatTimeFormat).format(date);
 	}
 
