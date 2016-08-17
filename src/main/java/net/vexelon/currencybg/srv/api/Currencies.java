@@ -92,7 +92,7 @@ public class Currencies extends AbstractJunction {
 
 	@GET
 	@Path("/today/{timeFrom}/{sourceId}")
-	public Response getAllCurrentRatesAfter(@PathParam("timeFrom") String ilitialTime,
+	public Response getAllCurrentRatesAfter(@PathParam("timeFrom") String timeFrom,
 			@PathParam("sourceId") Integer sourceId, @HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
 
 		try (DataSourceInterface source = new DataSource()) {
@@ -104,8 +104,7 @@ public class Currencies extends AbstractJunction {
 				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
 			}
 
-			String sDateZone = DateTimeUtils.convertPhoneToCurrentTimeZone(ilitialTime, Defs.CURRENT_TIME_ZONE,
-					Defs.DATETIME_ZONE_FORMAT);
+			String sDateZone = DateTimeUtils.toTimeZone(timeFrom, Defs.CURRENT_TIME_ZONE, Defs.DATETIME_ZONE_FORMAT);
 			String sDate = DateTimeUtils.modifyDateLayout(sDateZone, Defs.DATETIME_ZONE_FORMAT, Defs.DATETIME_FORMAT);
 
 			Date date = DateTimeUtils.parseStringToDate(sDate, Defs.DATETIME_FORMAT);
@@ -122,7 +121,7 @@ public class Currencies extends AbstractJunction {
 
 	@GET
 	@Path("/today/{timeFrom}")
-	public Response getAllCurrentRatesAfter(@PathParam("timeFrom") String ilitialTime,
+	public Response getAllCurrentRatesAfter(@PathParam("timeFrom") String timeFrom,
 			@HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
 
 		try (DataSourceInterface source = new DataSource()) {
@@ -133,8 +132,7 @@ public class Currencies extends AbstractJunction {
 				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
 			}
 
-			String sDateZone = DateTimeUtils.convertPhoneToCurrentTimeZone(ilitialTime, Defs.CURRENT_TIME_ZONE,
-					Defs.DATETIME_ZONE_FORMAT);
+			String sDateZone = DateTimeUtils.toTimeZone(timeFrom, Defs.CURRENT_TIME_ZONE, Defs.DATETIME_ZONE_FORMAT);
 			String sDate = DateTimeUtils.modifyDateLayout(sDateZone, Defs.DATETIME_ZONE_FORMAT, Defs.DATETIME_FORMAT);
 
 			Date date = DateTimeUtils.parseStringToDate(sDate, Defs.DATETIME_FORMAT);

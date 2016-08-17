@@ -7,8 +7,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import net.vexelon.currencybg.srv.Defs;
-
 public class DateTimeUtils {
 
 	protected TimeZone timeZone;
@@ -48,16 +46,18 @@ public class DateTimeUtils {
 	 */
 	public static Date addDays(Date date, int days) {
 
-		SimpleDateFormat sdf = new SimpleDateFormat(Defs.DATE_FORMAT);
-		try {
-			date = sdf.parse(sdf.format(date));
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		/*
+		 * SimpleDateFormat dateFormat = new SimpleDateFormat(Defs.DATE_FORMAT);
+		 * try { date = dateFormat.parse(dateFormat.format(date)); } catch
+		 * (ParseException e) { // TODO Auto-generated catch block
+		 * e.printStackTrace(); }
+		 */
 
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
 		cal.add(Calendar.DATE, days);
 
 		return cal.getTime();
@@ -89,8 +89,8 @@ public class DateTimeUtils {
 	 * @return
 	 * @throws ParseException
 	 */
-	public static String convertPhoneToCurrentTimeZone(String phoneTimeZone, String currentTimeZone,
-			String formatTimeZone) throws ParseException {
+	public static String toTimeZone(String phoneTimeZone, String currentTimeZone, String formatTimeZone)
+			throws ParseException {
 
 		DateFormat dateFormat = new SimpleDateFormat(formatTimeZone);
 
@@ -111,11 +111,11 @@ public class DateTimeUtils {
 
 	public static Date getStartOfYear() {
 		int year = Calendar.getInstance().get(Calendar.YEAR);
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 		String dateInString = "01.01." + year;
 		Date currentYear = null;
 		try {
-			currentYear = sdf.parse(dateInString);
+			currentYear = dateFormat.parse(dateInString);
 		} catch (ParseException e1) {
 			e1.printStackTrace();
 			// use default (today)
