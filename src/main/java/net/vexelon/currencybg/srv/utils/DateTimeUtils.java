@@ -90,7 +90,10 @@ public class DateTimeUtils {
 
 		// Date date = new
 		// SimpleDateFormat(inputFormatTimeFormat).parse(inputDate);
-		return new SimpleDateFormat(outputFormatTimeFormat).format(date);
+
+		SimpleDateFormat dateFormatter2 = new SimpleDateFormat(outputFormatTimeFormat);
+		return dateFormatter2.format(date);
+		// return new SimpleDateFormat(outputFormatTimeFormat).format(date);
 	}
 
 	/**
