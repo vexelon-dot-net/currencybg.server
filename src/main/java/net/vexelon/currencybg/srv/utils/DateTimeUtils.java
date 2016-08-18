@@ -84,16 +84,11 @@ public class DateTimeUtils {
 	public static String modifyDateLayout(String inputDate, String inputFormatTimeFormat, String outputFormatTimeFormat)
 			throws ParseException {
 
-		SimpleDateFormat dateFormatter = new SimpleDateFormat(inputFormatTimeFormat);
+		Date date = new SimpleDateFormat(inputFormatTimeFormat).parse(inputDate);
+		String formattedDate = new SimpleDateFormat(outputFormatTimeFormat).format(date);
 
-		Date date = dateFormatter.parse(inputDate);
+		return formattedDate;
 
-		// Date date = new
-		// SimpleDateFormat(inputFormatTimeFormat).parse(inputDate);
-
-		SimpleDateFormat dateFormatter2 = new SimpleDateFormat(outputFormatTimeFormat);
-		return dateFormatter2.format(date);
-		// return new SimpleDateFormat(outputFormatTimeFormat).format(date);
 	}
 
 	/**
