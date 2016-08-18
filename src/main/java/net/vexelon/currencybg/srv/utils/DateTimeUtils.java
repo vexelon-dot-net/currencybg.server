@@ -84,18 +84,22 @@ public class DateTimeUtils {
 	public static String modifyDateLayout(String inputDate, String inputFormatTimeFormat, String outputFormatTimeFormat)
 			throws ParseException {
 
-		SimpleDateFormat sdf = new SimpleDateFormat(inputFormatTimeFormat);
-		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-		Date theDate = null;
-		try {
-			theDate = sdf.parse(inputDate);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		String result = "";
+		SimpleDateFormat sdf;
+		SimpleDateFormat sdf1;
 
-		String formattedDate = new SimpleDateFormat(outputFormatTimeFormat).format(theDate);
-		return formattedDate;
+		try {
+			sdf = new SimpleDateFormat(inputFormatTimeFormat);
+			sdf1 = new SimpleDateFormat(outputFormatTimeFormat);
+			result = sdf1.format(sdf.parse(inputDate));
+		} catch (Exception e) {
+			e.printStackTrace();
+			// return "";
+		} finally {
+			sdf = null;
+			sdf1 = null;
+		}
+		return result;
 
 	}
 
