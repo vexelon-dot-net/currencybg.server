@@ -105,9 +105,8 @@ public class Currencies extends AbstractJunction {
 				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
 			}
 
-			String localTimeFrom = DateTimeUtils.toTimeZone(timeFrom, Defs.DATETIME_ZONE_FORMAT,
-					GlobalConfig.INSTANCE.getServerTimeZone());
-			String localTimeFromNoTz = DateTimeUtils.removeTimeZone(localTimeFrom, Defs.DATETIME_ZONE_FORMAT,
+			String localTimeFrom = DateTimeUtils.toTimeZone(timeFrom, GlobalConfig.INSTANCE.getServerTimeZone());
+			String localTimeFromNoTz = DateTimeUtils.removeTimeZone(localTimeFrom,
 					GlobalConfig.INSTANCE.getServerTimeZone());
 
 			return getJsonResponse(source.getAllCurrentRatesAfter(sourceId,
@@ -134,13 +133,12 @@ public class Currencies extends AbstractJunction {
 				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
 			}
 
-			String localTimeFrom = DateTimeUtils.toTimeZone(timeFrom, Defs.DATETIME_ZONE_FORMAT,
-					GlobalConfig.INSTANCE.getServerTimeZone());
-			String localTimeFromNoTz = DateTimeUtils.removeTimeZone(localTimeFrom, Defs.DATETIME_ZONE_FORMAT,
+			String localTimeFrom = DateTimeUtils.toTimeZone(timeFrom, GlobalConfig.INSTANCE.getServerTimeZone());
+			String localTimeFromNoTz = DateTimeUtils.removeTimeZone(localTimeFrom,
 					GlobalConfig.INSTANCE.getServerTimeZone());
 
-			return getJsonResponse(source
-					.getAllCurrentRatesAfter(DateTimeUtils.parseDate(localTimeFromNoTz, Defs.DATETIME_FORMAT)));
+			return getJsonResponse(
+					source.getAllCurrentRatesAfter(DateTimeUtils.parseDate(localTimeFromNoTz, Defs.DATETIME_FORMAT)));
 		} catch (IOException | DataSourceException | ParseException e) {
 			log.error("", e);
 			return getErrorResponse();

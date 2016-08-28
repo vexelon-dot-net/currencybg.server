@@ -48,5 +48,6 @@ public final class Defs {
 
 	public static final String DATE_FORMAT = "yyyy-MM-dd";
 	public static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
-	public static final String DATETIME_ZONE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
+	// public static final String DATETIME_FORMAT_ISO8601 =
+	// "yyyy-MM-dd'T'HH:mm:ssZ";
 }

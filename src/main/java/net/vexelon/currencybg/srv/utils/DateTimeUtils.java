@@ -25,6 +25,18 @@ public class DateTimeUtils {
 		this(TimeZone.getTimeZone(timeZone));
 	}
 
+	public static Date parseDateISO8601(String date) throws ParseException {
+		Calendar cal = javax.xml.bind.DatatypeConverter.parseDateTime(date);
+		return cal.getTime();
+	}
+
+	public static String toStringISO8601(Date date, String timeZone) throws ParseException {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.setTimeZone(TimeZone.getTimeZone(timeZone));
+		return javax.xml.bind.DatatypeConverter.printDateTime(cal);
+	}
+
 	public static Date parseDate(String date, String pattern) throws ParseException {
 		DateFormat formatter = new SimpleDateFormat(pattern);
 		return formatter.parse(date);
@@ -59,86 +71,37 @@ public class DateTimeUtils {
 	}
 
 	/**
-	 * Modify Date format. Example: "yyyy-MM-dd'T'HH:mm:ssZ => yyyy-MM-dd
-	 * HH:mm:ss
-	 * 
-	 * @param inputDate
-	 * @param inputFormatTimeFormat
-	 * @param outputFormatTimeFormat
-	 * @return
-	 * @throws ParseException
-	 */
-	// public static String modifyDateLayout(String inputDate, String
-	// inputFormatTimeFormat, String outputFormatTimeFormat)
-	// throws ParseException {
-	//
-	// Date date = new SimpleDateFormat(inputFormatTimeFormat).parse(inputDate);
-	// return new SimpleDateFormat(outputFormatTimeFormat).format(date);
-	// }
-
-	// public static String modifyDateLayout(String inputDate, String
-	// inputFormatTimeFormat, String outputFormatTimeFormat)
-	// throws ParseException {
-	//
-	// String result = "";
-	// SimpleDateFormat sdf;
-	// SimpleDateFormat sdf1;
-	//
-	// try {
-	// sdf = new SimpleDateFormat(inputFormatTimeFormat);
-	// sdf1 = new SimpleDateFormat(outputFormatTimeFormat);
-	//
-	// sdf.parse(inputDate);
-	// sdf.getTimeZone();
-	//
-	// result = sdf1.format(sdf.parse(inputDate));
-	//
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// // return "";
-	// } finally {
-	// sdf = null;
-	// sdf1 = null;
-	// }
-	// return result;
-	//
-	// }
-
-	/**
 	 * Removes the time zone portion of {@code date}. The time zone must be
 	 * explicitly specified with {@code timeZone}.
+	 * <p>
+	 * Example: <i>yyyy-MM-dd'T'HH:mm:ssZ</i> to <i>yyyy-MM-dd HH:mm:ss</i>.
 	 * 
 	 * @param date
-	 * @param dateTimeFormat
 	 * @param timeZone
 	 * @return
 	 * @throws ParseException
 	 *             On {@code date} parse error.
 	 */
-	public static String removeTimeZone(String date, String dateTimeFormat, String timeZone) throws ParseException {
-		DateFormat dateFormat = new SimpleDateFormat(dateTimeFormat);
-		dateFormat.setTimeZone(TimeZone.getTimeZone(timeZone));
-
+	public static String removeTimeZone(String date, String timeZone) throws ParseException {
 		DateFormat dateFormatOutput = new SimpleDateFormat(Defs.DATETIME_FORMAT);
 		dateFormatOutput.setTimeZone(TimeZone.getTimeZone(timeZone));
-
-		return dateFormatOutput.format(dateFormat.parse(date));
+		return dateFormatOutput.format(parseDateISO8601(date));
 	}
 
 	/**
-	 * Convert {@code date} from {@code fromTimeZone} to {@code toTimeZone}.
+	 * Convert ISO8601 {@code date} to date in given {@code toTimeZone}.
 	 * 
 	 * @param date
-	 * @param datePattern
-	 * @param fromTimeZone
+	 * @param toTimeZone
 	 * @return
 	 * @throws ParseException
 	 *             On {@code date} parse error.
 	 */
-	public static String toTimeZone(String date, String datePattern, String fromTimeZone) throws ParseException {
-		DateFormat dateFormat = new SimpleDateFormat(datePattern);
-		dateFormat.setTimeZone(TimeZone.getTimeZone(fromTimeZone));
-		return dateFormat.format(parseDate(date, datePattern));
+	public static String toTimeZone(String date, String toTimeZone) throws ParseException {
+		// DateFormat dateFormat = new SimpleDateFormat(datePattern);
+		// dateFormat.setTimeZone(TimeZone.getTimeZone(fromTimeZone));
+		// return dateFormat.format(parseDateISO8601(date));
+		return toStringISO8601(parseDateISO8601(date), toTimeZone);
 	}
 
 	public static int getYearByDate(Date date) {
