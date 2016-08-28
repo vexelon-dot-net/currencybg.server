@@ -7,6 +7,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import net.vexelon.currencybg.srv.Defs;
+
 public class DateTimeUtils {
 
 	protected TimeZone timeZone;
@@ -81,49 +83,69 @@ public class DateTimeUtils {
 	// return new SimpleDateFormat(outputFormatTimeFormat).format(date);
 	// }
 
-	public static String modifyDateLayout(String inputDate, String inputFormatTimeFormat, String outputFormatTimeFormat)
-			throws ParseException {
+	// public static String modifyDateLayout(String inputDate, String
+	// inputFormatTimeFormat, String outputFormatTimeFormat)
+	// throws ParseException {
+	//
+	// String result = "";
+	// SimpleDateFormat sdf;
+	// SimpleDateFormat sdf1;
+	//
+	// try {
+	// sdf = new SimpleDateFormat(inputFormatTimeFormat);
+	// sdf1 = new SimpleDateFormat(outputFormatTimeFormat);
+	//
+	// sdf.parse(inputDate);
+	// sdf.getTimeZone();
+	//
+	// result = sdf1.format(sdf.parse(inputDate));
+	//
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// // return "";
+	// } finally {
+	// sdf = null;
+	// sdf1 = null;
+	// }
+	// return result;
+	//
+	// }
 
-		String result = "";
-		SimpleDateFormat sdf;
-		SimpleDateFormat sdf1;
+	/**
+	 * Removes the time zone portion of {@code date}. The time zone must be
+	 * explicitly specified with {@code timeZone}.
+	 * 
+	 * @param date
+	 * @param dateTimeFormat
+	 * @param timeZone
+	 * @return
+	 * @throws ParseException
+	 *             On {@code date} parse error.
+	 */
+	public static String removeTimeZone(String date, String dateTimeFormat, String timeZone) throws ParseException {
+		DateFormat dateFormat = new SimpleDateFormat(dateTimeFormat);
+		dateFormat.setTimeZone(TimeZone.getTimeZone(timeZone));
 
-		try {
-			sdf = new SimpleDateFormat(inputFormatTimeFormat);
-			sdf1 = new SimpleDateFormat(outputFormatTimeFormat);
-			result = sdf1.format(sdf.parse(inputDate));
-		} catch (Exception e) {
-			e.printStackTrace();
-			// return "";
-		} finally {
-			sdf = null;
-			sdf1 = null;
-		}
-		return result;
+		DateFormat dateFormatOutput = new SimpleDateFormat(Defs.DATETIME_FORMAT);
+		dateFormatOutput.setTimeZone(TimeZone.getTimeZone(timeZone));
 
+		return dateFormatOutput.format(dateFormat.parse(date));
 	}
 
 	/**
-	 * Convert Date from one timezone to another timezone
+	 * Convert {@code date} from {@code fromTimeZone} to {@code toTimeZone}.
 	 * 
-	 * @param phoneTimeZone
-	 * @param currentTimeZone
-	 * @param formatTimeZone
+	 * @param date
+	 * @param datePattern
+	 * @param fromTimeZone
 	 * @return
 	 * @throws ParseException
+	 *             On {@code date} parse error.
 	 */
-	public static String toTimeZone(String phoneTimeZone, String currentTimeZone, String formatTimeZone)
-			throws ParseException {
-
-		DateFormat dateFormat = new SimpleDateFormat(formatTimeZone);
-
-		TimeZone tzInBulgaria = TimeZone.getTimeZone(currentTimeZone);
-
-		dateFormat.setTimeZone(tzInBulgaria);
-		String sDateInBulgaria = dateFormat.format(parseStringToDate(phoneTimeZone, formatTimeZone));
-
-		return sDateInBulgaria;
-
+	public static String toTimeZone(String date, String datePattern, String fromTimeZone) throws ParseException {
+		DateFormat dateFormat = new SimpleDateFormat(datePattern);
+		dateFormat.setTimeZone(TimeZone.getTimeZone(fromTimeZone));
+		return dateFormat.format(parseStringToDate(date, datePattern));
 	}
 
 	public static int getYearByDate(Date date) {

@@ -104,7 +104,7 @@ public class Currencies extends AbstractJunction {
 				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
 			}
 
-			String sDateZone = DateTimeUtils.toTimeZone(timeFrom, Defs.CURRENT_TIME_ZONE, Defs.DATETIME_ZONE_FORMAT);
+			String sDateZone = DateTimeUtils.toTimeZone(timeFrom, Defs.DATETIME_ZONE_FORMAT, Defs.CURRENT_TIME_ZONE);
 			String sDate = DateTimeUtils.modifyDateLayout(sDateZone, Defs.DATETIME_ZONE_FORMAT, Defs.DATETIME_FORMAT);
 
 			Date date = DateTimeUtils.parseStringToDate(sDate, Defs.DATETIME_FORMAT);
@@ -132,7 +132,7 @@ public class Currencies extends AbstractJunction {
 				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
 			}
 
-			String sDateZone = DateTimeUtils.toTimeZone(timeFrom, Defs.CURRENT_TIME_ZONE, Defs.DATETIME_ZONE_FORMAT);
+			String sDateZone = DateTimeUtils.toTimeZone(timeFrom, Defs.DATETIME_ZONE_FORMAT, Defs.CURRENT_TIME_ZONE);
 			String sDate = DateTimeUtils.modifyDateLayout(sDateZone, Defs.DATETIME_ZONE_FORMAT, Defs.DATETIME_FORMAT);
 
 			Date date = DateTimeUtils.parseStringToDate(sDate, Defs.DATETIME_FORMAT);
