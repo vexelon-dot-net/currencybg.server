@@ -17,6 +17,9 @@ public class DateTimeUtilsTests {
 		try {
 			assertEquals(testISOTime_02,
 					DateTimeUtils.toTimeZone(testISOTime_01, Defs.DATETIME_ZONE_FORMAT, "Europe/Sofia"));
+
+			assertEquals(testISOTime_01,
+					DateTimeUtils.toTimeZone(testISOTime_02, Defs.DATETIME_ZONE_FORMAT, "Europe/Berlin"));
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
