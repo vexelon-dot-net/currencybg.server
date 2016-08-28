@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.Maps;
 
 import net.vexelon.currencybg.srv.Defs;
+import net.vexelon.currencybg.srv.GlobalConfig;
 import net.vexelon.currencybg.srv.db.DataSource;
 import net.vexelon.currencybg.srv.db.DataSourceException;
 import net.vexelon.currencybg.srv.db.DataSourceInterface;
@@ -104,8 +105,9 @@ public class Currencies extends AbstractJunction {
 				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
 			}
 
-			String sDateZone = DateTimeUtils.toTimeZone(timeFrom, Defs.DATETIME_ZONE_FORMAT, Defs.CURRENT_TIME_ZONE);
-			String sDate = DateTimeUtils.modifyDateLayout(sDateZone, Defs.DATETIME_ZONE_FORMAT, Defs.DATETIME_FORMAT);
+			String sDateZone = DateTimeUtils.toTimeZone(timeFrom, Defs.DATETIME_ZONE_FORMAT,
+					GlobalConfig.INSTANCE.getServerTimeZone());
+			String sDate = DateTimeUtils.removeTimeZone(sDateZone, Defs.DATETIME_ZONE_FORMAT, Defs.DATETIME_FORMAT);
 
 			Date date = DateTimeUtils.parseStringToDate(sDate, Defs.DATETIME_FORMAT);
 
@@ -132,8 +134,9 @@ public class Currencies extends AbstractJunction {
 				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
 			}
 
-			String sDateZone = DateTimeUtils.toTimeZone(timeFrom, Defs.DATETIME_ZONE_FORMAT, Defs.CURRENT_TIME_ZONE);
-			String sDate = DateTimeUtils.modifyDateLayout(sDateZone, Defs.DATETIME_ZONE_FORMAT, Defs.DATETIME_FORMAT);
+			String sDateZone = DateTimeUtils.toTimeZone(timeFrom, Defs.DATETIME_ZONE_FORMAT,
+					GlobalConfig.INSTANCE.getServerTimeZone());
+			String sDate = DateTimeUtils.removeTimeZone(sDateZone, Defs.DATETIME_ZONE_FORMAT, Defs.DATETIME_FORMAT);
 
 			Date date = DateTimeUtils.parseStringToDate(sDate, Defs.DATETIME_FORMAT);
 
