@@ -126,7 +126,9 @@ public class DateTimeUtils {
 
 	public Calendar toCalendar(String value, String format) throws ParseException {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+		dateFormat.setTimeZone(timeZone);
 		Date date = dateFormat.parse(value);
+
 		Calendar calendar = getCal(date);
 
 		Calendar today = getCalToday();
