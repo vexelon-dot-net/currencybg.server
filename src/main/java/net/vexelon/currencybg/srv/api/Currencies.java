@@ -55,7 +55,7 @@ public class Currencies extends AbstractJunction {
 				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
 			}
 
-			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATE_FORMAT);
+			Date dateFrom = DateTimeUtils.parseDate(initialDate, Defs.DATE_FORMAT);
 			return getJsonResponse(source.getAllRates(dateFrom));
 		} catch (IOException | DataSourceException | ParseException e) {
 			log.error("", e);
@@ -79,7 +79,7 @@ public class Currencies extends AbstractJunction {
 				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
 			}
 
-			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATE_FORMAT);
+			Date dateFrom = DateTimeUtils.parseDate(initialDate, Defs.DATE_FORMAT);
 			return getJsonResponse(source.getAllRates(sourceId, dateFrom));
 		} catch (IOException | DataSourceException | ParseException e) {
 			log.error("", e);
@@ -111,7 +111,7 @@ public class Currencies extends AbstractJunction {
 					GlobalConfig.INSTANCE.getServerTimeZone());
 
 			return getJsonResponse(source.getAllCurrentRatesAfter(sourceId,
-					DateTimeUtils.parseStringToDate(localTimeFromNoTz, Defs.DATETIME_FORMAT)));
+					DateTimeUtils.parseDate(localTimeFromNoTz, Defs.DATETIME_FORMAT)));
 		} catch (IOException | DataSourceException | ParseException e) {
 			log.error("", e);
 			return getErrorResponse();
@@ -140,7 +140,7 @@ public class Currencies extends AbstractJunction {
 					GlobalConfig.INSTANCE.getServerTimeZone());
 
 			return getJsonResponse(source
-					.getAllCurrentRatesAfter(DateTimeUtils.parseStringToDate(localTimeFromNoTz, Defs.DATETIME_FORMAT)));
+					.getAllCurrentRatesAfter(DateTimeUtils.parseDate(localTimeFromNoTz, Defs.DATETIME_FORMAT)));
 		} catch (IOException | DataSourceException | ParseException e) {
 			log.error("", e);
 			return getErrorResponse();

@@ -52,7 +52,7 @@ public class Polana1 extends AbstractSource {
 		String currentTime = dateFormat.format(cal.getTime());
 
 		String currentDateTime = contentChildren.select("h1").first().text().substring(26).trim() + " " + currentTime;
-		Date updateDate = DateTimeUtils.parseStringToDate(currentDateTime, DATE_FORMAT);
+		Date updateDate = DateTimeUtils.parseDate(currentDateTime, DATE_FORMAT);
 
 		Element contentBoxChildren = contentChildren.select("table > tbody").first();
 		Elements children = contentBoxChildren.children();

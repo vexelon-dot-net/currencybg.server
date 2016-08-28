@@ -25,17 +25,17 @@ public class DateTimeUtils {
 		this(TimeZone.getTimeZone(timeZone));
 	}
 
-	public static Date parseStringToDate(String date, String format) throws ParseException {
-		SimpleDateFormat formatter = new SimpleDateFormat(format);
+	public static Date parseDate(String date, String pattern) throws ParseException {
+		DateFormat formatter = new SimpleDateFormat(pattern);
 		return formatter.parse(date);
 	}
 
-	public static String parseDateToString(Date date, String dateFormat) {
-		DateFormat formatter = new SimpleDateFormat(dateFormat);
+	public static String toString(Date date, String pattern) throws ParseException {
+		DateFormat formatter = new SimpleDateFormat(pattern);
 		return formatter.format(date);
 	}
 
-	public static java.sql.Date convertJavaDateToSqlDate(java.util.Date date) {
+	public static java.sql.Date toSqlDate(java.util.Date date) {
 		return new java.sql.Date(date.getTime());
 	}
 
@@ -138,7 +138,7 @@ public class DateTimeUtils {
 	public static String toTimeZone(String date, String datePattern, String fromTimeZone) throws ParseException {
 		DateFormat dateFormat = new SimpleDateFormat(datePattern);
 		dateFormat.setTimeZone(TimeZone.getTimeZone(fromTimeZone));
-		return dateFormat.format(parseStringToDate(date, datePattern));
+		return dateFormat.format(parseDate(date, datePattern));
 	}
 
 	public static int getYearByDate(Date date) {

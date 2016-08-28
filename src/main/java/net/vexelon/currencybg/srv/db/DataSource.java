@@ -306,7 +306,7 @@ public class DataSource implements DataSourceInterface {
 
 			preparedStatement = dbConnection.prepareStatement(sqlSelect.toString());
 			preparedStatement.setTimestamp(1, new Timestamp(timeFrom.getTime()));
-			preparedStatement.setDate(2, DateTimeUtils.convertJavaDateToSqlDate(nextDay));
+			preparedStatement.setDate(2, DateTimeUtils.toSqlDate(nextDay));
 			if (sourceId != null) {
 				preparedStatement.setInt(3, sourceId);
 			}
@@ -369,7 +369,7 @@ public class DataSource implements DataSourceInterface {
 
 			// Dynamic currencies
 			preparedStatement = dbConnection.prepareStatement(selectSQL);
-			preparedStatement.setDate(1, DateTimeUtils.convertJavaDateToSqlDate(dateFrom));
+			preparedStatement.setDate(1, DateTimeUtils.toSqlDate(dateFrom));
 			preparedStatement.setInt(2, sourceId);
 			rs = preparedStatement.executeQuery();
 
@@ -441,7 +441,7 @@ public class DataSource implements DataSourceInterface {
 
 			// Dynamic currencies
 			preparedStatement = dbConnection.prepareStatement(selectSQL);
-			preparedStatement.setDate(1, DateTimeUtils.convertJavaDateToSqlDate(dateFrom));
+			preparedStatement.setDate(1, DateTimeUtils.toSqlDate(dateFrom));
 			rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
