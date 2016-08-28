@@ -105,13 +105,13 @@ public class Currencies extends AbstractJunction {
 				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
 			}
 
-			String sDateZone = DateTimeUtils.toTimeZone(timeFrom, Defs.DATETIME_ZONE_FORMAT,
+			String localTimeFrom = DateTimeUtils.toTimeZone(timeFrom, Defs.DATETIME_ZONE_FORMAT,
 					GlobalConfig.INSTANCE.getServerTimeZone());
-			String sDate = DateTimeUtils.removeTimeZone(sDateZone, Defs.DATETIME_ZONE_FORMAT, Defs.DATETIME_FORMAT);
+			String localTimeFromNoTz = DateTimeUtils.removeTimeZone(localTimeFrom, Defs.DATETIME_ZONE_FORMAT,
+					GlobalConfig.INSTANCE.getServerTimeZone());
 
-			Date date = DateTimeUtils.parseStringToDate(sDate, Defs.DATETIME_FORMAT);
-
-			return getJsonResponse(source.getAllCurrentRatesAfter(sourceId, date));
+			return getJsonResponse(source.getAllCurrentRatesAfter(sourceId,
+					DateTimeUtils.parseStringToDate(localTimeFromNoTz, Defs.DATETIME_FORMAT)));
 		} catch (IOException | DataSourceException | ParseException e) {
 			log.error("", e);
 			return getErrorResponse();
@@ -134,13 +134,13 @@ public class Currencies extends AbstractJunction {
 				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
 			}
 
-			String sDateZone = DateTimeUtils.toTimeZone(timeFrom, Defs.DATETIME_ZONE_FORMAT,
+			String localTimeFrom = DateTimeUtils.toTimeZone(timeFrom, Defs.DATETIME_ZONE_FORMAT,
 					GlobalConfig.INSTANCE.getServerTimeZone());
-			String sDate = DateTimeUtils.removeTimeZone(sDateZone, Defs.DATETIME_ZONE_FORMAT, Defs.DATETIME_FORMAT);
+			String localTimeFromNoTz = DateTimeUtils.removeTimeZone(localTimeFrom, Defs.DATETIME_ZONE_FORMAT,
+					GlobalConfig.INSTANCE.getServerTimeZone());
 
-			Date date = DateTimeUtils.parseStringToDate(sDate, Defs.DATETIME_FORMAT);
-
-			return getJsonResponse(source.getAllCurrentRatesAfter(date));
+			return getJsonResponse(source
+					.getAllCurrentRatesAfter(DateTimeUtils.parseStringToDate(localTimeFromNoTz, Defs.DATETIME_FORMAT)));
 		} catch (IOException | DataSourceException | ParseException e) {
 			log.error("", e);
 			return getErrorResponse();

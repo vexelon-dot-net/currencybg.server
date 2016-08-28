@@ -47,15 +47,8 @@ public class DateTimeUtils {
 	 * @return
 	 */
 	public static Date addDays(Date date, int days) {
-
-		/*
-		 * SimpleDateFormat dateFormat = new SimpleDateFormat(Defs.DATE_FORMAT);
-		 * try { date = dateFormat.parse(dateFormat.format(date)); } catch
-		 * (ParseException e) { // TODO Auto-generated catch block
-		 * e.printStackTrace(); }
-		 */
-
 		Calendar cal = Calendar.getInstance();
+
 		cal.setTime(date);
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
