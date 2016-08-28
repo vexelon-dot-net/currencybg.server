@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.Maps;
 
 import net.vexelon.currencybg.srv.Defs;
+import net.vexelon.currencybg.srv.GlobalConfig;
 import net.vexelon.currencybg.srv.db.DataSource;
 import net.vexelon.currencybg.srv.db.DataSourceException;
 import net.vexelon.currencybg.srv.db.DataSourceInterface;
@@ -54,7 +55,7 @@ public class Currencies extends AbstractJunction {
 				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
 			}
 
-			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
+			Date dateFrom = DateTimeUtils.parseDate(initialDate, Defs.DATE_FORMAT);
 			return getJsonResponse(source.getAllRates(dateFrom));
 		} catch (IOException | DataSourceException | ParseException e) {
 			log.error("", e);
@@ -78,7 +79,7 @@ public class Currencies extends AbstractJunction {
 				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
 			}
 
-			Date dateFrom = DateTimeUtils.parseStringToDate(initialDate, Defs.DATETIME_FORMAT);
+			Date dateFrom = DateTimeUtils.parseDate(initialDate, Defs.DATE_FORMAT);
 			return getJsonResponse(source.getAllRates(sourceId, dateFrom));
 		} catch (IOException | DataSourceException | ParseException e) {
 			log.error("", e);
@@ -88,5 +89,62 @@ public class Currencies extends AbstractJunction {
 			return getCustomResponse(e.getStatus());
 		}
 
+	}
+
+	@GET
+	@Path("/today/{timeFrom}/{sourceId}")
+	public Response getAllCurrentRatesAfter(@PathParam("timeFrom") String timeFrom,
+			@PathParam("sourceId") Integer sourceId, @HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
+
+		try (DataSourceInterface source = new DataSource()) {
+			verifyAccess();
+
+			source.connect();
+
+			if (!source.isCheckAuthentication(apiKey)) {
+				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
+			}
+
+			String localTimeFrom = DateTimeUtils.toTimeZone(timeFrom, GlobalConfig.INSTANCE.getServerTimeZone());
+			String localTimeFromNoTz = DateTimeUtils.removeTimeZone(localTimeFrom,
+					GlobalConfig.INSTANCE.getServerTimeZone());
+
+			return getJsonResponse(source.getAllCurrentRatesAfter(sourceId,
+					DateTimeUtils.parseDate(localTimeFromNoTz, Defs.DATETIME_FORMAT)));
+		} catch (IOException | DataSourceException | ParseException e) {
+			log.error("", e);
+			return getErrorResponse();
+		} catch (ApiAccessException e) {
+			log.debug(e.getMessage());
+			return getCustomResponse(e.getStatus());
+		}
+	}
+
+	@GET
+	@Path("/today/{timeFrom}")
+	public Response getAllCurrentRatesAfter(@PathParam("timeFrom") String timeFrom,
+			@HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
+
+		try (DataSourceInterface source = new DataSource()) {
+			verifyAccess();
+
+			source.connect();
+			if (!source.isCheckAuthentication(apiKey)) {
+				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
+			}
+
+			String localTimeFrom = DateTimeUtils.toTimeZone(timeFrom, GlobalConfig.INSTANCE.getServerTimeZone());
+			String localTimeFromNoTz = DateTimeUtils.removeTimeZone(localTimeFrom,
+					GlobalConfig.INSTANCE.getServerTimeZone());
+
+			return getJsonResponse(
+					source.getAllCurrentRatesAfter(DateTimeUtils.parseDate(localTimeFromNoTz, Defs.DATETIME_FORMAT)));
+		} catch (IOException | DataSourceException | ParseException e) {
+			log.error("", e);
+			return getErrorResponse();
+		} catch (ApiAccessException e) {
+			log.debug(e.getMessage());
+			return getCustomResponse(e.getStatus());
+		}
 	}
 }

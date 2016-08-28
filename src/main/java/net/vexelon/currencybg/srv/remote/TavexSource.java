@@ -55,7 +55,7 @@ public class TavexSource extends AbstractSource {
 		Element span = doc.select("#page-sub-content > tbody > tr > td.right > span").first();
 		String[] components = StringUtils.split(span.text(), " ", 2);
 		if (components.length > 0) {
-			updateDate = DateTimeUtils.parseStringToDate(components[1], DATE_FORMAT);
+			updateDate = DateTimeUtils.parseDate(components[1], DATE_FORMAT);
 		} else {
 			throw new ParseException("Could not parse date - " + span.text(), 0);
 		}

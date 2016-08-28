@@ -45,7 +45,7 @@ public class FIBSource extends AbstractSource {
 
 		// parse update date and time
 		String getDate = contentBox.textNodes().get(0).text().substring(20).trim();
-		Date updateDate = DateTimeUtils.parseStringToDate(getDate, DATE_FORMAT);
+		Date updateDate = DateTimeUtils.parseDate(getDate, DATE_FORMAT);
 
 		// parse table with currencies
 		Elements contentBoxChildren = contentBox.children();
