@@ -38,38 +38,44 @@ public class Heartbeat implements Runnable {
 			}
 
 			try {
-				DateTimeUtils dateTimeUtils = new DateTimeUtils(
+				DateTimeUtils dateTimeSofia = new DateTimeUtils(TimeZone.getTimeZone("Europe/Sofia"));
+				DateTimeUtils dateTimeServer = new DateTimeUtils(
 						TimeZone.getTimeZone(GlobalConfig.INSTANCE.getServerTimeZone()));
-				Date today = new Date();
-				Calendar calToday = dateTimeUtils.getCal(today);
 
-				if (dateTimeUtils.isWeekend(today)) {
+				Date today = new Date();
+				Calendar calToday = dateTimeServer.getCal(today);
+
+				if (dateTimeServer.isWeekend(today)) {
 					/*
 					 * Weekends
 					 */
 					if (!updateRestrictions.isEnabledOnWeekends()) {
 						return false;
-					} else if (dateTimeUtils.isSunday(today) && !updateRestrictions.isEnabledOnSunday()) {
+					} else if (dateTimeServer.isSunday(today) && !updateRestrictions.isEnabledOnSunday()) {
 						return false;
 					}
 
-					if (calToday
-							.before(dateTimeUtils.toCalendar(updateRestrictions.getWeekendsNotBefore(),
-									Defs.DATETIME_RESTR_FORMAT))
-							|| calToday.after(dateTimeUtils.toCalendar(updateRestrictions.getWeekendsNotAfter(),
-									Defs.DATETIME_RESTR_FORMAT))) {
+					Calendar notBefore = dateTimeSofia.getCalToday(updateRestrictions.getWeekendsNotBefore(),
+							Defs.DATETIME_RESTR_FORMAT);
+					Calendar notAfter = dateTimeSofia.getCalToday(updateRestrictions.getWeekendsNotAfter(),
+							Defs.DATETIME_RESTR_FORMAT);
+
+					if (dateTimeServer.compareTimeOnly(calToday, notBefore) < 0
+							|| dateTimeServer.compareTimeOnly(calToday, notAfter) > 0) {
 						return false;
 					}
 
-				} else if (dateTimeUtils.isWeekday(today)) {
+				} else if (dateTimeServer.isWeekday(today)) {
 					/*
 					 * Week days
 					 */
-					if (calToday
-							.before(dateTimeUtils.toCalendar(updateRestrictions.getWeekdaysNotBefore(),
-									Defs.DATETIME_RESTR_FORMAT))
-							|| calToday.after(dateTimeUtils.toCalendar(updateRestrictions.getWeekdaysNotAfter(),
-									Defs.DATETIME_RESTR_FORMAT))) {
+					Calendar notBefore = dateTimeSofia.getCalToday(updateRestrictions.getWeekdaysNotBefore(),
+							Defs.DATETIME_RESTR_FORMAT);
+					Calendar notAfter = dateTimeSofia.getCalToday(updateRestrictions.getWeekdaysNotAfter(),
+							Defs.DATETIME_RESTR_FORMAT);
+
+					if (dateTimeServer.compareTimeOnly(calToday, notBefore) < 0
+							|| dateTimeServer.compareTimeOnly(calToday, notAfter) > 0) {
 						return false;
 					}
 				}
@@ -82,6 +88,7 @@ public class Heartbeat implements Runnable {
 
 		// all OK!
 		return true;
+
 	}
 
 	@Override
