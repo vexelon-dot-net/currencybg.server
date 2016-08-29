@@ -116,28 +116,32 @@ public abstract class AbstractSource implements Source {
 					currencyData.setRatio(0);
 				}
 
-				try {
-					new BigDecimal(currencyData.getBuy());
-				} catch (NumberFormatException e) {
-					// log.warn(tag + " - cannot parse Buy value=" +
-					// StringUtils.defaultString(currencyData.getBuy()));
-					getReporter().write(getName(),
-							tag + " - cannot parse Buy value=" + StringUtils.defaultString(currencyData.getBuy()));
+				if (!currencyData.getBuy().isEmpty()) {
+					try {
+						new BigDecimal(currencyData.getBuy());
+					} catch (NumberFormatException e) {
+						// log.warn(tag + " - cannot parse Buy value=" +
+						// StringUtils.defaultString(currencyData.getBuy()));
+						getReporter().write(getName(),
+								tag + " - cannot parse Buy value=" + StringUtils.defaultString(currencyData.getBuy()));
 
-					// set default
-					currencyData.setBuy("");
+						// set default
+						currencyData.setBuy("");
+					}
 				}
 
-				try {
-					new BigDecimal(currencyData.getSell());
-				} catch (NumberFormatException e) {
-					// log.warn(tag + " - cannot parse Sell value=" +
-					// StringUtils.defaultString(currencyData.getSell()));
-					getReporter().write(getName(),
-							tag + " - cannot parse Sell value=" + StringUtils.defaultString(currencyData.getSell()));
+				if (!currencyData.getSell().isEmpty()) {
+					try {
+						new BigDecimal(currencyData.getSell());
+					} catch (NumberFormatException e) {
+						// log.warn(tag + " - cannot parse Sell value=" +
+						// StringUtils.defaultString(currencyData.getSell()));
+						getReporter().write(getName(), tag + " - cannot parse Sell value="
+								+ StringUtils.defaultString(currencyData.getSell()));
 
-					// set default
-					currencyData.setSell("");
+						// set default
+						currencyData.setSell("");
+					}
 				}
 			} catch (SourceException e) {
 				log.warn("Currency entry normalization error!", e.getMessage());
