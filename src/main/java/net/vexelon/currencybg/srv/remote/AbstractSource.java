@@ -119,8 +119,11 @@ public abstract class AbstractSource implements Source {
 				try {
 					new BigDecimal(currencyData.getBuy());
 				} catch (NumberFormatException e) {
+					// log.warn(tag + " - cannot parse Buy value=" +
+					// StringUtils.defaultString(currencyData.getBuy()));
 					getReporter().write(getName(),
 							tag + " - cannot parse Buy value=" + StringUtils.defaultString(currencyData.getBuy()));
+
 					// set default
 					currencyData.setBuy("");
 				}
@@ -128,8 +131,11 @@ public abstract class AbstractSource implements Source {
 				try {
 					new BigDecimal(currencyData.getSell());
 				} catch (NumberFormatException e) {
+					// log.warn(tag + " - cannot parse Sell value=" +
+					// StringUtils.defaultString(currencyData.getSell()));
 					getReporter().write(getName(),
 							tag + " - cannot parse Sell value=" + StringUtils.defaultString(currencyData.getSell()));
+
 					// set default
 					currencyData.setSell("");
 				}
