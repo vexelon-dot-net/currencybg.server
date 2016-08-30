@@ -102,15 +102,15 @@ public class DateTimeUtilsTests {
 
 			calToday = dtSOF.getCalTimeZone(dtNYC.getCalToday("22:50", TestUtils.TIME_FORMAT));
 			assertTrue("22:50 EDT is before 06:00 EEST",
-					dtNYC.compareTimeOnly(calToday, dtSOF.getCalToday("06:00", TestUtils.TIME_FORMAT)) < 0);
+					DateTimeUtils.compareTimeOnly(calToday, dtSOF.getCalToday("06:00", TestUtils.TIME_FORMAT)) < 0);
 
 			calToday = dtSOF.getCalTimeZone(dtNYC.getCalToday("16:00", TestUtils.TIME_FORMAT));
 			assertTrue("16:00 EDT is equal to 23:00 EEST",
-					dtNYC.compareTimeOnly(calToday, dtSOF.getCalToday("23:00", TestUtils.TIME_FORMAT)) == 0);
+					DateTimeUtils.compareTimeOnly(calToday, dtSOF.getCalToday("23:00", TestUtils.TIME_FORMAT)) == 0);
 
 			calToday = dtSOF.getCalTimeZone(dtNYC.getCalToday("16:30", TestUtils.TIME_FORMAT));
 			assertTrue("16:30 EDT is after 23:00 EEST",
-					dtNYC.compareTimeOnly(calToday, dtSOF.getCalToday("23:00", TestUtils.TIME_FORMAT)) > 0);
+					DateTimeUtils.compareTimeOnly(calToday, dtSOF.getCalToday("23:00", TestUtils.TIME_FORMAT)) > 0);
 
 		} catch (Exception e) {
 			e.printStackTrace();

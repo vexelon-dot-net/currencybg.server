@@ -43,7 +43,7 @@ public class Heartbeat implements Runnable {
 						TimeZone.getTimeZone(GlobalConfig.INSTANCE.getServerTimeZone()));
 
 				Date today = new Date();
-				Calendar calToday = dateTimeServer.getCal(today);
+				Calendar calSofiaToday = dateTimeSofia.getCalTimeZone(dateTimeServer.getCal(today));
 
 				if (dateTimeServer.isWeekend(today)) {
 					/*
@@ -60,8 +60,8 @@ public class Heartbeat implements Runnable {
 					Calendar notAfter = dateTimeSofia.getCalToday(updateRestrictions.getWeekendsNotAfter(),
 							Defs.DATETIME_RESTR_FORMAT);
 
-					if (dateTimeServer.compareTimeOnly(calToday, notBefore) < 0
-							|| dateTimeServer.compareTimeOnly(calToday, notAfter) > 0) {
+					if (DateTimeUtils.compareTimeOnly(calSofiaToday, notBefore) < 0
+							|| DateTimeUtils.compareTimeOnly(calSofiaToday, notAfter) > 0) {
 						return false;
 					}
 
@@ -74,8 +74,8 @@ public class Heartbeat implements Runnable {
 					Calendar notAfter = dateTimeSofia.getCalToday(updateRestrictions.getWeekdaysNotAfter(),
 							Defs.DATETIME_RESTR_FORMAT);
 
-					if (dateTimeServer.compareTimeOnly(calToday, notBefore) < 0
-							|| dateTimeServer.compareTimeOnly(calToday, notAfter) > 0) {
+					if (DateTimeUtils.compareTimeOnly(calSofiaToday, notBefore) < 0
+							|| DateTimeUtils.compareTimeOnly(calSofiaToday, notAfter) > 0) {
 						return false;
 					}
 				}

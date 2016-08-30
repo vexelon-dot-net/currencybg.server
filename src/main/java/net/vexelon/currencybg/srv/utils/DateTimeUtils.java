@@ -141,6 +141,13 @@ public class DateTimeUtils {
 		return new SimpleDateFormat("dd.MM.yyyy").parse("01.01." + Calendar.getInstance().get(Calendar.YEAR));
 	}
 
+	public static int compareTimeOnly(Calendar cal1, Calendar cal2) {
+		cal2.set(Calendar.YEAR, cal1.get(Calendar.YEAR));
+		cal2.set(Calendar.MONTH, cal1.get(Calendar.MONTH));
+		cal2.set(Calendar.DATE, cal1.get(Calendar.DATE));
+		return cal1.compareTo(cal2);
+	}
+
 	public Calendar getCal(Date date) {
 		Calendar cal = Calendar.getInstance(timeZone);
 		cal.setTime(date);
@@ -196,20 +203,6 @@ public class DateTimeUtils {
 
 	public boolean isWeekday(Date date) {
 		return !isWeekend(date);
-	}
-
-	public int compareTimeOnly(Calendar cal1, Calendar cal2) {
-		Calendar today = getCalToday();
-
-		cal1.set(Calendar.YEAR, today.get(Calendar.YEAR));
-		cal1.set(Calendar.MONTH, today.get(Calendar.MONTH));
-		cal1.set(Calendar.DATE, today.get(Calendar.DATE));
-
-		cal2.set(Calendar.YEAR, today.get(Calendar.YEAR));
-		cal2.set(Calendar.MONTH, today.get(Calendar.MONTH));
-		cal2.set(Calendar.DATE, today.get(Calendar.DATE));
-
-		return cal1.compareTo(cal2);
 	}
 
 }
