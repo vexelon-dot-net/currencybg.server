@@ -37,6 +37,10 @@ public class DateTimeUtils {
 		return javax.xml.bind.DatatypeConverter.printDateTime(cal);
 	}
 
+	public static String toStringISO8601(Calendar cal) throws ParseException {
+		return javax.xml.bind.DatatypeConverter.printDateTime(cal);
+	}
+
 	public static Date parseDate(String date, String pattern) throws ParseException {
 		DateFormat formatter = new SimpleDateFormat(pattern);
 		return formatter.parse(date);
@@ -104,37 +108,44 @@ public class DateTimeUtils {
 		return toStringISO8601(parseDateISO8601(date), toTimeZone);
 	}
 
+	/**
+	 * Converts {@code fromCalendar}'s date, time & time zone to a
+	 * {@link Calendar} with {@link toTimeZone} time zone.
+	 * 
+	 * @param fromCalendar
+	 *            Input date, time & time zone.
+	 * @param toTimeZone
+	 *            Target time zone to convert {@code fromCalendar} to.
+	 * @return
+	 */
+	public static Calendar toTimeZone(Calendar fromCalendar, TimeZone toTimeZone) {
+		Calendar calendar = Calendar.getInstance(toTimeZone);
+		calendar.setTimeInMillis(fromCalendar.getTimeInMillis());
+		return calendar;
+	}
+
+	/**
+	 * @see #toTimeZone(Calendar, TimeZone)
+	 */
+	public static Calendar toTimeZone(Calendar fromCalendar, String toTimeZone) {
+		return toTimeZone(fromCalendar, TimeZone.getTimeZone(toTimeZone));
+	}
+
 	public static int getYearByDate(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		return cal.get(Calendar.YEAR);
 	}
 
-	public static Date getStartOfYear() {
-		int year = Calendar.getInstance().get(Calendar.YEAR);
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-		String dateInString = "01.01." + year;
-		Date currentYear = null;
-		try {
-			currentYear = dateFormat.parse(dateInString);
-		} catch (ParseException e1) {
-			e1.printStackTrace();
-			// use default (today)
-		}
-		return currentYear;
+	public static Date getStartOfYear() throws ParseException {
+		return new SimpleDateFormat("dd.MM.yyyy").parse("01.01." + Calendar.getInstance().get(Calendar.YEAR));
 	}
 
-	public Calendar toCalendar(String value, String format) throws ParseException {
-		SimpleDateFormat dateFormat = new SimpleDateFormat(format);
-		Date date = dateFormat.parse(value);
-		Calendar calendar = getCal(date);
-
-		Calendar today = getCalToday();
-		calendar.set(Calendar.YEAR, today.get(Calendar.YEAR));
-		calendar.set(Calendar.MONTH, today.get(Calendar.MONTH));
-		calendar.set(Calendar.DATE, today.get(Calendar.DATE));
-
-		return calendar;
+	public static int compareTimeOnly(Calendar cal1, Calendar cal2) {
+		cal2.set(Calendar.YEAR, cal1.get(Calendar.YEAR));
+		cal2.set(Calendar.MONTH, cal1.get(Calendar.MONTH));
+		cal2.set(Calendar.DATE, cal1.get(Calendar.DATE));
+		return cal1.compareTo(cal2);
 	}
 
 	public Calendar getCal(Date date) {
@@ -145,6 +156,37 @@ public class DateTimeUtils {
 
 	public Calendar getCalToday() {
 		return getCal(new Date());
+	}
+
+	/**
+	 * 
+	 * @param value
+	 *            Date time value.
+	 * @param format
+	 *            {@code value} date time format.
+	 * @return
+	 * @throws ParseException
+	 */
+	public Calendar getCalToday(String value, String format) throws ParseException {
+		SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+		dateFormat.setTimeZone(timeZone);
+		Date date = dateFormat.parse(value);
+
+		Calendar calendar = getCal(date);
+
+		Calendar today = getCalToday();
+		calendar.set(Calendar.YEAR, today.get(Calendar.YEAR));
+		calendar.set(Calendar.MONTH, today.get(Calendar.MONTH));
+		calendar.set(Calendar.DATE, today.get(Calendar.DATE));
+
+		return calendar;
+	}
+
+	/**
+	 * @see #toTimeZone(Calendar, TimeZone)
+	 */
+	public Calendar getCalTimeZone(Calendar fromCalendar) throws ParseException {
+		return toTimeZone(fromCalendar, timeZone);
 	}
 
 	public boolean isSaturday(Date date) {
@@ -162,4 +204,5 @@ public class DateTimeUtils {
 	public boolean isWeekday(Date date) {
 		return !isWeekend(date);
 	}
+
 }

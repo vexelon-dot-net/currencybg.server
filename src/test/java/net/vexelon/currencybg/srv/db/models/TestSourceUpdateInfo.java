@@ -35,7 +35,7 @@ public class TestSourceUpdateInfo {
 	}
 
 	private Calendar toCal(String value) throws ParseException {
-		return new DateTimeUtils(TimeZone.getDefault()).toCalendar(value, Defs.DATETIME_RESTR_FORMAT);
+		return new DateTimeUtils(TimeZone.getDefault()).getCalToday(value, Defs.DATETIME_RESTR_FORMAT);
 	}
 
 	@Test
