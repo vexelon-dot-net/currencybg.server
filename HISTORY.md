@@ -1,6 +1,6 @@
 Currency BG Server Changes
 ==========================
 
-## v0.9
+## 1.0
 
 Initial release.
