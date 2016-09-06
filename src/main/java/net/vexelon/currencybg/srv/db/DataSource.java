@@ -64,7 +64,6 @@ public class DataSource implements DataSourceInterface {
 
 	@Override
 	public void addRates(Map<Integer, List<CurrencyData>> rates) throws DataSourceException {
-
 		for (Map.Entry<Integer, List<CurrencyData>> currenciesData : rates.entrySet()) {
 
 			List<CurrencyData> currencies = new ArrayList<CurrencyData>();
@@ -116,7 +115,6 @@ public class DataSource implements DataSourceInterface {
 
 	@Override
 	public void addRates(List<CurrencyData> currencies) throws DataSourceException {
-
 		if (!currencies.isEmpty() && currencies != null) {
 
 			PreparedStatement preparedStatement = null;
@@ -208,7 +206,6 @@ public class DataSource implements DataSourceInterface {
 
 	@Override
 	public boolean isCheckAuthentication(String authenticationKey) throws DataSourceException {
-
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
 
@@ -348,7 +345,6 @@ public class DataSource implements DataSourceInterface {
 		log.trace("Selected rows {} in {}", selectSQL, selectSQL);
 
 		try {
-
 			// Dynamic currencies
 			preparedStatement = dbConnection.prepareStatement(selectSQL);
 			preparedStatement.setDate(1, DateTimeUtils.toSqlDate(dateFrom));
@@ -423,17 +419,14 @@ public class DataSource implements DataSourceInterface {
 		}
 
 		try {
-
 			// Dynamic currencies
 			preparedStatement = dbConnection.prepareStatement(selectSQL);
 			preparedStatement.setDate(1, DateTimeUtils.toSqlDate(dateFrom));
 			rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
-
 				currencies.add(new CurrencyData(rs.getString(1), rs.getInt(2), rs.getString(3), rs.getString(4),
 						rs.getTimestamp(5), rs.getInt(6)));
-
 			}
 
 			// Gson gson = new

@@ -105,7 +105,7 @@ public class Currencies extends AbstractJunction {
 				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
 			}
 
-			String localTimeFrom = DateTimeUtils.toTimeZone(timeFrom, GlobalConfig.INSTANCE.getServerTimeZone());
+			String localTimeFrom = DateTimeUtils.toTimeZone(timeFrom, Defs.DATETIME_TIMEZONE_SOFIA);
 			String localTimeFromNoTz = DateTimeUtils.removeTimeZone(localTimeFrom,
 					GlobalConfig.INSTANCE.getServerTimeZone());
 
@@ -133,7 +133,7 @@ public class Currencies extends AbstractJunction {
 				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
 			}
 
-			String localTimeFrom = DateTimeUtils.toTimeZone(timeFrom, GlobalConfig.INSTANCE.getServerTimeZone());
+			String localTimeFrom = DateTimeUtils.toTimeZone(timeFrom, Defs.DATETIME_TIMEZONE_SOFIA);
 			String localTimeFromNoTz = DateTimeUtils.removeTimeZone(localTimeFrom,
 					GlobalConfig.INSTANCE.getServerTimeZone());
 

@@ -11,7 +11,8 @@ public final class Defs {
 	/*
 	 * DateTime
 	 */
-	public static final String DATETIME_DEFAULT_TIMEZONE = "Europe/Sofia";
+	public static final String DATETIME_TIMEZONE_SOFIA = "Europe/Sofia";
+	public static final String DATETIME_DEFAULT_TIMEZONE = DATETIME_TIMEZONE_SOFIA;
 	public static final String DATETIME_RESTR_FORMAT = "HH:mm";
 
 	/*
