@@ -27,6 +27,7 @@ import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.CurrencySource;
 import net.vexelon.currencybg.srv.db.models.SourceUpdateRestrictions;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
+import net.vexelon.currencybg.srv.utils.GsonDateTimeSerializer;
 
 public class DataSource implements DataSourceInterface {
 
@@ -247,7 +248,9 @@ public class DataSource implements DataSourceInterface {
 		List<CurrencyData> currencies = Lists.newArrayList();
 		currencies = getCurrentRatesAfter(null, timeFrom);
 
-		Gson gson = new GsonBuilder().setDateFormat(Defs.DATEFORMAT_ISO_8601).create();
+		Gson gson = new GsonBuilder().setDateFormat(Defs.DATEFORMAT_ISO_8601)
+				.registerTypeHierarchyAdapter(Date.class, new GsonDateTimeSerializer(Defs.DATETIME_TIMEZONE_SOFIA))
+				.create();
 		Type type = new TypeToken<List<CurrencyData>>() {
 		}.getType();
 
@@ -260,7 +263,9 @@ public class DataSource implements DataSourceInterface {
 		List<CurrencyData> currencies = Lists.newArrayList();
 		currencies = getCurrentRatesAfter(sourceId, timeFrom);
 
-		Gson gson = new GsonBuilder().setDateFormat(Defs.DATEFORMAT_ISO_8601).create();
+		Gson gson = new GsonBuilder().setDateFormat(Defs.DATEFORMAT_ISO_8601)
+				.registerTypeHierarchyAdapter(Date.class, new GsonDateTimeSerializer(Defs.DATETIME_TIMEZONE_SOFIA))
+				.create();
 		Type type = new TypeToken<List<CurrencyData>>() {
 		}.getType();
 
