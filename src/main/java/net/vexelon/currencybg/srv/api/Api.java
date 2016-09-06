@@ -1,7 +1,5 @@
 package net.vexelon.currencybg.srv.api;
 
-import java.util.Map;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
@@ -21,10 +19,9 @@ public class Api extends AbstractJunction {
 		JsonObject junctionsJson = new JsonObject();
 		String baseUri = uri.getBaseUri().toString();
 
-		Map<String, String> currenciesJunctionsMap = Currencies.getJunctionsList();
-		for (java.util.Map.Entry<String, String> entry : currenciesJunctionsMap.entrySet()) {
-			junctionsJson.addProperty(baseUri + entry.getKey(), entry.getValue());
-		}
+		Currencies.getJunctionsList().entrySet().stream().forEach(e -> {
+			junctionsJson.addProperty(baseUri + e.getKey(), e.getValue());
+		});
 
 		return getJsonResponse(junctionsJson);
 	}
