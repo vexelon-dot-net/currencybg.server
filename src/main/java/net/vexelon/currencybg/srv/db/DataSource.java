@@ -32,33 +32,23 @@ public class DataSource implements DataSourceInterface {
 
 	private static final Logger log = LoggerFactory.getLogger(Currencies.class);
 
-	Connection dbConnection = null;
+	private Connection dbConnection = null;
 
 	@Override
 	public Connection connect() throws DataSourceException {
 		try {
-
 			Class.forName(Defs.DB_DRIVER);
-
 		} catch (ClassNotFoundException e) {
-			// log.error("Could not open database connection!", e);
 			throw new DataSourceException("Could not find DB driver!", e);
-			// System.out.println(e.getMessage());
-
 		}
 
 		try {
-
 			dbConnection = DriverManager.getConnection(Defs.DB_CONNECTION, Defs.DB_USER, Defs.DB_PASSWORD);
 			return dbConnection;
-
 		} catch (SQLException e) {
-			// log.error("Could not open database connection!", e);
 			throw new DataSourceException("Could not open SQLite database!", e);
-			// System.out.println(e.getMessage());
 
 		}
-		// return dbConnection;
 	}
 
 	@Override
@@ -68,8 +58,6 @@ public class DataSource implements DataSourceInterface {
 				dbConnection.close();
 			} catch (SQLException e) {
 				log.error("Could not close database connection!", e);
-				// throw new
-				// DataSourceException("Could not open SQLite database!", e);
 			}
 		}
 	}
@@ -265,9 +253,8 @@ public class DataSource implements DataSourceInterface {
 		Gson gson = new GsonBuilder().setDateFormat(Defs.DATEFORMAT_ISO_8601).create();
 		Type type = new TypeToken<List<CurrencyData>>() {
 		}.getType();
-		String json = gson.toJson(currencies, type);
 
-		return json;
+		return gson.toJson(currencies, type);
 	}
 
 	@Override
@@ -279,13 +266,11 @@ public class DataSource implements DataSourceInterface {
 		Gson gson = new GsonBuilder().setDateFormat(Defs.DATEFORMAT_ISO_8601).create();
 		Type type = new TypeToken<List<CurrencyData>>() {
 		}.getType();
-		String json = gson.toJson(currencies, type);
 
-		return json;
+		return gson.toJson(currencies, type);
 	}
 
 	private List<CurrencyData> getCurrentRatesAfter(Integer sourceId, Date timeFrom) throws DataSourceException {
-
 		List<CurrencyData> currencies = Lists.newArrayList();
 
 		PreparedStatement preparedStatement = null;
@@ -303,7 +288,6 @@ public class DataSource implements DataSourceInterface {
 		log.trace("Selected rows {} in {}", sqlSelect, sqlSelect);
 
 		try {
-
 			preparedStatement = dbConnection.prepareStatement(sqlSelect.toString());
 			preparedStatement.setTimestamp(1, new Timestamp(timeFrom.getTime()));
 			preparedStatement.setDate(2, DateTimeUtils.toSqlDate(nextDay));
@@ -314,10 +298,8 @@ public class DataSource implements DataSourceInterface {
 			rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
-
 				currencies.add(new CurrencyData(rs.getString(1), rs.getInt(2), rs.getString(3), rs.getString(4),
 						rs.getTimestamp(5), rs.getInt(6)));
-
 			}
 
 			return currencies;
@@ -435,7 +417,10 @@ public class DataSource implements DataSourceInterface {
 
 		String json = null;
 		// XXX test
-		log.trace("Selected rows {} in {}", selectSQL, selectSQL);
+
+		if (log.isTraceEnabled()) {
+			log.trace("Selected rows {} in {}", selectSQL, selectSQL);
+		}
 
 		try {
 
