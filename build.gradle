@@ -21,7 +21,7 @@ apply plugin: 'com.bmuschko.tomcat'
 
 def appVersion = '1.0'
 def tomcatVersion = '7.0.54'
-sourceCompatibility = JavaVersion.VERSION_1_7
+sourceCompatibility = JavaVersion.VERSION_1_8
 
 //compileTestJava.options.encoding = 'UTF-8'
 
@@ -40,8 +40,8 @@ eclipse {
 	}
 	project.referencedProjects.each { evaluationDependsOn it }
 	jdt {
-    	sourceCompatibility = JavaVersion.VERSION_1_7
-    	targetCompatibility = JavaVersion.VERSION_1_7
+    	sourceCompatibility = JavaVersion.VERSION_1_8
+    	targetCompatibility = JavaVersion.VERSION_1_8
     }
   	//classpath.plusConfigurations += [ configurations.compile, configurations.testCompile ]
     classpath {

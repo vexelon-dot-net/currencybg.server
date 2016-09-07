@@ -1,6 +1,7 @@
 package net.vexelon.currencybg.srv.reports;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +32,10 @@ public class TelegramReporter extends AbstractReporter {
 
 			TelegramBot bot = TelegramBotAdapter.build(GlobalConfig.INSTANCE.getBotToken());
 
-			bot.execute(new SendDocument(/* "@ceco88" */GlobalConfig.INSTANCE.getBotChannel(),
-					buffer.toString().getBytes("UTF-8")), new Callback<SendDocument, SendResponse>() {
+			bot.execute(
+					new SendDocument(GlobalConfig.INSTANCE.getBotChannel(),
+							buffer.toString().getBytes(StandardCharsets.UTF_8.name())),
+					new Callback<SendDocument, SendResponse>() {
 						@Override
 						public void onFailure(SendDocument request, IOException e) {
 							log.error("Telegram SendDocument failed!", e);
