@@ -1,11 +1,15 @@
 package net.vexelon.currencybg.srv;
 
 import java.io.IOException;
-import java.text.ParseException;
+import java.time.DateTimeException;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -21,7 +25,7 @@ import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.remote.Source;
 import net.vexelon.currencybg.srv.remote.SourceException;
 import net.vexelon.currencybg.srv.reports.TelegramReporter;
-import net.vexelon.currencybg.srv.utils.DateTimeUtils;
+import net.vexelon.currencybg.srv.tests.TestUtils;
 
 /**
  * Fetches currencies from remote server and imports them into the database.
@@ -38,49 +42,55 @@ public class Heartbeat implements Runnable {
 			}
 
 			try {
-				DateTimeUtils dateTimeSofia = new DateTimeUtils(TimeZone.getTimeZone("Europe/Sofia"));
-				DateTimeUtils dateTimeServer = new DateTimeUtils(
-						TimeZone.getTimeZone(GlobalConfig.INSTANCE.getServerTimeZone()));
+				// hour and minute and database are always relevant to the
+				// Europe/Sofia time zone
+				ZonedDateTime dateTimeSofia = ZonedDateTime.now(ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
 
-				Date today = new Date();
-				Calendar calSofiaToday = dateTimeSofia.getCalTimeZone(dateTimeServer.getCal(today));
+				System.out.println("Now -----");
+				System.out.println(dateTimeSofia);
 
-				if (dateTimeServer.isWeekend(today)) {
+				if (dateTimeSofia.getDayOfWeek() == DayOfWeek.SATURDAY
+						|| dateTimeSofia.getDayOfWeek() == DayOfWeek.SUNDAY) {
 					/*
 					 * Weekends
 					 */
 					if (!updateRestrictions.isEnabledOnWeekends()) {
 						return false;
-					} else if (dateTimeServer.isSunday(today) && !updateRestrictions.isEnabledOnSunday()) {
+					} else if (dateTimeSofia.getDayOfWeek() == DayOfWeek.SUNDAY
+							&& !updateRestrictions.isEnabledOnSunday()) {
 						return false;
 					}
 
-					Calendar notBefore = dateTimeSofia.getCalToday(updateRestrictions.getWeekendsNotBefore(),
-							Defs.DATETIME_RESTR_FORMAT);
-					Calendar notAfter = dateTimeSofia.getCalToday(updateRestrictions.getWeekendsNotAfter(),
-							Defs.DATETIME_RESTR_FORMAT);
+					ZonedDateTime notBefore = ZonedDateTime.of(LocalDate.now(),
+							LocalTime.parse(updateRestrictions.getWeekendsNotBefore()),
+							ZoneId.of(TestUtils.TIMEZONE_SOFIA));
 
-					if (DateTimeUtils.compareTimeOnly(calSofiaToday, notBefore) < 0
-							|| DateTimeUtils.compareTimeOnly(calSofiaToday, notAfter) > 0) {
-						return false;
-					}
+					ZonedDateTime notAfter = ZonedDateTime.of(LocalDate.now(),
+							LocalTime.parse(updateRestrictions.getWeekendsNotAfter()),
+							ZoneId.of(TestUtils.TIMEZONE_SOFIA));
 
-				} else if (dateTimeServer.isWeekday(today)) {
+					return dateTimeSofia.isAfter(notBefore) && dateTimeSofia.isBefore(notAfter);
+				} else {
 					/*
 					 * Week days
 					 */
-					Calendar notBefore = dateTimeSofia.getCalToday(updateRestrictions.getWeekdaysNotBefore(),
-							Defs.DATETIME_RESTR_FORMAT);
-					Calendar notAfter = dateTimeSofia.getCalToday(updateRestrictions.getWeekdaysNotAfter(),
-							Defs.DATETIME_RESTR_FORMAT);
+					ZonedDateTime notBefore = ZonedDateTime.of(LocalDate.now(),
+							LocalTime.parse(updateRestrictions.getWeekdaysNotBefore()),
+							ZoneId.of(TestUtils.TIMEZONE_SOFIA));
 
-					if (DateTimeUtils.compareTimeOnly(calSofiaToday, notBefore) < 0
-							|| DateTimeUtils.compareTimeOnly(calSofiaToday, notAfter) > 0) {
-						return false;
-					}
+					ZonedDateTime notAfter = ZonedDateTime.of(LocalDate.now(),
+							LocalTime.parse(updateRestrictions.getWeekdaysNotAfter()),
+							ZoneId.of(TestUtils.TIMEZONE_SOFIA));
+
+					System.out.println("Note before: ");
+					System.out.println(notBefore);
+					System.out.println("Note after: ");
+					System.out.println(notAfter);
+
+					return dateTimeSofia.isAfter(notBefore) && dateTimeSofia.isBefore(notAfter);
 				}
-			} catch (ParseException e) {
-				log.warn("Incorrect update restrictions format!", e);
+			} catch (DateTimeException e) {
+				log.warn("Incorrect update restrictions format or date time error!", e);
 				// do not update, if time restrictions could not be parsed!
 				return false;
 			}
