@@ -25,7 +25,6 @@ import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.remote.Source;
 import net.vexelon.currencybg.srv.remote.SourceException;
 import net.vexelon.currencybg.srv.reports.TelegramReporter;
-import net.vexelon.currencybg.srv.tests.TestUtils;
 
 /**
  * Fetches currencies from remote server and imports them into the database.
@@ -63,11 +62,11 @@ public class Heartbeat implements Runnable {
 
 					ZonedDateTime notBefore = ZonedDateTime.of(LocalDate.now(),
 							LocalTime.parse(updateRestrictions.getWeekendsNotBefore()),
-							ZoneId.of(TestUtils.TIMEZONE_SOFIA));
+							ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
 
 					ZonedDateTime notAfter = ZonedDateTime.of(LocalDate.now(),
 							LocalTime.parse(updateRestrictions.getWeekendsNotAfter()),
-							ZoneId.of(TestUtils.TIMEZONE_SOFIA));
+							ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
 
 					return dateTimeSofia.isAfter(notBefore) && dateTimeSofia.isBefore(notAfter);
 				} else {
@@ -76,11 +75,11 @@ public class Heartbeat implements Runnable {
 					 */
 					ZonedDateTime notBefore = ZonedDateTime.of(LocalDate.now(),
 							LocalTime.parse(updateRestrictions.getWeekdaysNotBefore()),
-							ZoneId.of(TestUtils.TIMEZONE_SOFIA));
+							ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
 
 					ZonedDateTime notAfter = ZonedDateTime.of(LocalDate.now(),
 							LocalTime.parse(updateRestrictions.getWeekdaysNotAfter()),
-							ZoneId.of(TestUtils.TIMEZONE_SOFIA));
+							ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
 
 					System.out.println("Note before: ");
 					System.out.println(notBefore);
