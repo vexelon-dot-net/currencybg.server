@@ -3,7 +3,6 @@ package net.vexelon.currencybg.srv;
 import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -41,12 +40,13 @@ public class Heartbeat implements Runnable {
 			}
 
 			try {
-				// hour and minute and database are always relevant to the
-				// Europe/Sofia time zone
+				/*
+				 * Hour and minute in database are always relevant to the
+				 * Europe/Sofia time zone
+				 */
 				ZonedDateTime dateTimeSofia = ZonedDateTime.now(ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
 
-				System.out.println("Now -----");
-				System.out.println(dateTimeSofia);
+				System.out.println("----- Now in SOF: " + dateTimeSofia.toString());
 
 				if (dateTimeSofia.getDayOfWeek() == DayOfWeek.SATURDAY
 						|| dateTimeSofia.getDayOfWeek() == DayOfWeek.SUNDAY) {
@@ -60,31 +60,34 @@ public class Heartbeat implements Runnable {
 						return false;
 					}
 
-					ZonedDateTime notBefore = ZonedDateTime.of(LocalDate.now(),
+					ZonedDateTime notBefore = ZonedDateTime.of(dateTimeSofia.toLocalDate(),
 							LocalTime.parse(updateRestrictions.getWeekendsNotBefore()),
 							ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
 
-					ZonedDateTime notAfter = ZonedDateTime.of(LocalDate.now(),
+					ZonedDateTime notAfter = ZonedDateTime.of(dateTimeSofia.toLocalDate(),
 							LocalTime.parse(updateRestrictions.getWeekendsNotAfter()),
 							ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
+
+					System.out.println("[WEND] Note before: " + notBefore.toString());
+					System.out.println("[WEND] Note after: " + notAfter.toString());
+					System.out.println("------------");
 
 					return dateTimeSofia.isAfter(notBefore) && dateTimeSofia.isBefore(notAfter);
 				} else {
 					/*
 					 * Week days
 					 */
-					ZonedDateTime notBefore = ZonedDateTime.of(LocalDate.now(),
+					ZonedDateTime notBefore = ZonedDateTime.of(dateTimeSofia.toLocalDate(),
 							LocalTime.parse(updateRestrictions.getWeekdaysNotBefore()),
 							ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
 
-					ZonedDateTime notAfter = ZonedDateTime.of(LocalDate.now(),
+					ZonedDateTime notAfter = ZonedDateTime.of(dateTimeSofia.toLocalDate(),
 							LocalTime.parse(updateRestrictions.getWeekdaysNotAfter()),
 							ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
 
-					System.out.println("Note before: ");
-					System.out.println(notBefore);
-					System.out.println("Note after: ");
-					System.out.println(notAfter);
+					System.out.println("[WD] Note before: " + notBefore.toString());
+					System.out.println("[WD] Note after: " + notAfter.toString());
+					System.out.println("------------");
 
 					return dateTimeSofia.isAfter(notBefore) && dateTimeSofia.isBefore(notAfter);
 				}
