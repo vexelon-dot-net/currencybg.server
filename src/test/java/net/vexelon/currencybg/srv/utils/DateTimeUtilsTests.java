@@ -137,7 +137,6 @@ public class DateTimeUtilsTests {
 			dtNYC = ZonedDateTime.of(2016, 9, 6, 23, 00, 0, 0, ZoneId.of(TestUtils.TIMEZONE_NEWYORK));
 
 			dur = Duration.between(dtSOF, dtNYC);
-			System.out.println(dur);
 			assertTrue(dur.getSeconds() == 0);
 
 		} catch (Exception e) {

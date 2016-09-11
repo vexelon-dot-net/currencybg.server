@@ -94,13 +94,10 @@ public class DataSource implements DataSourceInterface {
 					preparedStatement.setInt(6, currencies.get(i).getSource());
 
 					preparedStatement.executeUpdate();
-
 				}
-
 			} catch (SQLException e) {
 				throw new DataSourceException("SQL Exception in method addRates!", e);
 			} finally {
-
 				if (preparedStatement != null) {
 					try {
 						preparedStatement.close();
@@ -108,9 +105,7 @@ public class DataSource implements DataSourceInterface {
 						log.error("Problem with close of PreparedStatement in method addRates!", e);
 					}
 				}
-
 			}
-
 		}
 	}
 
@@ -134,13 +129,10 @@ public class DataSource implements DataSourceInterface {
 					preparedStatement.setInt(6, currencies.get(i).getSource());
 
 					preparedStatement.executeUpdate();
-
 				}
-
 			} catch (SQLException e) {
 				throw new DataSourceException("SQL Exception in method addRates!", e);
 			} finally {
-
 				if (preparedStatement != null) {
 					try {
 						preparedStatement.close();
@@ -148,10 +140,8 @@ public class DataSource implements DataSourceInterface {
 						log.error("Problem with close of PreparedStatement in method addRates!", e);
 					}
 				}
-
 			}
 		}
-
 	}
 
 	@Override
@@ -193,7 +183,6 @@ public class DataSource implements DataSourceInterface {
 		} catch (SQLException e) {
 			throw new DataSourceException("SQL Exception in method addRates!", e);
 		} finally {
-
 			if (preparedStatement != null) {
 				try {
 					preparedStatement.close();
@@ -201,7 +190,6 @@ public class DataSource implements DataSourceInterface {
 					log.error("Problem with close of PreparedStatement in method addRates!", e);
 				}
 			}
-
 		}
 	}
 
@@ -221,7 +209,6 @@ public class DataSource implements DataSourceInterface {
 		} catch (SQLException e) {
 			throw new DataSourceException("SQL Exception in method getFixedRates!", e);
 		} finally {
-
 			if (rs != null) {
 				try {
 					rs.close();
@@ -237,7 +224,6 @@ public class DataSource implements DataSourceInterface {
 					log.error("Problem with close of PreparedStatement in method isCheckAuthentication!", e);
 				}
 			}
-
 		}
 
 		return false;
@@ -287,7 +273,9 @@ public class DataSource implements DataSourceInterface {
 			sqlSelect += "ORDER BY date asc";
 		}
 
-		log.trace("Selected rows {} in {}", sqlSelect, sqlSelect);
+		if (log.isTraceEnabled()) {
+			log.trace("Selected rows {} in {}", sqlSelect, sqlSelect);
+		}
 
 		try {
 			preparedStatement = dbConnection.prepareStatement(sqlSelect.toString());
@@ -327,9 +315,7 @@ public class DataSource implements DataSourceInterface {
 							e);
 				}
 			}
-
 		}
-
 	}
 
 	@Override
@@ -342,12 +328,9 @@ public class DataSource implements DataSourceInterface {
 		String selectSQL = " SELECT code, " + " ratio, " + " buy, " + " sell, " + "	date, " + "	source "
 				+ "   FROM cbg_currencies" + " WHERE DATE(date) = ? " + " AND source = ? ORDER BY date asc";
 
-		// SELECT * FROM `cbg_fixedcurrencies` WHERE year(column_curr_date) >=
-		// 2016
-
-		String json = null;
-		// XXX test
-		log.trace("Selected rows {} in {}", selectSQL, selectSQL);
+		if (log.isTraceEnabled()) {
+			log.trace("Selected rows {} in {}", selectSQL, selectSQL);
+		}
 
 		try {
 			// Dynamic currencies
@@ -366,16 +349,16 @@ public class DataSource implements DataSourceInterface {
 			Gson gson = new GsonBuilder().setDateFormat(Defs.DATEFORMAT_ISO_8601).create();
 			Type type = new TypeToken<List<CurrencyData>>() {
 			}.getType();
-			json = gson.toJson(currencies, type);
+			String json = gson.toJson(currencies, type);
 
-			System.out.println(json);
-			List<CurrencyData> fromJson = gson.fromJson(json, type);
-
+			// List<CurrencyData> fromJson = gson.fromJson(json, type);
 			// for (CurrencyData task : fromJson) {
 			// System.out.println(task.getCode());
 			// System.out.println(DateTimeUtils.parseDateToString(task.getCurrDate(),
 			// "yyyy-MM-dd"));
 			// }
+
+			return json;
 
 		} catch (SQLException e) {
 			throw new DataSourceException("SQL Exception in method getAllRatesByDate!", e);
@@ -399,8 +382,6 @@ public class DataSource implements DataSourceInterface {
 			}
 
 		}
-
-		return json;
 	}
 
 	@Override
@@ -415,9 +396,6 @@ public class DataSource implements DataSourceInterface {
 
 		// SELECT * FROM `cbg_fixedcurrencies` WHERE year(column_curr_date) >=
 		// 2016
-
-		String json = null;
-		// XXX test
 
 		if (log.isTraceEnabled()) {
 			log.trace("Selected rows {} in {}", selectSQL, selectSQL);
@@ -441,15 +419,16 @@ public class DataSource implements DataSourceInterface {
 			Gson gson = new GsonBuilder().setDateFormat(Defs.DATEFORMAT_ISO_8601).create();
 			Type type = new TypeToken<List<CurrencyData>>() {
 			}.getType();
-			json = gson.toJson(currencies, type);
+			String json = gson.toJson(currencies, type);
 
-			List<CurrencyData> fromJson = gson.fromJson(json, type);
-
+			// List<CurrencyData> fromJson = gson.fromJson(json, type);
 			// for (CurrencyData task : fromJson) {
 			// System.out.println(task.getCode());
 			// System.out.println(DateTimeUtils.parseDateToString(task.getCurrDate(),
 			// "yyyy-MM-dd"));
 			// }
+
+			return json;
 
 		} catch (SQLException e) {
 			throw new DataSourceException("SQL Exception in method getAllRatesByDate!", e);
@@ -473,8 +452,6 @@ public class DataSource implements DataSourceInterface {
 			}
 
 		}
-
-		return json;
 	}
 
 	@Override
@@ -505,7 +482,6 @@ public class DataSource implements DataSourceInterface {
 					source.setUpdateRestrictions(SourceUpdateRestrictions.empty());
 				}
 			}
-
 		} catch (JsonParseException e) {
 			throw new DataSourceException(id + " - could not parse update info JSON data for currency!", e);
 		} catch (SQLException e) {
@@ -529,6 +505,7 @@ public class DataSource implements DataSourceInterface {
 			}
 
 		}
+
 		return source;
 	}
 
