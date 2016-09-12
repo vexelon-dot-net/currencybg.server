@@ -31,7 +31,8 @@ public enum GlobalConfig {
 		TIMEZONE_SERVER("timezone.server"),
 		MAINTENANCE_ENABLED("maintenance.enabled"),
 		TELEGRAM_BOT_TOKEN("telegram.bot"),
-		TELEGRAM_CHANNEL("telegram.channel");
+		TELEGRAM_CHANNEL("telegram.channel"),
+		ENABLE_LOG_SQL("log.sql");
 
 		private String optName;
 
@@ -56,6 +57,7 @@ public enum GlobalConfig {
 			setMaintenanceEnabled(false);
 			setBotToken("");
 			setBotChannel("");
+			setLogSqlEnabled(false);
 
 			builder.save();
 			builder.setAutoSave(true);
@@ -169,4 +171,19 @@ public enum GlobalConfig {
 		getConfig().setProperty(Options.TELEGRAM_CHANNEL.getName(), channel);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isLogSqlEnabled() {
+		return getConfig().getBoolean(Options.ENABLE_LOG_SQL.getName());
+	}
+
+	/**
+	 * 
+	 * @param channel
+	 */
+	public void setLogSqlEnabled(boolean enabled) {
+		getConfig().setProperty(Options.ENABLE_LOG_SQL.getName(), enabled);
+	}
 }
