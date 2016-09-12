@@ -39,20 +39,12 @@ public class DataSource implements DataSourceInterface {
 
 	@Override
 	public Connection connect() throws DataSourceException {
-		try {
-			Class.forName(Defs.DB_DRIVER);
-		} catch (ClassNotFoundException e) {
-			throw new DataSourceException("Could not find DB driver!", e);
-		}
-
 		isLogSql = GlobalConfig.INSTANCE.isLogSqlEnabled();
 
 		try {
-			dbConnection = DriverManager.getConnection(Defs.DB_CONNECTION, Defs.DB_USER, Defs.DB_PASSWORD);
-			return dbConnection;
+			return dbConnection = DriverManager.getConnection(Defs.DB_CONNECTION, Defs.DB_USER, Defs.DB_PASSWORD);
 		} catch (SQLException e) {
-			throw new DataSourceException("Could not open SQLite database!", e);
-
+			throw new DataSourceException("Could not open database connection!", e);
 		}
 	}
 
