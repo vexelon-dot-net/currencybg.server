@@ -45,8 +45,9 @@ public class Heartbeat implements Runnable {
 				 * Europe/Sofia time zone
 				 */
 				ZonedDateTime dateTimeSofia = ZonedDateTime.now(ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
-
-				System.out.println("----- Now in SOF: " + dateTimeSofia.toString());
+				if (log.isTraceEnabled()) {
+					log.trace("*** Time in {} is {}", Defs.DATETIME_TIMEZONE_SOFIA, dateTimeSofia.toString());
+				}
 
 				if (dateTimeSofia.getDayOfWeek() == DayOfWeek.SATURDAY
 						|| dateTimeSofia.getDayOfWeek() == DayOfWeek.SUNDAY) {
@@ -68,9 +69,10 @@ public class Heartbeat implements Runnable {
 							LocalTime.parse(updateRestrictions.getWeekendsNotAfter()),
 							ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
 
-					System.out.println("[WEND] Note before: " + notBefore.toString());
-					System.out.println("[WEND] Note after: " + notAfter.toString());
-					System.out.println("------------");
+					if (log.isTraceEnabled()) {
+						log.trace("[Weekend] Note before - {}", notBefore.toString());
+						log.trace("[Weekend] Note after - {}", notAfter.toString());
+					}
 
 					return dateTimeSofia.isAfter(notBefore) && dateTimeSofia.isBefore(notAfter);
 				} else {
@@ -85,9 +87,10 @@ public class Heartbeat implements Runnable {
 							LocalTime.parse(updateRestrictions.getWeekdaysNotAfter()),
 							ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
 
-					System.out.println("[WD] Note before: " + notBefore.toString());
-					System.out.println("[WD] Note after: " + notAfter.toString());
-					System.out.println("------------");
+					if (log.isTraceEnabled()) {
+						log.trace("[Weekday] Note before - {}", notBefore.toString());
+						log.trace("[Weekday] Note after - {}", notAfter.toString());
+					}
 
 					return dateTimeSofia.isAfter(notBefore) && dateTimeSofia.isBefore(notAfter);
 				}
