@@ -5,13 +5,13 @@ Currency BG Server
 
 Currency BG RESTful web service
 
-[API documentation](docs/API.md)
+HTTP API [documentation](docs/API.md)
 
 # Requirements
 
-  * JDK `1.7`
+  * JDK `1.8`
   * MySQL `5.5`
-  * Tomcat `7.0.+`
+  * Tomcat `7.+`
 
 # Development
 

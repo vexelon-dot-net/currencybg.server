@@ -25,6 +25,7 @@ public class Bootstrap {
 	public void start(ScheduledExecutorService executor) {
 		log.trace("Running sanity tests ...");
 		testEncoding();
+		testSQLDriver();
 
 		log.info("Loading configuratons ...");
 		if (StringUtils.isEmpty(Defs.CONFIG_PATH)) {
@@ -81,6 +82,14 @@ public class Bootstrap {
 		 */
 		"Victor jagt zwölf Boxkämpfer quer über den großen Sylter Deich".getBytes(Charsets.UTF_8);
 		"Любя, съешь щипцы, — вздохнёт мэр, — кайф жгуч ".getBytes(Charsets.UTF_8);
+	}
+
+	private void testSQLDriver() {
+		try {
+			Class.forName(Defs.DB_DRIVER);
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException("Could not find SQL " + Defs.DB_DRIVER + " driver!", e);
+		}
 	}
 
 }

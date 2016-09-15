@@ -22,6 +22,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
 import net.vexelon.currencybg.srv.Defs;
+import net.vexelon.currencybg.srv.GlobalConfig;
 import net.vexelon.currencybg.srv.api.Currencies;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.CurrencySource;
@@ -34,21 +35,16 @@ public class DataSource implements DataSourceInterface {
 	private static final Logger log = LoggerFactory.getLogger(Currencies.class);
 
 	private Connection dbConnection = null;
+	private boolean isLogSql = false;
 
 	@Override
 	public Connection connect() throws DataSourceException {
-		try {
-			Class.forName(Defs.DB_DRIVER);
-		} catch (ClassNotFoundException e) {
-			throw new DataSourceException("Could not find DB driver!", e);
-		}
+		isLogSql = GlobalConfig.INSTANCE.isLogSqlEnabled();
 
 		try {
-			dbConnection = DriverManager.getConnection(Defs.DB_CONNECTION, Defs.DB_USER, Defs.DB_PASSWORD);
-			return dbConnection;
+			return dbConnection = DriverManager.getConnection(Defs.DB_CONNECTION, Defs.DB_USER, Defs.DB_PASSWORD);
 		} catch (SQLException e) {
-			throw new DataSourceException("Could not open SQLite database!", e);
-
+			throw new DataSourceException("Could not open database connection!", e);
 		}
 	}
 
@@ -273,7 +269,7 @@ public class DataSource implements DataSourceInterface {
 			sqlSelect += "ORDER BY date asc";
 		}
 
-		if (log.isTraceEnabled()) {
+		if (log.isTraceEnabled() && isLogSql) {
 			log.trace("Selected rows {} in {}", sqlSelect, sqlSelect);
 		}
 
@@ -328,7 +324,7 @@ public class DataSource implements DataSourceInterface {
 		String selectSQL = " SELECT code, " + " ratio, " + " buy, " + " sell, " + "	date, " + "	source "
 				+ "   FROM cbg_currencies" + " WHERE DATE(date) = ? " + " AND source = ? ORDER BY date asc";
 
-		if (log.isTraceEnabled()) {
+		if (log.isTraceEnabled() && isLogSql) {
 			log.trace("Selected rows {} in {}", selectSQL, selectSQL);
 		}
 
@@ -394,10 +390,7 @@ public class DataSource implements DataSourceInterface {
 		String selectSQL = " SELECT code, " + " ratio, " + " buy, " + " sell, " + "	date, " + "	source "
 				+ "   FROM cbg_currencies" + " WHERE DATE(date) = ?  ORDER BY date asc";
 
-		// SELECT * FROM `cbg_fixedcurrencies` WHERE year(column_curr_date) >=
-		// 2016
-
-		if (log.isTraceEnabled()) {
+		if (log.isTraceEnabled() && isLogSql) {
 			log.trace("Selected rows {} in {}", selectSQL, selectSQL);
 		}
 
