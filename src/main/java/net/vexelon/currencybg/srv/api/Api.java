@@ -6,6 +6,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.google.gson.JsonObject;
 
 @Path("/")
@@ -17,10 +19,10 @@ public class Api extends AbstractJunction {
 	@GET
 	public Response getApiContents() throws Exception {
 		JsonObject junctionsJson = new JsonObject();
-		String baseUri = uri.getBaseUri().toString();
+		String baseUri = StringUtils.removeEnd(uri.getBaseUri().toString(), "/");
 
 		Currencies.getJunctionsList().entrySet().stream().forEach(e -> {
-			junctionsJson.addProperty(baseUri + e.getKey(), e.getValue());
+			junctionsJson.addProperty(e.getKey(), baseUri + e.getValue());
 		});
 
 		return getJsonResponse(junctionsJson);

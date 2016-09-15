@@ -2,7 +2,6 @@ package net.vexelon.currencybg.srv.api;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Date;
 import java.util.Map;
 
 import javax.ws.rs.GET;
@@ -38,13 +37,15 @@ public class Currencies extends AbstractJunction {
 	public static Map<String, String> getJunctionsList() {
 		Map<String, String> junctionsMap = Maps.newHashMap();
 		junctionsMap.put("currencies_from_date_url", JUNCTION_NAME + "/{date}");
-		junctionsMap.put("currencies_from_date&source_url", JUNCTION_NAME + "/{date}/{sourceid}");
+		junctionsMap.put("currencies_from_date_for_source_url", JUNCTION_NAME + "/{date}/{source_id}");
+		junctionsMap.put("currencies_on_date_url", JUNCTION_NAME + "/today/{time_from}/{source_id}");
+		junctionsMap.put("currencies_on_date_for_source_url", JUNCTION_NAME + "/today/{time_from}/{source_id}");
 		return junctionsMap;
 	}
 
 	@GET
 	@Path("/{dateFrom}")
-	public Response getAllRatesByDate(@PathParam("dateFrom") String initialDate,
+	public Response getAllRatesByDate(@PathParam("dateFrom") String dateFrom,
 			@HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
 
 		try (DataSourceInterface source = new DataSource()) {
@@ -55,8 +56,7 @@ public class Currencies extends AbstractJunction {
 				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
 			}
 
-			Date dateFrom = DateTimeUtils.parseDate(initialDate, Defs.DATE_FORMAT);
-			return getJsonResponse(source.getAllRates(dateFrom));
+			return getJsonResponse(source.getAllRates(DateTimeUtils.parseDate(dateFrom, Defs.DATE_FORMAT)));
 		} catch (IOException | DataSourceException | ParseException e) {
 			log.error("", e);
 			return getErrorResponse();
@@ -68,7 +68,7 @@ public class Currencies extends AbstractJunction {
 
 	@GET
 	@Path("/{dateFrom}/{sourceId}")
-	public Response getAllRates(@PathParam("dateFrom") String initialDate, @PathParam("sourceId") Integer sourceId,
+	public Response getAllRates(@PathParam("dateFrom") String dateFrom, @PathParam("sourceId") Integer sourceId,
 			@HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
 
 		try (DataSourceInterface source = new DataSource()) {
@@ -79,8 +79,7 @@ public class Currencies extends AbstractJunction {
 				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
 			}
 
-			Date dateFrom = DateTimeUtils.parseDate(initialDate, Defs.DATE_FORMAT);
-			return getJsonResponse(source.getAllRates(sourceId, dateFrom));
+			return getJsonResponse(source.getAllRates(sourceId, DateTimeUtils.parseDate(dateFrom, Defs.DATE_FORMAT)));
 		} catch (IOException | DataSourceException | ParseException e) {
 			log.error("", e);
 			return getErrorResponse();
