@@ -4,6 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.time.Duration;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.TimeZone;
 
@@ -111,6 +114,30 @@ public class DateTimeUtilsTests {
 			calToday = dtSOF.getCalTimeZone(dtNYC.getCalToday("16:30", TestUtils.TIME_FORMAT));
 			assertTrue("16:30 EDT is after 23:00 EEST",
 					DateTimeUtils.compareTimeOnly(calToday, dtSOF.getCalToday("23:00", TestUtils.TIME_FORMAT)) > 0);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+
+	@Test
+	public void test_CalendarTimeZones_NYC_SOF_2() {
+		try {
+			int startHour = 06;
+			int startMinute = 00;
+
+			ZonedDateTime dtSOF = ZonedDateTime.of(2016, 9, 7, startHour, startMinute, 0, 0,
+					ZoneId.of(TestUtils.TIMEZONE_SOFIA));
+			ZonedDateTime dtNYC = ZonedDateTime.of(2016, 9, 6, 22, 50, 0, 0, ZoneId.of(TestUtils.TIMEZONE_NEWYORK));
+
+			Duration dur = Duration.between(dtSOF, dtNYC);
+			assertTrue(dur.abs().getSeconds() > 0);
+
+			dtNYC = ZonedDateTime.of(2016, 9, 6, 23, 00, 0, 0, ZoneId.of(TestUtils.TIMEZONE_NEWYORK));
+
+			dur = Duration.between(dtSOF, dtNYC);
+			assertTrue(dur.getSeconds() == 0);
 
 		} catch (Exception e) {
 			e.printStackTrace();

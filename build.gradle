@@ -2,7 +2,6 @@
  * CurrencyBG Server Build Script
  *
  */
- 
 buildscript {
 	repositories {
 		jcenter()

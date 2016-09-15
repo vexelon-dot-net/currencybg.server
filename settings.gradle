@@ -1,6 +1,1 @@
-/**
- * CurrencyBG server build script
- */
- 
 rootProject.name = 'currencybg.server'
-
