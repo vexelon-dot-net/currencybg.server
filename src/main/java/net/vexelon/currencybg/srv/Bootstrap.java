@@ -8,6 +8,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +45,13 @@ public class Bootstrap {
 			GlobalConfig.INSTANCE.createDefault(configFile, executor);
 		} else {
 			GlobalConfig.INSTANCE.load(configFile, executor);
+		}
+
+		// apply log non-production log level, if needed
+		if (GlobalConfig.INSTANCE.isLogDebugEnabled()) {
+			LogManager.getLogger(Defs.LOGGER_NAME).setLevel(Level.TRACE);
+			LogManager.getRootLogger().setLevel(Level.TRACE);
+			log.trace("**Non-production** TRACE logging mode enabled.");
 		}
 
 		// verify configuration

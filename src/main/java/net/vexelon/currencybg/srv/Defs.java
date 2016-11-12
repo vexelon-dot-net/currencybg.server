@@ -8,6 +8,8 @@ import javax.ws.rs.core.MediaType;
  */
 public final class Defs {
 
+	public static final String LOGGER_NAME = "net.vexelon.currencybg";
+
 	/*
 	 * DateTime
 	 */
