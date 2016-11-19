@@ -56,7 +56,7 @@ dependencies {
 			'org.apache.commons:commons-configuration2:2.0',
 			'org.apache.httpcomponents:httpasyncclient:4.1.1',
 			'org.slf4j:slf4j-log4j12:1.7.+',
-			'com.google.guava:guava:19.+',
+			'com.google.guava:guava:20.+',
 			'com.google.code.gson:gson:2.6.+',
 			'com.sun.jersey:jersey-core:1.19',
 			'com.sun.jersey:jersey-servlet:1.19',
@@ -80,7 +80,7 @@ war {
 		def manifestClasspath = configurations.compile.collect { it.getName() }.join(',')
     	attributes (
     		"Class-Path": manifestClasspath,
-    		"Implementation-Vendor": 'Vexelon Net Services',
+    		"Implementation-Vendor": 'Vexelon Microservices',
     		"Implementation-Title": 'CurrencyBG Server',
     		"Implementation-Version": appVersion
     	)		
