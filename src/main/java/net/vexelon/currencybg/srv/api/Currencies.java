@@ -21,6 +21,7 @@ import net.vexelon.currencybg.srv.db.DataSource;
 import net.vexelon.currencybg.srv.db.DataSourceException;
 import net.vexelon.currencybg.srv.db.DataSourceInterface;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
+import net.vexelon.currencybg.srv.utils.DateTimeUtilsNew;
 
 @Path(Currencies.JUNCTION_NAME)
 public class Currencies extends AbstractJunction {
@@ -138,7 +139,7 @@ public class Currencies extends AbstractJunction {
 			// DateTimeUtils.removeTimeZone(localTimeFrom,
 			// GlobalConfig.INSTANCE.getServerTimeZone());
 
-			String localTimeFromNoTz = DateTimeUtils.removeTimeZone2(timeFrom);
+			String localTimeFromNoTz = DateTimeUtilsNew.removeTimeZone(timeFrom, Defs.DATETIME_FORMAT);
 
 			return getJsonResponse(
 					source.getAllCurrentRatesAfter(DateTimeUtils.parseDate(localTimeFromNoTz, Defs.DATETIME_FORMAT)));

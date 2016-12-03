@@ -3,9 +3,6 @@ package net.vexelon.currencybg.srv.utils;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -61,30 +58,6 @@ public class DateTimeUtils {
 	// public static void main(String[] args) {
 	// removeTimeZone2();
 	// }
-
-	/**
-	 * Parse String to Date convert to Bulgarian Time Zone using Java 8 date
-	 * formatter
-	 * 
-	 * @param date
-	 * @param dateFormatter
-	 * @return
-	 */
-	public static String removeTimeZone2(String timeFrom) {
-
-		ZoneId australia = ZoneId.of("Europe/Sofia");
-
-		String strDatewithTime = "2016-11-22T15:03:04+02:00";
-		DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
-		LocalDateTime aLDT = LocalDateTime.parse(timeFrom, formatter);
-		// ZonedDateTime dateAndTimeInSydney = ZonedDateTime.of(aLDT,
-		// australia);
-
-		System.out.println("Date with Time: " + aLDT);
-		System.out.println(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(aLDT));
-
-		return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(aLDT);
-	}
 
 	/**
 	 * Add define days to some date
