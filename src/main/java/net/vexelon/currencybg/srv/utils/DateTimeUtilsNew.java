@@ -4,13 +4,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import net.vexelon.currencybg.srv.Defs;
-
 public class DateTimeUtilsNew {
-
-	public static void main(String[] args) {
-		System.out.println(removeTimeZone("2016-12-03T20:01:10+03:00", Defs.DATETIME_FORMAT));
-	}
 
 	/**
 	 * Converts String ZoneDateTime from user specific to Europe/Sofia using
