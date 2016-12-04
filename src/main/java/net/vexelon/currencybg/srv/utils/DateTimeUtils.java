@@ -55,10 +55,6 @@ public class DateTimeUtils {
 		return new java.sql.Date(date.getTime());
 	}
 
-	// public static void main(String[] args) {
-	// removeTimeZone2();
-	// }
-
 	/**
 	 * Add define days to some date
 	 * 

@@ -13,8 +13,8 @@ public class DateTimeUtilsNew {
 	}
 
 	/**
-	 * Parse String to Date convert to Bulgarian Time Zone using Java 8 date
-	 * formatter
+	 * Converts String ZoneDateTime from user specific to Europe/Sofia using
+	 * using Java 8 DateTime API
 	 * 
 	 * @param date
 	 * @param dateFormatter
