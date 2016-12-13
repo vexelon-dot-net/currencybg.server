@@ -2,6 +2,7 @@ package net.vexelon.currencybg.srv.db.models;
 
 import net.vexelon.currencybg.srv.remote.BNBSource;
 import net.vexelon.currencybg.srv.remote.FIBSource;
+import net.vexelon.currencybg.srv.remote.Factorin;
 import net.vexelon.currencybg.srv.remote.Polana1;
 import net.vexelon.currencybg.srv.remote.Source;
 import net.vexelon.currencybg.srv.remote.TavexSource;
@@ -12,7 +13,8 @@ public enum Sources {
 	BNB(1),
 	FIB(100),
 	TAVEX(200),
-	POLANA1(300);
+	POLANA1(300),
+	FACTORIN(400);
 
 	private int id;
 
@@ -61,6 +63,10 @@ public enum Sources {
 		// POLANA1
 		case 300:
 			return new Polana1(reporter);
+
+		// FACTORIN
+		case 400:
+			return new Factorin(reporter);
 
 		// <unknown>
 		default:
