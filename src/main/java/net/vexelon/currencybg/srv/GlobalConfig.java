@@ -14,7 +14,7 @@ import org.apache.commons.configuration2.reloading.PeriodicReloadingTrigger;
 import com.google.common.base.Charsets;
 
 /**
- * 
+ * Global server configurations
  *
  */
 public enum GlobalConfig {
@@ -32,7 +32,8 @@ public enum GlobalConfig {
 		MAINTENANCE_ENABLED("maintenance.enabled"),
 		TELEGRAM_BOT_TOKEN("telegram.bot"),
 		TELEGRAM_CHANNEL("telegram.channel"),
-		ENABLE_LOG_SQL("log.sql");
+		ENABLE_LOG_SQL("log.sql"),
+		ENABLE_LOG_DEBUG("log.debug");
 
 		private String optName;
 
@@ -58,6 +59,7 @@ public enum GlobalConfig {
 			setBotToken("");
 			setBotChannel("");
 			setLogSqlEnabled(false);
+			setLogDebugEnabled(false);
 
 			builder.save();
 			builder.setAutoSave(true);
@@ -171,19 +173,27 @@ public enum GlobalConfig {
 		getConfig().setProperty(Options.TELEGRAM_CHANNEL.getName(), channel);
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
 	public boolean isLogSqlEnabled() {
 		return getConfig().getBoolean(Options.ENABLE_LOG_SQL.getName());
 	}
 
 	/**
 	 * 
-	 * @param channel
+	 * @param enabled
 	 */
 	public void setLogSqlEnabled(boolean enabled) {
 		getConfig().setProperty(Options.ENABLE_LOG_SQL.getName(), enabled);
+	}
+
+	public boolean isLogDebugEnabled() {
+		return getConfig().getBoolean(Options.ENABLE_LOG_DEBUG.getName());
+	}
+
+	/**
+	 * 
+	 * @param enabled
+	 */
+	public void setLogDebugEnabled(boolean enabled) {
+		getConfig().setProperty(Options.ENABLE_LOG_DEBUG.getName(), enabled);
 	}
 }

@@ -112,6 +112,10 @@ public class DataSource implements DataSourceInterface {
 			PreparedStatement preparedStatement = null;
 			String insertSQL = "INSERT INTO cbg_currencies (CODE, RATIO, BUY, SELL, DATE, SOURCE) VALUES (?,?,?,?,?,?)";
 
+			if (log.isTraceEnabled() && isLogSql) {
+				log.trace("[SQL] {}", insertSQL);
+			}
+
 			try {
 				preparedStatement = dbConnection.prepareStatement(insertSQL);
 
@@ -194,9 +198,14 @@ public class DataSource implements DataSourceInterface {
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
 
-		String selectSQL = "SELECT 1 FROM cbg_apikeys WHERE key_value = ? AND status = 0 ";
+		String sql = "SELECT 1 FROM cbg_apikeys WHERE key_value = ? AND status = 0 ";
+
+		if (log.isTraceEnabled() && isLogSql) {
+			log.trace("[SQL] {}", sql);
+		}
+
 		try {
-			preparedStatement = dbConnection.prepareStatement(selectSQL);
+			preparedStatement = dbConnection.prepareStatement(sql);
 			preparedStatement.setString(1, authenticationKey);
 			rs = preparedStatement.executeQuery();
 
@@ -270,7 +279,7 @@ public class DataSource implements DataSourceInterface {
 		}
 
 		if (log.isTraceEnabled() && isLogSql) {
-			log.trace("Selected rows {} in {}", sqlSelect, sqlSelect);
+			log.trace("[SQL] {}", sqlSelect);
 		}
 
 		try {
@@ -321,16 +330,16 @@ public class DataSource implements DataSourceInterface {
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
 
-		String selectSQL = " SELECT code, " + " ratio, " + " buy, " + " sell, " + "	date, " + "	source "
+		String sql = " SELECT code, " + " ratio, " + " buy, " + " sell, " + "	date, " + "	source "
 				+ "   FROM cbg_currencies" + " WHERE DATE(date) = ? " + " AND source = ? ORDER BY date asc";
 
 		if (log.isTraceEnabled() && isLogSql) {
-			log.trace("Selected rows {} in {}", selectSQL, selectSQL);
+			log.trace("[SQL] {}", sql);
 		}
 
 		try {
 			// Dynamic currencies
-			preparedStatement = dbConnection.prepareStatement(selectSQL);
+			preparedStatement = dbConnection.prepareStatement(sql);
 			preparedStatement.setDate(1, DateTimeUtils.toSqlDate(dateFrom));
 			preparedStatement.setInt(2, sourceId);
 			rs = preparedStatement.executeQuery();
@@ -387,16 +396,16 @@ public class DataSource implements DataSourceInterface {
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
 
-		String selectSQL = " SELECT code, " + " ratio, " + " buy, " + " sell, " + "	date, " + "	source "
+		String sql = " SELECT code, " + " ratio, " + " buy, " + " sell, " + "	date, " + "	source "
 				+ "   FROM cbg_currencies" + " WHERE DATE(date) = ?  ORDER BY date asc";
 
 		if (log.isTraceEnabled() && isLogSql) {
-			log.trace("Selected rows {} in {}", selectSQL, selectSQL);
+			log.trace("[SQL] {}", sql);
 		}
 
 		try {
 			// Dynamic currencies
-			preparedStatement = dbConnection.prepareStatement(selectSQL);
+			preparedStatement = dbConnection.prepareStatement(sql);
 			preparedStatement.setDate(1, DateTimeUtils.toSqlDate(dateFrom));
 			rs = preparedStatement.executeQuery();
 
@@ -453,11 +462,16 @@ public class DataSource implements DataSourceInterface {
 
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
-		String sqlSelect = "SELECT source_id, status, update_period, last_update, update_restrictions FROM cbg_sources "
+
+		String sql = "SELECT source_id, status, update_period, last_update, update_restrictions FROM cbg_sources "
 				+ " WHERE source_id = ? and status = 0 ";
 
+		if (log.isTraceEnabled() && isLogSql) {
+			log.trace("[SQL] {}", sql);
+		}
+
 		try {
-			preparedStatement = dbConnection.prepareStatement(sqlSelect);
+			preparedStatement = dbConnection.prepareStatement(sql);
 			preparedStatement.setInt(1, id);
 			rs = preparedStatement.executeQuery();
 
@@ -510,13 +524,17 @@ public class DataSource implements DataSourceInterface {
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
 
-		String sqlSelect = "SELECT source_id, status, update_period, last_update, update_restrictions FROM cbg_sources ";
+		String sql = "SELECT source_id, status, update_period, last_update, update_restrictions FROM cbg_sources ";
 		if (isActiveOnly) {
-			sqlSelect += "WHERE status = 0 ";
+			sql += "WHERE status = 0 ";
+		}
+
+		if (log.isTraceEnabled() && isLogSql) {
+			log.trace("[SQL] {}", sql);
 		}
 
 		try {
-			preparedStatement = dbConnection.prepareStatement(sqlSelect.toString());
+			preparedStatement = dbConnection.prepareStatement(sql.toString());
 			rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
