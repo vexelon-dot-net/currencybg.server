@@ -68,6 +68,9 @@ dependencies {
     providedCompile 'javax.servlet:javax.servlet-api:3.0.+',
     				'javax.servlet.jsp:jsp-api:2.2'
 
+	// https://mvnrepository.com/artifact/com.sparkpost/sparkpost-lib
+	compile group: 'com.sparkpost', name: 'sparkpost-lib', version: '0.16.1'
+	
     testCompile 'junit:junit:4.+'
     
     tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
