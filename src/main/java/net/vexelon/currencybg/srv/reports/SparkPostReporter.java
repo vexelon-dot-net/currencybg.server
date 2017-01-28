@@ -39,8 +39,7 @@ public class SparkPostReporter extends AbstractReporter {
 				client.sendMessage("noreply-currencybg@vexelon.net", emails, "CurrencyBG Report", buffer.toString(),
 						null);
 			} catch (SparkPostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error("SparkPost send message failed!", e);
 			}
 		}
 
