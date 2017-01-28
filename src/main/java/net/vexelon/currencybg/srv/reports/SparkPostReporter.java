@@ -36,7 +36,8 @@ public class SparkPostReporter extends AbstractReporter {
 			Client client = new Client(GlobalConfig.INSTANCE.getSparkPostAPIKey());
 
 			try {
-				client.sendMessage("currencybg@vexelon.net", emails, "CurrencyBG", buffer.toString(), "");
+				client.sendMessage("noreply-currencybg@vexelon.net", emails, "CurrencyBG Report", buffer.toString(),
+						null);
 			} catch (SparkPostException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
