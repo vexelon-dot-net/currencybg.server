@@ -9,6 +9,11 @@ import java.util.TimeZone;
 
 import net.vexelon.currencybg.srv.Defs;
 
+/**
+ * General date-time utils
+ * 
+ * TODO: remove unused methods
+ */
 public class DateTimeUtils {
 
 	protected TimeZone timeZone;

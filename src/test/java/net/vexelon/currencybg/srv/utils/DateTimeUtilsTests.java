@@ -8,7 +8,6 @@ import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
-import java.util.TimeZone;
 
 import org.junit.Test;
 
@@ -48,87 +47,13 @@ public class DateTimeUtilsTests {
 	}
 
 	@Test
-	public void test_CalendarTimeZones_SameDay_SOF() {
-		try {
-			DateTimeUtils dateTimeUtils = new DateTimeUtils(TimeZone.getTimeZone(TestUtils.TIMEZONE_SOFIA));
-			Calendar calToday = dateTimeUtils.getCalToday("12:00", TestUtils.TIME_FORMAT);
-
-			assertTrue("12 is after 11", calToday.after(dateTimeUtils.getCalToday("11:00", TestUtils.TIME_FORMAT)));
-			assertTrue("12 is after 11:59", calToday.after(dateTimeUtils.getCalToday("11:59", TestUtils.TIME_FORMAT)));
-			assertTrue("12 is before 12:01",
-					calToday.before(dateTimeUtils.getCalToday("12:01", TestUtils.TIME_FORMAT)));
-			assertTrue("12 is before 23:59",
-					calToday.before(dateTimeUtils.getCalToday("23:59", TestUtils.TIME_FORMAT)));
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-	}
-
-	@Test
-	public void test_CalendarTimeZones_SameDay_BRN_SOF() {
-		try {
-			DateTimeUtils dateTimeUtils = new DateTimeUtils(TimeZone.getTimeZone(TestUtils.TIMEZONE_BERLIN));
-			DateTimeUtils dateTimeUtilsSof = new DateTimeUtils(TimeZone.getTimeZone(TestUtils.TIMEZONE_SOFIA));
-
-			Calendar calToday = dateTimeUtils.getCalToday("12:00", TestUtils.TIME_FORMAT);
-
-			assertTrue("12 CEST is after 11 EEST",
-					calToday.after(dateTimeUtilsSof.getCalToday("11:00", TestUtils.TIME_FORMAT)));
-			assertTrue("12 CEST is after 11:59 EEST",
-					calToday.after(dateTimeUtilsSof.getCalToday("11:59", TestUtils.TIME_FORMAT)));
-			assertTrue("12 CEST is before 13:01 EEST",
-					calToday.before(dateTimeUtilsSof.getCalToday("13:01", TestUtils.TIME_FORMAT)));
-			assertTrue("12 CEST is before 23:59 EEST",
-					calToday.before(dateTimeUtilsSof.getCalToday("23:59", TestUtils.TIME_FORMAT)));
-
-			calToday = dateTimeUtils.getCalToday("22:58", TestUtils.TIME_FORMAT);
-
-			assertTrue("22:58 CEST is before 23:59 EEST",
-					calToday.before(dateTimeUtilsSof.getCalToday("23:59", TestUtils.TIME_FORMAT)));
-			assertTrue("22:58 CEST is after 23:57 EEST",
-					calToday.after(dateTimeUtilsSof.getCalToday("23:57", TestUtils.TIME_FORMAT)));
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-	}
-
-	@Test
-	public void test_CalendarTimeZones_NYC_SOF() {
-		Calendar calToday;
-
-		try {
-			DateTimeUtils dtNYC = new DateTimeUtils(TimeZone.getTimeZone(TestUtils.TIMEZONE_NEWYORK));
-			DateTimeUtils dtSOF = new DateTimeUtils(TimeZone.getTimeZone(TestUtils.TIMEZONE_SOFIA));
-
-			calToday = dtSOF.getCalTimeZone(dtNYC.getCalToday("22:50", TestUtils.TIME_FORMAT));
-			assertTrue("22:50 EDT is before 06:00 EEST",
-					DateTimeUtils.compareTimeOnly(calToday, dtSOF.getCalToday("06:00", TestUtils.TIME_FORMAT)) < 0);
-
-			calToday = dtSOF.getCalTimeZone(dtNYC.getCalToday("16:00", TestUtils.TIME_FORMAT));
-			assertTrue("16:00 EDT is equal to 23:00 EEST",
-					DateTimeUtils.compareTimeOnly(calToday, dtSOF.getCalToday("23:00", TestUtils.TIME_FORMAT)) == 0);
-
-			calToday = dtSOF.getCalTimeZone(dtNYC.getCalToday("16:30", TestUtils.TIME_FORMAT));
-			assertTrue("16:30 EDT is after 23:00 EEST",
-					DateTimeUtils.compareTimeOnly(calToday, dtSOF.getCalToday("23:00", TestUtils.TIME_FORMAT)) > 0);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-	}
-
-	@Test
 	public void test_CalendarTimeZones_NYC_SOF_2() {
 		try {
 			int startHour = 06;
 			int startMinute = 00;
 
 			ZonedDateTime dtSOF = ZonedDateTime.of(2016, 9, 7, startHour, startMinute, 0, 0,
-					ZoneId.of(TestUtils.TIMEZONE_SOFIA));
+			        ZoneId.of(TestUtils.TIMEZONE_SOFIA));
 			ZonedDateTime dtNYC = ZonedDateTime.of(2016, 9, 6, 22, 50, 0, 0, ZoneId.of(TestUtils.TIMEZONE_NEWYORK));
 
 			Duration dur = Duration.between(dtSOF, dtNYC);
