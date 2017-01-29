@@ -33,7 +33,9 @@ public enum GlobalConfig {
 		TELEGRAM_BOT_TOKEN("telegram.bot"),
 		TELEGRAM_CHANNEL("telegram.channel"),
 		ENABLE_LOG_SQL("log.sql"),
-		ENABLE_LOG_DEBUG("log.debug");
+		ENABLE_LOG_DEBUG("log.debug"),
+		SPARKPOST_API_KEY("sparkpost.apikey"),
+		SPARKPOST_EMAILS("sparkpost.emails");
 
 		private String optName;
 
@@ -60,6 +62,8 @@ public enum GlobalConfig {
 			setBotChannel("");
 			setLogSqlEnabled(false);
 			setLogDebugEnabled(false);
+			setSparkPostAPIKey("");
+			setSparkPostEmails("");
 
 			builder.save();
 			builder.setAutoSave(true);
@@ -171,6 +175,39 @@ public enum GlobalConfig {
 	 */
 	public void setBotChannel(String channel) {
 		getConfig().setProperty(Options.TELEGRAM_CHANNEL.getName(), channel);
+	}
+
+	/**
+	 * 
+	 * @return SparkPost API KEY
+	 */
+	public String getSparkPostAPIKey() {
+		return getConfig().getString(Options.SPARKPOST_API_KEY.getName());
+	}
+
+	/**
+	 * 
+	 * @param API
+	 *            KEY
+	 */
+	public void setSparkPostAPIKey(String apiKey) {
+		getConfig().setProperty(Options.SPARKPOST_API_KEY.getName(), apiKey);
+	}
+
+	/**
+	 * 
+	 * @return SparkPost Emails
+	 */
+	public String getSparkPostEmails() {
+		return getConfig().getString(Options.SPARKPOST_EMAILS.getName());
+	}
+
+	/**
+	 * 
+	 * @param Emails
+	 */
+	public void setSparkPostEmails(String emails) {
+		getConfig().setProperty(Options.SPARKPOST_EMAILS.getName(), emails);
 	}
 
 	public boolean isLogSqlEnabled() {

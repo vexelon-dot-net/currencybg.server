@@ -23,7 +23,7 @@ import net.vexelon.currencybg.srv.db.models.SourceUpdateRestrictions;
 import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.remote.Source;
 import net.vexelon.currencybg.srv.remote.SourceException;
-import net.vexelon.currencybg.srv.reports.TelegramReporter;
+import net.vexelon.currencybg.srv.reports.SparkPostReporter;
 
 /**
  * Fetches currencies from remote server and imports them into the database.
@@ -138,6 +138,7 @@ public class Heartbeat implements Runnable {
 					if (!isUpdateGo(updateRestrictions)) {
 						log.trace("Source ({}) updates are disabled for the current time/date!",
 								currencySource.getSourceId());
+
 						continue;
 					}
 
@@ -147,7 +148,9 @@ public class Heartbeat implements Runnable {
 							// TODO: add proper reporter
 							// final ConsoleReporter reporter = new
 							// ConsoleReporter();
-							final TelegramReporter reporter = new TelegramReporter();
+							// final TelegramReporter reporter = new
+							// TelegramReporter();
+							final SparkPostReporter reporter = new SparkPostReporter();
 							final Source source = sourceType.newInstance(reporter);
 
 							// set update datetime flag
