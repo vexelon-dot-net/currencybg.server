@@ -7,7 +7,6 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.HttpResponse;
 import org.jsoup.Jsoup;
@@ -50,48 +49,37 @@ public class TavexSource extends AbstractSource {
 
 		Document doc = Jsoup.parse(input, Charsets.UTF_8.name(), URL_SOURCE);
 
-		// parse update date
-		Date updateDate;
-		Element span = doc.select("#page-sub-content > tbody > tr > td.right > span").first();
-		String[] components = StringUtils.split(span.text(), " ", 2);
-		if (components.length > 0) {
-			updateDate = DateTimeUtils.parseDate(components[1], DATE_FORMAT);
-		} else {
-			throw new ParseException("Could not parse date - " + span.text(), 0);
-		}
+		// Parse update date
+		String[] components = doc.select("div.timer.timer--flexible.calculator__timer").get(0).text().substring(31)
+		        .replaceAll("\\s+", "").split(",");
+		Date updateDate = DateTimeUtils.parseDate(components[0] + " " + components[1], DATE_FORMAT);
 
-		// parse list of currencies
-		Element tbody = doc.select("#page-sub-content > tbody > tr > td.right > table:nth-child(5) > tbody").first();
+		// Parse table with currencies
+		Elements span = doc.select("div.table-flex__body").get(0).children();
 
-		Elements children = tbody.children();
-		if (!children.isEmpty()) {
-			// skip first row
-			children.remove(0);
-		}
-
-		for (Element tr : children) {
+		int row = 0;
+		for (Element spanChild : span) {
 			CurrencyData currencyData = new CurrencyData();
 			try {
-				currencyData.setDate(updateDate);
-				currencyData.setCode(tr.child(1).text());
-
-				currencyData.setBuy(tr.child(3).text().trim());
+				currencyData.setCode(spanChild.child(0).child(1).text());
+				currencyData.setBuy(spanChild.child(1).text());
 				if ("-".equals(currencyData.getBuy())) {
 					currencyData.setBuy("");
 				}
-
-				currencyData.setSell(tr.child(4).text().trim());
+				currencyData.setSell(spanChild.child(2).text());
 				if ("-".equals(currencyData.getSell())) {
 					currencyData.setSell("");
 				}
-
 				currencyData.setRatio(1);
 				currencyData.setSource(Sources.TAVEX.getID());
+				currencyData.setDate(updateDate);
 				result.add(currencyData);
 			} catch (IndexOutOfBoundsException e) {
-				log.warn("Failed on row='{}', Exception={}", tr.text(), e.getMessage());
-				getReporter().write(TAG_NAME, "Could not process currency on row='{}'!", tr.text());
+				log.warn("Failed on row='{}', Exception={}", row, e.getMessage());
+				getReporter().write(TAG_NAME, "Could not process currency on row='{}'!", row + "");
 			}
+
+			row++;
 		}
 
 		return normalizeCurrencyData(result);
