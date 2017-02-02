@@ -21,7 +21,7 @@ public class TavexSourceTests {
 			        .getTavexRates(TestUtils.getTestResource("/tavex01.html"));
 
 			int last = rates.size() - 1;
-			Date lastUpdate = TestUtils.newDate(2017, 1, 1, 10, 23); // 29.01.2017,
+			Date lastUpdate = TestUtils.newDate(2017, 1, 29, 10, 23); // 29.01.2017,
 			                                                         // 10:23
 
 			assertTrue(rates.get(0).getCode().equals("EUR"));
