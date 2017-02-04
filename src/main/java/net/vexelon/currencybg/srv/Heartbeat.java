@@ -14,9 +14,9 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.vexelon.currencybg.srv.db.DataSource;
+import net.vexelon.currencybg.srv.db.MySQLDataSource;
 import net.vexelon.currencybg.srv.db.DataSourceException;
-import net.vexelon.currencybg.srv.db.DataSourceInterface;
+import net.vexelon.currencybg.srv.db.DataSource;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.CurrencySource;
 import net.vexelon.currencybg.srv.db.models.SourceUpdateRestrictions;
@@ -111,7 +111,7 @@ public class Heartbeat implements Runnable {
 		log.info("Downloading rates from sources ...");
 		try {
 
-			try (final DataSourceInterface dataSource = new DataSource()) {
+			try (final DataSource dataSource = new MySQLDataSource()) {
 				/*
 				 * Fetch all (active) sources from database
 				 */
@@ -183,7 +183,7 @@ public class Heartbeat implements Runnable {
 									}
 
 									log.debug("{} - importing downloaded rates in database ...", source.getName());
-									try (final DataSourceInterface dataSource = new DataSource()) {
+									try (final DataSource dataSource = new MySQLDataSource()) {
 										dataSource.connect();
 										dataSource.addRates(currencyDataList);
 									} catch (IOException | DataSourceException e) {

@@ -16,9 +16,9 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.Maps;
 
 import net.vexelon.currencybg.srv.Defs;
-import net.vexelon.currencybg.srv.db.DataSource;
+import net.vexelon.currencybg.srv.db.MySQLDataSource;
 import net.vexelon.currencybg.srv.db.DataSourceException;
-import net.vexelon.currencybg.srv.db.DataSourceInterface;
+import net.vexelon.currencybg.srv.db.DataSource;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 import net.vexelon.currencybg.srv.utils.DateTimeUtilsNew;
 
@@ -48,7 +48,7 @@ public class Currencies extends AbstractJunction {
 	public Response getAllRatesByDate(@PathParam("dateFrom") String dateFrom,
 	        @HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
 
-		try (DataSourceInterface source = new DataSource()) {
+		try (DataSource source = new MySQLDataSource()) {
 			verifyAccess();
 
 			source.connect();
@@ -71,7 +71,7 @@ public class Currencies extends AbstractJunction {
 	public Response getAllRates(@PathParam("dateFrom") String dateFrom, @PathParam("sourceId") Integer sourceId,
 	        @HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
 
-		try (DataSourceInterface source = new DataSource()) {
+		try (DataSource source = new MySQLDataSource()) {
 			verifyAccess();
 
 			source.connect();
@@ -95,7 +95,7 @@ public class Currencies extends AbstractJunction {
 	public Response getAllCurrentRatesAfter(@PathParam("timeFrom") String timeFrom,
 	        @PathParam("sourceId") Integer sourceId, @HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
 
-		try (DataSourceInterface source = new DataSource()) {
+		try (DataSource source = new MySQLDataSource()) {
 			verifyAccess();
 
 			source.connect();
@@ -128,7 +128,7 @@ public class Currencies extends AbstractJunction {
 	public Response getAllCurrentRatesAfter(@PathParam("timeFrom") String timeFrom,
 	        @HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
 
-		try (DataSourceInterface source = new DataSource()) {
+		try (DataSource source = new MySQLDataSource()) {
 			verifyAccess();
 
 			source.connect();
