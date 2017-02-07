@@ -88,15 +88,13 @@ public class TavexSource extends AbstractSource {
 	@Override
 	public void getRates(final Callback callback) throws SourceException {
 		try {
-			final AbstractSource source = this;
-
 			doGet(URL_SOURCE, new HTTPCallback() {
 
 				@Override
 				public void onRequestFailed(Exception e) {
 					getReporter().write(TAG_NAME, "Connection failure= {}", ExceptionUtils.getStackTrace(e));
 
-					source.close();
+					TavexSource.this.close();
 					callback.onFailed(e);
 				}
 
@@ -116,7 +114,7 @@ public class TavexSource extends AbstractSource {
 						getReporter().write(TAG_NAME, "Request was canceled! No currencies were downloaded.");
 					}
 
-					source.close();
+					TavexSource.this.close();
 					callback.onCompleted(result);
 				}
 			});

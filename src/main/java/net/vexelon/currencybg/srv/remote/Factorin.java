@@ -33,9 +33,9 @@ public class Factorin extends AbstractSource {
 	private static final String URL_SOURCE = "http://www.factorin.bg/bg/clients/currency/";
 	private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
 	private static final List<String> CURRENCY_CODES = Arrays.asList("AED", "ALL", "AUD", "BAM", "BRL", "CAD", "CHF",
-			"CNY", "CZK", "DKK", "DOP", "EEK", "EGP", "EUR", "GBP", "HKD", "HRK", "HUF", "IDR", "ILS", "JPY", "KES",
-			"KRW", "LTL", "LVL", "MKD", "MUR", "MXN", "MYR", "NOK", "NZD", "PLN", "RON", "RSD", "RUB", "SBP", "SEK",
-			"SGD", "THB", "TRY", "UAH", "USD", "ZAR");
+	        "CNY", "CZK", "DKK", "DOP", "EEK", "EGP", "EUR", "GBP", "HKD", "HRK", "HUF", "IDR", "ILS", "JPY", "KES",
+	        "KRW", "LTL", "LVL", "MKD", "MUR", "MXN", "MYR", "NOK", "NZD", "PLN", "RON", "RSD", "RUB", "SBP", "SEK",
+	        "SGD", "THB", "TRY", "UAH", "USD", "ZAR");
 
 	public Factorin(Reporter reporter) {
 		super(reporter);
@@ -91,7 +91,7 @@ public class Factorin extends AbstractSource {
 				public void onRequestFailed(Exception e) {
 					getReporter().write(TAG_NAME, "Connection failure= {}", ExceptionUtils.getStackTrace(e));
 
-					source.close();
+					Factorin.this.close();
 					callback.onFailed(e);
 				}
 
@@ -111,7 +111,7 @@ public class Factorin extends AbstractSource {
 						getReporter().write(TAG_NAME, "Request was canceled! No currencies were downloaded.");
 					}
 
-					source.close();
+					Factorin.this.close();
 					callback.onCompleted(result);
 
 				}
