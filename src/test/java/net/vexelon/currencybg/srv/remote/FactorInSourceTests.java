@@ -21,8 +21,8 @@ public class FactorInSourceTests {
 			        .getFactorinRates(TestUtils.getTestResource("/factorin.html"));
 
 			int last = rates.size() - 1;
-			Date lastUpdate = TestUtils.newDate(2017, 2, 04, 17, 00); // 29.01.2017,
-			                                                          // 10:23
+			Date lastUpdate = TestUtils.newDate(2017, 2, 04, 17, 00); // 04.02.2017,
+			                                                          // 17:00
 
 			assertTrue(rates.get(0).getCode().equals("EUR"));
 			assertTrue(rates.get(0).getRatio() == 1);
