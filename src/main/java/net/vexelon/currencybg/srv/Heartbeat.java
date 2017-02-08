@@ -14,9 +14,9 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.vexelon.currencybg.srv.db.MySQLDataSource;
-import net.vexelon.currencybg.srv.db.DataSourceException;
 import net.vexelon.currencybg.srv.db.DataSource;
+import net.vexelon.currencybg.srv.db.DataSourceException;
+import net.vexelon.currencybg.srv.db.MySQLDataSource;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.CurrencySource;
 import net.vexelon.currencybg.srv.db.models.SourceUpdateRestrictions;
@@ -50,24 +50,24 @@ public class Heartbeat implements Runnable {
 				}
 
 				if (dateTimeSofia.getDayOfWeek() == DayOfWeek.SATURDAY
-						|| dateTimeSofia.getDayOfWeek() == DayOfWeek.SUNDAY) {
+				        || dateTimeSofia.getDayOfWeek() == DayOfWeek.SUNDAY) {
 					/*
 					 * Weekends
 					 */
 					if (!updateRestrictions.isEnabledOnWeekends()) {
 						return false;
 					} else if (dateTimeSofia.getDayOfWeek() == DayOfWeek.SUNDAY
-							&& !updateRestrictions.isEnabledOnSunday()) {
+					        && !updateRestrictions.isEnabledOnSunday()) {
 						return false;
 					}
 
 					ZonedDateTime notBefore = ZonedDateTime.of(dateTimeSofia.toLocalDate(),
-							LocalTime.parse(updateRestrictions.getWeekendsNotBefore()),
-							ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
+					        LocalTime.parse(updateRestrictions.getWeekendsNotBefore()),
+					        ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
 
 					ZonedDateTime notAfter = ZonedDateTime.of(dateTimeSofia.toLocalDate(),
-							LocalTime.parse(updateRestrictions.getWeekendsNotAfter()),
-							ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
+					        LocalTime.parse(updateRestrictions.getWeekendsNotAfter()),
+					        ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
 
 					if (log.isTraceEnabled()) {
 						log.trace("[Weekend] Note before - {}", notBefore.toString());
@@ -80,12 +80,12 @@ public class Heartbeat implements Runnable {
 					 * Week days
 					 */
 					ZonedDateTime notBefore = ZonedDateTime.of(dateTimeSofia.toLocalDate(),
-							LocalTime.parse(updateRestrictions.getWeekdaysNotBefore()),
-							ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
+					        LocalTime.parse(updateRestrictions.getWeekdaysNotBefore()),
+					        ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
 
 					ZonedDateTime notAfter = ZonedDateTime.of(dateTimeSofia.toLocalDate(),
-							LocalTime.parse(updateRestrictions.getWeekdaysNotAfter()),
-							ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
+					        LocalTime.parse(updateRestrictions.getWeekdaysNotAfter()),
+					        ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
 
 					if (log.isTraceEnabled()) {
 						log.trace("[Weekday] Note before - {}", notBefore.toString());
@@ -127,7 +127,7 @@ public class Heartbeat implements Runnable {
 					// checks if it is time to update this source entry
 					Calendar sourceCalendar = Calendar.getInstance();
 					sourceCalendar.setTimeInMillis(currencySource.getLastUpdate().getTime()
-							+ TimeUnit.SECONDS.toMillis(currencySource.getUpdatePeriod()));
+					        + TimeUnit.SECONDS.toMillis(currencySource.getUpdatePeriod()));
 					if (sourceCalendar.after(nowCalendar)) {
 						log.trace("Source ({}) update skipped.", currencySource.getSourceId());
 						continue;
@@ -137,7 +137,7 @@ public class Heartbeat implements Runnable {
 					SourceUpdateRestrictions updateRestrictions = currencySource.getUpdateRestrictions();
 					if (!isUpdateGo(updateRestrictions)) {
 						log.trace("Source ({}) updates are disabled for the current time/date!",
-								currencySource.getSourceId());
+						        currencySource.getSourceId());
 
 						continue;
 					}
