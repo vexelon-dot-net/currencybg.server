@@ -29,7 +29,7 @@ public class TavexSource extends AbstractSource {
 	private static final Logger log = LoggerFactory.getLogger(TavexSource.class);
 	private static final String TAG_NAME = TavexSource.class.getSimpleName();
 
-	private static final String URL_SOURCE = "http://www.tavex.bg/?main=24";
+	private static final String URL_SOURCE = "https://tavex.bg/obmen-na-valuta";
 	private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
 
 	public TavexSource(Reporter reporter) {
