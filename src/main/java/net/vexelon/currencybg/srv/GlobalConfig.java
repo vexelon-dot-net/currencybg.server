@@ -67,6 +67,7 @@ public enum GlobalConfig {
 			setSparkPostAPIKey("");
 			setSparkPostEmails("");
 			setSparkPostSubject("");
+			setServerName("");
 
 			builder.save();
 			builder.setAutoSave(true);
