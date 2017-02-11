@@ -37,6 +37,7 @@ public enum GlobalConfig {
 		SPARKPOST_API_KEY("sparkpost.apikey"),
 		SPARKPOST_EMAILS("sparkpost.emails"),
 		SPARKPOST_SUBJECT("sparkpost.subject"),
+		SPARKPOST_FROM("sparkpost.from"),
 		SERVER_NAME("server.name");
 
 		private String optName;
@@ -67,6 +68,7 @@ public enum GlobalConfig {
 			setSparkPostAPIKey("");
 			setSparkPostEmails("");
 			setSparkPostSubject("");
+			setSparkPostFrom("");
 			setServerName("");
 
 			builder.save();
@@ -228,6 +230,23 @@ public enum GlobalConfig {
 	 */
 	public void setSparkPostSubject(String subject) {
 		getConfig().setProperty(Options.SPARKPOST_SUBJECT.getName(), subject);
+	}
+
+	/**
+	 * 
+	 * @return SparkPost From - Domain which will be used by SparkPost to send
+	 *         notifications for errors
+	 */
+	public String getSparkPostFrom() {
+		return getConfig().getString(Options.SPARKPOST_FROM.getName());
+	}
+
+	/**
+	 * 
+	 * @param From
+	 */
+	public void setSparkPostFrom(String from) {
+		getConfig().setProperty(Options.SPARKPOST_FROM.getName(), from);
 	}
 
 	/**
