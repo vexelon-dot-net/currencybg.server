@@ -16,14 +16,14 @@ import org.slf4j.LoggerFactory;
 
 import net.vexelon.currencybg.srv.db.DataSource;
 import net.vexelon.currencybg.srv.db.DataSourceException;
-import net.vexelon.currencybg.srv.db.DataSourceInterface;
+import net.vexelon.currencybg.srv.db.MySQLDataSource;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.CurrencySource;
 import net.vexelon.currencybg.srv.db.models.SourceUpdateRestrictions;
 import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.remote.Source;
 import net.vexelon.currencybg.srv.remote.SourceException;
-import net.vexelon.currencybg.srv.reports.TelegramReporter;
+import net.vexelon.currencybg.srv.reports.SparkPostReporter;
 
 /**
  * Fetches currencies from remote server and imports them into the database.
@@ -50,24 +50,24 @@ public class Heartbeat implements Runnable {
 				}
 
 				if (dateTimeSofia.getDayOfWeek() == DayOfWeek.SATURDAY
-						|| dateTimeSofia.getDayOfWeek() == DayOfWeek.SUNDAY) {
+				        || dateTimeSofia.getDayOfWeek() == DayOfWeek.SUNDAY) {
 					/*
 					 * Weekends
 					 */
 					if (!updateRestrictions.isEnabledOnWeekends()) {
 						return false;
 					} else if (dateTimeSofia.getDayOfWeek() == DayOfWeek.SUNDAY
-							&& !updateRestrictions.isEnabledOnSunday()) {
+					        && !updateRestrictions.isEnabledOnSunday()) {
 						return false;
 					}
 
 					ZonedDateTime notBefore = ZonedDateTime.of(dateTimeSofia.toLocalDate(),
-							LocalTime.parse(updateRestrictions.getWeekendsNotBefore()),
-							ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
+					        LocalTime.parse(updateRestrictions.getWeekendsNotBefore()),
+					        ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
 
 					ZonedDateTime notAfter = ZonedDateTime.of(dateTimeSofia.toLocalDate(),
-							LocalTime.parse(updateRestrictions.getWeekendsNotAfter()),
-							ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
+					        LocalTime.parse(updateRestrictions.getWeekendsNotAfter()),
+					        ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
 
 					if (log.isTraceEnabled()) {
 						log.trace("[Weekend] Note before - {}", notBefore.toString());
@@ -80,12 +80,12 @@ public class Heartbeat implements Runnable {
 					 * Week days
 					 */
 					ZonedDateTime notBefore = ZonedDateTime.of(dateTimeSofia.toLocalDate(),
-							LocalTime.parse(updateRestrictions.getWeekdaysNotBefore()),
-							ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
+					        LocalTime.parse(updateRestrictions.getWeekdaysNotBefore()),
+					        ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
 
 					ZonedDateTime notAfter = ZonedDateTime.of(dateTimeSofia.toLocalDate(),
-							LocalTime.parse(updateRestrictions.getWeekdaysNotAfter()),
-							ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
+					        LocalTime.parse(updateRestrictions.getWeekdaysNotAfter()),
+					        ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA));
 
 					if (log.isTraceEnabled()) {
 						log.trace("[Weekday] Note before - {}", notBefore.toString());
@@ -111,7 +111,7 @@ public class Heartbeat implements Runnable {
 		log.info("Downloading rates from sources ...");
 		try {
 
-			try (final DataSourceInterface dataSource = new DataSource()) {
+			try (final DataSource dataSource = new MySQLDataSource()) {
 				/*
 				 * Fetch all (active) sources from database
 				 */
@@ -127,7 +127,7 @@ public class Heartbeat implements Runnable {
 					// checks if it is time to update this source entry
 					Calendar sourceCalendar = Calendar.getInstance();
 					sourceCalendar.setTimeInMillis(currencySource.getLastUpdate().getTime()
-							+ TimeUnit.SECONDS.toMillis(currencySource.getUpdatePeriod()));
+					        + TimeUnit.SECONDS.toMillis(currencySource.getUpdatePeriod()));
 					if (sourceCalendar.after(nowCalendar)) {
 						log.trace("Source ({}) update skipped.", currencySource.getSourceId());
 						continue;
@@ -137,7 +137,8 @@ public class Heartbeat implements Runnable {
 					SourceUpdateRestrictions updateRestrictions = currencySource.getUpdateRestrictions();
 					if (!isUpdateGo(updateRestrictions)) {
 						log.trace("Source ({}) updates are disabled for the current time/date!",
-								currencySource.getSourceId());
+						        currencySource.getSourceId());
+
 						continue;
 					}
 
@@ -147,7 +148,9 @@ public class Heartbeat implements Runnable {
 							// TODO: add proper reporter
 							// final ConsoleReporter reporter = new
 							// ConsoleReporter();
-							final TelegramReporter reporter = new TelegramReporter();
+							// final TelegramReporter reporter = new
+							// TelegramReporter();
+							final SparkPostReporter reporter = new SparkPostReporter();
 							final Source source = sourceType.newInstance(reporter);
 
 							// set update datetime flag
@@ -180,7 +183,7 @@ public class Heartbeat implements Runnable {
 									}
 
 									log.debug("{} - importing downloaded rates in database ...", source.getName());
-									try (final DataSourceInterface dataSource = new DataSource()) {
+									try (final DataSource dataSource = new MySQLDataSource()) {
 										dataSource.connect();
 										dataSource.addRates(currencyDataList);
 									} catch (IOException | DataSourceException e) {

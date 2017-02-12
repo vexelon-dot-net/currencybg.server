@@ -15,17 +15,29 @@ HTTP API [documentation](docs/API.md)
 
 # Development
 
+Install [Gradle](https://gradle.org/gradle-download/) `3.+` or use the `./gradlew` script.
+
+Create a MySQL database called `currencybg` and run the DDL in `schemas` to create all required tables.
+
+In order to deploy the local test version you need to first setup the following environment variables, i.e.,
+
+    CBG_CFG_PATH=<directory path> // path to where server configurations will be saved
+    OPENSHIFT_MYSQL_DB_HOST=<mysql hostname>
+    OPENSHIFT_MYSQL_DB_PORT=<mysql port>
+    OPENSHIFT_MYSQL_DB_USERNAME=<mysql user>
+    OPENSHIFT_MYSQL_DB_PASSWORD=<mysql password>
+
 To generate Eclipse project files run:
 
-	gradle eclipse
+	./gradlew eclipse
 
 To build the project run:
 
-	gradle clean build
+	./gradlew clean build
 
 To start a local test version run:
 
-	gradle tomcatRun
+	./gradlew tomcatRun
 
 # License
 

@@ -111,7 +111,7 @@ public class BNBSource extends AbstractSource {
 						} catch (ParseException e1) {
 							log.warn("Could not parse date from buffer!", e1);
 							getReporter().write(TAG_NAME, "Could not parse date from buffer - '{}'! ({})",
-									buffer.toString(), e1.getMessage());
+							        buffer.toString(), e1.getMessage());
 							// use default (today)
 							currencyData.setDate(new Date());
 						}
@@ -145,7 +145,7 @@ public class BNBSource extends AbstractSource {
 				public void onRequestFailed(Exception e) {
 					getReporter().write(TAG_NAME, "Connection failure= {}", ExceptionUtils.getStackTrace(e));
 
-					source.close();
+					BNBSource.this.close();
 					callback.onFailed(e);
 				}
 
@@ -165,7 +165,7 @@ public class BNBSource extends AbstractSource {
 						}
 					}
 
-					source.close();
+					BNBSource.this.close();
 					callback.onCompleted(result);
 				}
 			});

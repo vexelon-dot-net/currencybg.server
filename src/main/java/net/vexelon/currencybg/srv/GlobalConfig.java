@@ -28,12 +28,17 @@ public enum GlobalConfig {
 	 *
 	 */
 	public enum Options {
-		TIMEZONE_SERVER("timezone.server"),
+		TIMEZONE_SERVER("timezone"),
 		MAINTENANCE_ENABLED("maintenance.enabled"),
 		TELEGRAM_BOT_TOKEN("telegram.bot"),
 		TELEGRAM_CHANNEL("telegram.channel"),
 		ENABLE_LOG_SQL("log.sql"),
-		ENABLE_LOG_DEBUG("log.debug");
+		ENABLE_LOG_DEBUG("log.debug"),
+		SPARKPOST_API_KEY("sparkpost.apikey"),
+		SPARKPOST_EMAILS("sparkpost.emails"),
+		SPARKPOST_SUBJECT("sparkpost.subject"),
+		SPARKPOST_FROM("sparkpost.from"),
+		SERVER_NAME("server.name");
 
 		private String optName;
 
@@ -60,6 +65,11 @@ public enum GlobalConfig {
 			setBotChannel("");
 			setLogSqlEnabled(false);
 			setLogDebugEnabled(false);
+			setSparkPostAPIKey("");
+			setSparkPostEmails("");
+			setSparkPostSubject("");
+			setSparkPostFrom("");
+			setServerName("");
 
 			builder.save();
 			builder.setAutoSave(true);
@@ -85,17 +95,17 @@ public enum GlobalConfig {
 	}
 
 	private ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> createConfigurationBuilder(File file,
-			ScheduledExecutorService executor) {
+	        ScheduledExecutorService executor) {
 
 		FileBasedBuilderParameters parameters = new Parameters().fileBased().setFile(file)
-				.setEncoding(Charsets.UTF_8.name());
+		        .setEncoding(Charsets.UTF_8.name());
 
 		ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> builder = new ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration>(
-				PropertiesConfiguration.class).configure(parameters);
+		        PropertiesConfiguration.class).configure(parameters);
 
 		// setup reloading interval
 		trigger = new PeriodicReloadingTrigger(builder.getReloadingController(), null, Defs.CONFIG_RELOAD_INTERVAL,
-				TimeUnit.SECONDS, executor);
+		        TimeUnit.SECONDS, executor);
 		trigger.start();
 
 		return builder;
@@ -171,6 +181,89 @@ public enum GlobalConfig {
 	 */
 	public void setBotChannel(String channel) {
 		getConfig().setProperty(Options.TELEGRAM_CHANNEL.getName(), channel);
+	}
+
+	/**
+	 * 
+	 * @return SparkPost API KEY
+	 */
+	public String getSparkPostAPIKey() {
+		return getConfig().getString(Options.SPARKPOST_API_KEY.getName());
+	}
+
+	/**
+	 * 
+	 * @param API
+	 *            KEY
+	 */
+	public void setSparkPostAPIKey(String apiKey) {
+		getConfig().setProperty(Options.SPARKPOST_API_KEY.getName(), apiKey);
+	}
+
+	/**
+	 * 
+	 * @return SparkPost Emails
+	 */
+	public String getSparkPostEmails() {
+		return getConfig().getString(Options.SPARKPOST_EMAILS.getName());
+	}
+
+	/**
+	 * 
+	 * @param Emails
+	 */
+	public void setSparkPostEmails(String emails) {
+		getConfig().setProperty(Options.SPARKPOST_EMAILS.getName(), emails);
+	}
+
+	/**
+	 * 
+	 * @return SparkPost Subject
+	 */
+	public String getSparkPostSubject() {
+		return getConfig().getString(Options.SPARKPOST_SUBJECT.getName());
+	}
+
+	/**
+	 * 
+	 * @param Subject
+	 */
+	public void setSparkPostSubject(String subject) {
+		getConfig().setProperty(Options.SPARKPOST_SUBJECT.getName(), subject);
+	}
+
+	/**
+	 * 
+	 * @return SparkPost From - Domain which will be used by SparkPost to send
+	 *         notifications for errors
+	 */
+	public String getSparkPostFrom() {
+		return getConfig().getString(Options.SPARKPOST_FROM.getName());
+	}
+
+	/**
+	 * 
+	 * @param From
+	 */
+	public void setSparkPostFrom(String from) {
+		getConfig().setProperty(Options.SPARKPOST_FROM.getName(), from);
+	}
+
+	/**
+	 * 
+	 * @return Server name
+	 */
+	public String getServerName() {
+		return getConfig().getString(Options.SERVER_NAME.getName());
+	}
+
+	/**
+	 * 
+	 * @param Server
+	 *            Name
+	 */
+	public void setServerName(String serverName) {
+		getConfig().setProperty(Options.SERVER_NAME.getName(), serverName);
 	}
 
 	public boolean isLogSqlEnabled() {

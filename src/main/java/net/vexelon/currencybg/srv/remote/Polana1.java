@@ -85,15 +85,13 @@ public class Polana1 extends AbstractSource {
 	@Override
 	public void getRates(final Callback callback) throws SourceException {
 		try {
-			final AbstractSource source = this;
-
 			doGet(URL_SOURCE, new HTTPCallback() {
 
 				@Override
 				public void onRequestFailed(Exception e) {
 					getReporter().write(TAG_NAME, "Connection failure= {}", ExceptionUtils.getStackTrace(e));
 
-					source.close();
+					Polana1.this.close();
 					callback.onFailed(e);
 				}
 
@@ -113,7 +111,7 @@ public class Polana1 extends AbstractSource {
 						getReporter().write(TAG_NAME, "Request was canceled! No currencies were downloaded.");
 					}
 
-					source.close();
+					Polana1.this.close();
 					callback.onCompleted(result);
 
 				}

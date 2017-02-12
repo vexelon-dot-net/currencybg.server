@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -24,77 +25,73 @@ import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.reports.Reporter;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 
-public class TavexSource extends AbstractSource {
+public class Factorin extends AbstractSource {
 
-	private static final Logger log = LoggerFactory.getLogger(TavexSource.class);
-	private static final String TAG_NAME = TavexSource.class.getSimpleName();
+	private static final Logger log = LoggerFactory.getLogger(Factorin.class);
+	private static final String TAG_NAME = Factorin.class.getSimpleName();
 
-	private static final String URL_SOURCE = "https://tavex.bg/obmen-na-valuta";
+	private static final String URL_SOURCE = "http://www.factorin.bg/bg/clients/currency/";
 	private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
+	private static final List<String> CURRENCY_CODES = Arrays.asList("AED", "ALL", "AUD", "BAM", "BRL", "CAD", "CHF",
+	        "CNY", "CZK", "DKK", "DOP", "EEK", "EGP", "EUR", "GBP", "HKD", "HRK", "HUF", "IDR", "ILS", "JPY", "KES",
+	        "KRW", "LTL", "LVL", "MKD", "MUR", "MXN", "MYR", "NOK", "NZD", "PLN", "RON", "RSD", "RUB", "SBP", "SEK",
+	        "SGD", "THB", "TRY", "UAH", "USD", "ZAR");
 
-	public TavexSource(Reporter reporter) {
+	public Factorin(Reporter reporter) {
 		super(reporter);
 	}
 
-	/**
-	 * Transforms Tavex HTML data into {@link CurrencyData} models.
-	 * 
-	 * @param input
-	 * @return
-	 * @throws IOException
-	 * @throws ParseException
-	 */
-	public List<CurrencyData> getTavexRates(InputStream input) throws IOException, ParseException {
+	public List<CurrencyData> getFactorinRates(InputStream input) throws IOException, ParseException {
 		List<CurrencyData> result = Lists.newArrayList();
 
 		Document doc = Jsoup.parse(input, Charsets.UTF_8.name(), URL_SOURCE);
 
-		// Parse update date
-		String[] components = doc.select("div.timer.timer--flexible.calculator__timer").get(0).text().substring(31)
-		        .replaceAll("\\s+", "").split(",");
-		Date updateDate = DateTimeUtils.parseDate(components[0] + " " + components[1], DATE_FORMAT);
+		Elements contentBox = doc.select("div.public_list");
+
+		// parse update date and time
+		String getDate = contentBox.select("div.public_list > table > tbody > tr > td").text().substring(23);
+		Date updateDate = DateTimeUtils.parseDate(getDate, DATE_FORMAT);
 
 		// Parse table with currencies
-		Elements span = doc.select("div.table-flex__body").get(0).children();
-
+		Elements contentBoxChildren = contentBox.select("div.currency_list.search").get(0).children();
 		int row = 0;
-		for (Element spanChild : span) {
-			CurrencyData currencyData = new CurrencyData();
+
+		for (Element child : contentBoxChildren) {
+
 			try {
-				currencyData.setCode(spanChild.child(0).child(1).text());
-				currencyData.setBuy(spanChild.child(1).text());
-				if ("-".equals(currencyData.getBuy())) {
-					currencyData.setBuy("");
+				if (CURRENCY_CODES.contains(child.child(1).text())) {
+					CurrencyData currencyData = new CurrencyData();
+					currencyData.setDate(updateDate);
+					currencyData.setCode(child.child(1).text());
+					currencyData.setBuy(child.child(3).text());
+					currencyData.setSell(child.child(4).text());
+					currencyData.setRatio(1);
+					currencyData.setSource(Sources.FACTORIN.getID());
+					result.add(currencyData);
 				}
-				currencyData.setSell(spanChild.child(2).text());
-				if ("-".equals(currencyData.getSell())) {
-					currencyData.setSell("");
-				}
-				currencyData.setRatio(1);
-				currencyData.setSource(Sources.TAVEX.getID());
-				currencyData.setDate(updateDate);
-				result.add(currencyData);
 			} catch (IndexOutOfBoundsException e) {
 				log.warn("Failed on row='{}', Exception={}", row, e.getMessage());
 				getReporter().write(TAG_NAME, "Could not process currency on row='{}'!", row + "");
 			}
-
 			row++;
 		}
 
 		return normalizeCurrencyData(result);
+
 	}
 
 	@Override
 	public void getRates(final Callback callback) throws SourceException {
 		try {
+			final AbstractSource source = this;
+
 			doGet(URL_SOURCE, new HTTPCallback() {
 
 				@Override
 				public void onRequestFailed(Exception e) {
 					getReporter().write(TAG_NAME, "Connection failure= {}", ExceptionUtils.getStackTrace(e));
 
-					TavexSource.this.close();
+					Factorin.this.close();
 					callback.onFailed(e);
 				}
 
@@ -104,7 +101,7 @@ public class TavexSource extends AbstractSource {
 
 					if (!isCanceled) {
 						try {
-							result = getTavexRates(response.getEntity().getContent());
+							result = getFactorinRates(response.getEntity().getContent());
 						} catch (IOException | ParseException e) {
 							log.error("Could not parse source data!", e);
 							getReporter().write(TAG_NAME, "Parse failed= {}", ExceptionUtils.getStackTrace(e));
@@ -114,10 +111,12 @@ public class TavexSource extends AbstractSource {
 						getReporter().write(TAG_NAME, "Request was canceled! No currencies were downloaded.");
 					}
 
-					TavexSource.this.close();
+					Factorin.this.close();
 					callback.onCompleted(result);
+
 				}
 			});
+
 		} catch (URISyntaxException e) {
 			throw new SourceException("Invalid source url - " + URL_SOURCE, e);
 		}
