@@ -38,7 +38,8 @@ public enum GlobalConfig {
 		SPARKPOST_EMAILS("sparkpost.emails"),
 		SPARKPOST_SUBJECT("sparkpost.subject"),
 		SPARKPOST_FROM("sparkpost.from"),
-		SERVER_NAME("server.name");
+		SERVER_NAME("server.name"),
+		REPORT_TYPE("reporter.type");
 
 		private String optName;
 
@@ -70,6 +71,7 @@ public enum GlobalConfig {
 			setSparkPostSubject("");
 			setSparkPostFrom("");
 			setServerName("");
+			setReportType("");
 
 			builder.save();
 			builder.setAutoSave(true);
@@ -264,6 +266,23 @@ public enum GlobalConfig {
 	 */
 	public void setServerName(String serverName) {
 		getConfig().setProperty(Options.SERVER_NAME.getName(), serverName);
+	}
+
+	/**
+	 * 
+	 * @return Report type. For instance: SparkPost or Telegram
+	 */
+	public String getReportType() {
+		return getConfig().getString(Options.REPORT_TYPE.getName());
+	}
+
+	/**
+	 * 
+	 * @param Report
+	 *            Type
+	 */
+	public void setReportType(String reportType) {
+		getConfig().setProperty(Options.REPORT_TYPE.getName(), reportType);
 	}
 
 	public boolean isLogSqlEnabled() {
