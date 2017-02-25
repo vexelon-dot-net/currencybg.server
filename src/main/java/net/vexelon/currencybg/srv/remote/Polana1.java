@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 
+import net.vexelon.currencybg.srv.Defs;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.reports.Reporter;
@@ -47,8 +48,8 @@ public class Polana1 extends AbstractSource {
 		Element contentBox = doc.select("div.content-center ").first();
 		Elements contentChildren = contentBox.children();
 
-		String currentTimeSofia = LocalTime.now(ZoneId.of("Europe/Sofia")).format(DateTimeFormatter.ofPattern("HH:mm"))
-		        .toString();
+		String currentTimeSofia = LocalTime.now(ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA))
+		        .format(DateTimeFormatter.ofPattern("HH:mm")).toString();
 
 		String currentDateTime = contentChildren.select("h1").first().text().substring(26).trim() + " "
 		        + currentTimeSofia;
