@@ -3,10 +3,10 @@ package net.vexelon.currencybg.srv.remote;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 
+import net.vexelon.currencybg.srv.Defs;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.reports.Reporter;
@@ -47,11 +48,11 @@ public class Polana1 extends AbstractSource {
 		Element contentBox = doc.select("div.content-center ").first();
 		Elements contentChildren = contentBox.children();
 
-		Calendar cal = Calendar.getInstance();
-		DateFormat dateFormat = new SimpleDateFormat("HH:mm");
-		String currentTime = dateFormat.format(cal.getTime());
+		String currentTimeSofia = LocalTime.now(ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA))
+		        .format(DateTimeFormatter.ofPattern("HH:mm")).toString();
 
-		String currentDateTime = contentChildren.select("h1").first().text().substring(26).trim() + " " + currentTime;
+		String currentDateTime = contentChildren.select("h1").first().text().substring(26).trim() + " "
+		        + currentTimeSofia;
 		Date updateDate = DateTimeUtils.parseDate(currentDateTime, DATE_FORMAT);
 
 		Element contentBoxChildren = contentChildren.select("table > tbody").first();

@@ -4,11 +4,13 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
 
+import net.vexelon.currencybg.srv.Defs;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.reports.NullReporter;
 import net.vexelon.currencybg.srv.tests.TestUtils;
@@ -22,8 +24,9 @@ public class Polana1SourceTests {
 			        .getPolana1(TestUtils.getTestResource("/polana1_01.html"));
 
 			int last = rates.size() - 1;
-			Date lastUpdate = TestUtils.newDate(2017, 2, 2, LocalDateTime.now().getHour(),
-			        LocalDateTime.now().getMinute()); // 02.02.2017
+			Date lastUpdate = TestUtils.newDate(2017, 2, 2,
+			        LocalDateTime.now(ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA)).getHour(),
+			        LocalDateTime.now(ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA)).getMinute()); // 02.02.2017
 
 			assertTrue(rates.get(0).getCode().equals("EUR"));
 			assertTrue(rates.get(0).getRatio() == 1);
