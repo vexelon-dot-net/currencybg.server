@@ -52,7 +52,8 @@ public class TavexSource extends AbstractSource {
 		// Parse update date
 		String[] components = doc.select("div.timer.timer--flexible.calculator__timer").get(0).text().substring(31)
 		        .replaceAll("\\s+", "").split(",");
-		Date updateDate = DateTimeUtils.parseDate(components[0] + " " + components[1], DATE_FORMAT);
+		Date updateDate = DateTimeUtils.parseDate(components[0].substring(0, 10) + " " + components[1].substring(0, 5),
+		        DATE_FORMAT);
 
 		// Parse table with currencies
 		Elements span = doc.select("div.table-flex__body").get(0).children();
