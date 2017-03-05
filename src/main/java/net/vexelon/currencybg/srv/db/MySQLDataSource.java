@@ -657,7 +657,19 @@ public class MySQLDataSource implements DataSource {
 
 	@Override
 	public void deleteReports() throws DataSourceException {
-		// TODO Auto-generated method stub
+
+		try (PreparedStatement preparedStatement = dbConnection.prepareStatement("DELETE FROM cbg_reports WHERE 1")) {
+
+			if (log.isTraceEnabled() && isLogSql) {
+				log.trace("[SQL] {}", "DELETE FROM cbg_reports WHERE 1");
+			}
+
+			preparedStatement.executeUpdate();
+
+		} catch (SQLException e) {
+			throw new DataSourceException("SQL Exception in method deleteReports!", e);
+
+		}
 
 	}
 

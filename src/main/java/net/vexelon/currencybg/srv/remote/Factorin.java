@@ -30,10 +30,7 @@ public class Factorin extends AbstractSource {
 	private static final Logger log = LoggerFactory.getLogger(Factorin.class);
 	private static final String TAG_NAME = Factorin.class.getSimpleName();
 
-	// TODO - temp commented
-	// private static final String URL_SOURCE =
-	// "http://www.factorin.bg/bg/clients/currency/";
-	private static final String URL_SOURCE = "http://www.factoridfsfd3131sn.bg/bg/clients/currency/";
+	private static final String URL_SOURCE = "http://www.factorin.bg/bg/clients/currency/";
 
 	private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
 	private static final List<String> CURRENCY_CODES = Arrays.asList("AED", "ALL", "AUD", "BAM", "BRL", "CAD", "CHF",

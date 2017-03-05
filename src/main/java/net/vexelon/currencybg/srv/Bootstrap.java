@@ -78,7 +78,8 @@ public class Bootstrap {
 		}
 
 		log.info("Booting threads ...");
-		executor.scheduleWithFixedDelay(new ReporterHeartbeat(), 10, 60, TimeUnit.SECONDS);
+		executor.scheduleWithFixedDelay(new ReporterHeartbeat(), Defs.REPORTER_UPDATE_FIRST_INTERVAL,
+		        Defs.REPORTER_UPDATES_PERIODIC_INTERVAL, TimeUnit.SECONDS);
 		executor.scheduleWithFixedDelay(new Heartbeat(), Defs.UPDATE_FIRST_INTERVAL, Defs.UPDATES_PERIODIC_INTERVAL,
 		        TimeUnit.SECONDS);
 
