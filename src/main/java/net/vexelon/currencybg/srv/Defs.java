@@ -44,6 +44,13 @@ public final class Defs {
 	public static final long UPDATES_PERIODIC_INTERVAL = 5 * 60; // 5 minutes
 
 	/*
+	 * Reporter thread parameters
+	 */
+	public static final long REPORTER_UPDATE_FIRST_INTERVAL = 10;// seconds
+	public static final long REPORTER_UPDATES_PERIODIC_INTERVAL = 60 * 60;// 1
+	                                                                      // hour
+
+	/*
 	 * HTTP API specific
 	 */
 	public static final String HEADER_APIKEY = "APIKey";

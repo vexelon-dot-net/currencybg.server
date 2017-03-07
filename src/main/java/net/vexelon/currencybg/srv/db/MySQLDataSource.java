@@ -26,6 +26,7 @@ import net.vexelon.currencybg.srv.GlobalConfig;
 import net.vexelon.currencybg.srv.api.Currencies;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.CurrencySource;
+import net.vexelon.currencybg.srv.db.models.ReportData;
 import net.vexelon.currencybg.srv.db.models.SourceUpdateRestrictions;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 import net.vexelon.currencybg.srv.utils.GsonDateTimeSerializer;
@@ -240,8 +241,8 @@ public class MySQLDataSource implements DataSource {
 		currencies = getCurrentRatesAfter(null, timeFrom);
 
 		Gson gson = new GsonBuilder().setDateFormat(Defs.DATEFORMAT_ISO_8601)
-				.registerTypeHierarchyAdapter(Date.class, new GsonDateTimeSerializer(Defs.DATETIME_TIMEZONE_SOFIA))
-				.create();
+		        .registerTypeHierarchyAdapter(Date.class, new GsonDateTimeSerializer(Defs.DATETIME_TIMEZONE_SOFIA))
+		        .create();
 		Type type = new TypeToken<List<CurrencyData>>() {
 		}.getType();
 
@@ -255,8 +256,8 @@ public class MySQLDataSource implements DataSource {
 		currencies = getCurrentRatesAfter(sourceId, timeFrom);
 
 		Gson gson = new GsonBuilder().setDateFormat(Defs.DATEFORMAT_ISO_8601)
-				.registerTypeHierarchyAdapter(Date.class, new GsonDateTimeSerializer(Defs.DATETIME_TIMEZONE_SOFIA))
-				.create();
+		        .registerTypeHierarchyAdapter(Date.class, new GsonDateTimeSerializer(Defs.DATETIME_TIMEZONE_SOFIA))
+		        .create();
 		Type type = new TypeToken<List<CurrencyData>>() {
 		}.getType();
 
@@ -294,7 +295,7 @@ public class MySQLDataSource implements DataSource {
 
 			while (rs.next()) {
 				currencies.add(new CurrencyData(rs.getString(1), rs.getInt(2), rs.getString(3), rs.getString(4),
-						rs.getTimestamp(5), rs.getInt(6)));
+				        rs.getTimestamp(5), rs.getInt(6)));
 			}
 
 			return currencies;
@@ -317,7 +318,7 @@ public class MySQLDataSource implements DataSource {
 					preparedStatement.close();
 				} catch (SQLException e) {
 					log.error("Problem with close of PreparedStatement(for selectSQL) in method getCurrentRatesAfter!",
-							e);
+					        e);
 				}
 			}
 		}
@@ -331,7 +332,7 @@ public class MySQLDataSource implements DataSource {
 		ResultSet rs = null;
 
 		String sql = " SELECT code, " + " ratio, " + " buy, " + " sell, " + "	date, " + "	source "
-				+ "   FROM cbg_currencies" + " WHERE DATE(date) = ? " + " AND source = ? ORDER BY date asc";
+		        + "   FROM cbg_currencies" + " WHERE DATE(date) = ? " + " AND source = ? ORDER BY date asc";
 
 		if (log.isTraceEnabled() && isLogSql) {
 			log.trace("[SQL] {}", sql);
@@ -347,7 +348,7 @@ public class MySQLDataSource implements DataSource {
 			while (rs.next()) {
 
 				currencies.add(new CurrencyData(rs.getString(1), rs.getInt(2), rs.getString(3), rs.getString(4),
-						rs.getTimestamp(5), rs.getInt(6)));
+				        rs.getTimestamp(5), rs.getInt(6)));
 
 			}
 
@@ -397,7 +398,7 @@ public class MySQLDataSource implements DataSource {
 		ResultSet rs = null;
 
 		String sql = " SELECT code, " + " ratio, " + " buy, " + " sell, " + "	date, " + "	source "
-				+ "   FROM cbg_currencies" + " WHERE DATE(date) = ?  ORDER BY date asc";
+		        + "   FROM cbg_currencies" + " WHERE DATE(date) = ?  ORDER BY date asc";
 
 		if (log.isTraceEnabled() && isLogSql) {
 			log.trace("[SQL] {}", sql);
@@ -411,7 +412,7 @@ public class MySQLDataSource implements DataSource {
 
 			while (rs.next()) {
 				currencies.add(new CurrencyData(rs.getString(1), rs.getInt(2), rs.getString(3), rs.getString(4),
-						rs.getTimestamp(5), rs.getInt(6)));
+				        rs.getTimestamp(5), rs.getInt(6)));
 			}
 
 			// Gson gson = new
@@ -464,7 +465,7 @@ public class MySQLDataSource implements DataSource {
 		ResultSet rs = null;
 
 		String sql = "SELECT source_id, status, update_period, last_update, update_restrictions FROM cbg_sources "
-				+ " WHERE source_id = ? and status = 0 ";
+		        + " WHERE source_id = ? and status = 0 ";
 
 		if (log.isTraceEnabled() && isLogSql) {
 			log.trace("[SQL] {}", sql);
@@ -482,8 +483,8 @@ public class MySQLDataSource implements DataSource {
 				source.setLastUpdate(rs.getTimestamp(4));
 				if (rs.getString(5) != null) {
 					SourceUpdateRestrictions updateInfo = new Gson().fromJson(rs.getString(5),
-							new TypeToken<SourceUpdateRestrictions>() {
-							}.getType());
+					        new TypeToken<SourceUpdateRestrictions>() {
+					        }.getType());
 					source.setUpdateRestrictions(updateInfo);
 				} else {
 					source.setUpdateRestrictions(SourceUpdateRestrictions.empty());
@@ -546,8 +547,8 @@ public class MySQLDataSource implements DataSource {
 				try {
 					if (rs.getString(5) != null) {
 						SourceUpdateRestrictions updateInfo = new Gson().fromJson(rs.getString(5),
-								new TypeToken<SourceUpdateRestrictions>() {
-								}.getType());
+						        new TypeToken<SourceUpdateRestrictions>() {
+						        }.getType());
 						source.setUpdateRestrictions(updateInfo);
 					} else {
 						source.setUpdateRestrictions(SourceUpdateRestrictions.empty());
@@ -556,7 +557,7 @@ public class MySQLDataSource implements DataSource {
 					listSource.add(source);
 				} catch (JsonParseException e) {
 					throw new DataSourceException(
-							source.getSourceId() + " - could not parse update info JSON data for currency!", e);
+					        source.getSourceId() + " - could not parse update info JSON data for currency!", e);
 				}
 
 				source = new CurrencySource();
@@ -584,6 +585,96 @@ public class MySQLDataSource implements DataSource {
 
 		}
 		return listSource;
+	}
+
+	@Override
+	public void addReport(String message) throws DataSourceException {
+
+		String insertSQL = "INSERT INTO cbg_reports (message) VALUES (?)";
+
+		if (log.isTraceEnabled() && isLogSql) {
+			log.trace("[SQL] {}", insertSQL);
+		}
+
+		try (PreparedStatement preparedStatement = dbConnection.prepareStatement(insertSQL)) {
+			preparedStatement.setString(1, message);
+
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			throw new DataSourceException("SQL Exception in method addReport!", e);
+		}
+	}
+
+	@Override
+	public List<ReportData> getReports() throws DataSourceException {
+		ReportData reporter = new ReportData();
+		List<ReportData> listRepoerter = new ArrayList<>();
+
+		PreparedStatement preparedStatement = null;
+		ResultSet rs = null;
+
+		String sql = "SELECT id, message FROM cbg_reports ";
+
+		if (log.isTraceEnabled() && isLogSql) {
+			log.trace("[SQL] {}", sql);
+		}
+
+		try {
+			preparedStatement = dbConnection.prepareStatement(sql.toString());
+			rs = preparedStatement.executeQuery();
+
+			while (rs.next()) {
+
+				reporter.setId(rs.getInt(1));
+				reporter.setMessage(rs.getString(2));
+
+				listRepoerter.add(reporter);
+				reporter = new ReportData();
+			}
+
+		} catch (SQLException e) {
+			throw new DataSourceException("SQL Exception in method getAllSources!", e);
+		} finally {
+			// TODO - close 2 PreprareStatement
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					log.error("Problem with close of ResultSet(for selectSQL) in method getReports!", e);
+				}
+			}
+
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+					log.error("Problem with close of PreparedStatement(for selectSQL) in method getAllSources!", e);
+				}
+			}
+
+		}
+		return listRepoerter;
+	}
+
+	@Override
+	public void deleteReports(List<ReportData> reporters) throws DataSourceException {
+
+		for (ReportData report : reporters) {
+			try (PreparedStatement preparedStatement = dbConnection
+			        .prepareStatement("DELETE FROM cbg_reports WHERE id = " + report.getId())) {
+
+				if (log.isTraceEnabled() && isLogSql) {
+					log.trace("[SQL] {}", "DELETE FROM cbg_reports WHERE id = " + report.getId());
+				}
+
+				preparedStatement.executeUpdate();
+
+			} catch (SQLException e) {
+				throw new DataSourceException("SQL Exception in method deleteReports!", e);
+
+			}
+		}
+
 	}
 
 }

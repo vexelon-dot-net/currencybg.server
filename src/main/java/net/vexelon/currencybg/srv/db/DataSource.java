@@ -31,6 +31,7 @@ import java.util.Map;
 
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.CurrencySource;
+import net.vexelon.currencybg.srv.db.models.ReportData;
 
 /**
  * Encapsulates the available read-write operations to and from an underlying
@@ -142,5 +143,30 @@ public interface DataSource extends Closeable {
 	 * @throws DataSourceException
 	 */
 	void updateSource(int sourceId, CurrencySource source) throws DataSourceException;
+
+	/**
+	 * Write an error message in DB
+	 * 
+	 * @param source
+	 *            throws an error
+	 * @param message
+	 * @throws DataSourceException
+	 */
+	void addReport(String message) throws DataSourceException;
+
+	/**
+	 * Return information for all reports in DB
+	 * 
+	 * @return
+	 * @throws DataSourceException
+	 */
+	List<ReportData> getReports() throws DataSourceException;
+
+	/**
+	 * Clear all information for the reports in DB
+	 * 
+	 * @throws DataSourceException
+	 */
+	void deleteReports(List<ReportData> reporters) throws DataSourceException;
 
 }

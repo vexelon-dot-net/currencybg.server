@@ -31,6 +31,7 @@ public class Factorin extends AbstractSource {
 	private static final String TAG_NAME = Factorin.class.getSimpleName();
 
 	private static final String URL_SOURCE = "http://www.factorin.bg/bg/clients/currency/";
+
 	private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
 	private static final List<String> CURRENCY_CODES = Arrays.asList("AED", "ALL", "AUD", "BAM", "BRL", "CAD", "CHF",
 	        "CNY", "CZK", "DKK", "DOP", "EEK", "EGP", "EUR", "GBP", "HKD", "HRK", "HUF", "IDR", "ILS", "JPY", "KES",
