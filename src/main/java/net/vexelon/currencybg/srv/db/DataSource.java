@@ -167,6 +167,6 @@ public interface DataSource extends Closeable {
 	 * 
 	 * @throws DataSourceException
 	 */
-	void deleteReports() throws DataSourceException;
+	void deleteReports(List<ReportData> reporters) throws DataSourceException;
 
 }

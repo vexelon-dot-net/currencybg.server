@@ -2,8 +2,8 @@ package net.vexelon.currencybg.srv.reports;
 
 public enum Reporters {
 
-	SPARKPOST("SPARKPOST"),
-	TELEGRAM("TELEGRAM");
+	SPARKPOST("sparkpost"),
+	TELEGRAM("telegram");
 
 	private String id;
 
@@ -19,6 +19,15 @@ public enum Reporters {
 		this.id = id;
 	}
 
+	public static Reporters getByName(String name) {
+		for (Reporters r : values()) {
+			if (r.getId().equals(name)) {
+				return r;
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Creates a new {@link Reporter} mapped via the {@link Reporters} constant.
 	 *
@@ -27,9 +36,9 @@ public enum Reporters {
 	 */
 	public Reporter newInstance() {
 		switch (id) {
-		case "SPARKPOST":
+		case "sparkpost":
 			return new SparkPostReporter();
-		case "TELEGRAM":
+		case "telegram":
 			return new TelegramReporter();
 		// <unknown>
 		default:

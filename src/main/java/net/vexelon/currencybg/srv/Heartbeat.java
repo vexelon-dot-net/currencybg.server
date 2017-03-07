@@ -145,13 +145,6 @@ public class Heartbeat implements Runnable {
 					final Sources sourceType = Sources.valueOf(currencySource.getSourceId());
 					if (sourceType != null) {
 						try {
-							// TODO: add proper reporter
-							// final ConsoleReporter reporter = new
-							// ConsoleReporter();
-							// final TelegramReporter reporter = new
-							// TelegramReporter();
-							// final SparkPostReporter reporter = new
-							// SparkPostReporter();
 							final MySQLReporter reporter = new MySQLReporter();
 							final Source source = sourceType.newInstance(reporter);
 

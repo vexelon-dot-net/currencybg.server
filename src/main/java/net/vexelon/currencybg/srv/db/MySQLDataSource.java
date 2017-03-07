@@ -613,7 +613,7 @@ public class MySQLDataSource implements DataSource {
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
 
-		String sql = "SELECT message FROM cbg_reports ";
+		String sql = "SELECT id, message FROM cbg_reports ";
 
 		if (log.isTraceEnabled() && isLogSql) {
 			log.trace("[SQL] {}", sql);
@@ -625,7 +625,8 @@ public class MySQLDataSource implements DataSource {
 
 			while (rs.next()) {
 
-				reporter.setMessage(rs.getString(1));
+				reporter.setId(rs.getInt(1));
+				reporter.setMessage(rs.getString(2));
 
 				listRepoerter.add(reporter);
 				reporter = new ReportData();
@@ -656,19 +657,22 @@ public class MySQLDataSource implements DataSource {
 	}
 
 	@Override
-	public void deleteReports() throws DataSourceException {
+	public void deleteReports(List<ReportData> reporters) throws DataSourceException {
 
-		try (PreparedStatement preparedStatement = dbConnection.prepareStatement("DELETE FROM cbg_reports WHERE 1")) {
+		for (ReportData report : reporters) {
+			try (PreparedStatement preparedStatement = dbConnection
+			        .prepareStatement("DELETE FROM cbg_reports WHERE id = " + report.getId())) {
 
-			if (log.isTraceEnabled() && isLogSql) {
-				log.trace("[SQL] {}", "DELETE FROM cbg_reports WHERE 1");
+				if (log.isTraceEnabled() && isLogSql) {
+					log.trace("[SQL] {}", "DELETE FROM cbg_reports WHERE id = " + report.getId());
+				}
+
+				preparedStatement.executeUpdate();
+
+			} catch (SQLException e) {
+				throw new DataSourceException("SQL Exception in method deleteReports!", e);
+
 			}
-
-			preparedStatement.executeUpdate();
-
-		} catch (SQLException e) {
-			throw new DataSourceException("SQL Exception in method deleteReports!", e);
-
 		}
 
 	}

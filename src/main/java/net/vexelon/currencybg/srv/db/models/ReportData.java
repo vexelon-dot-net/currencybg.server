@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class ReportData {
 
+	private int id;
 	private Date createdOn;
 	private int source;
 	private String message;
@@ -12,10 +13,20 @@ public class ReportData {
 
 	}
 
-	public ReportData(Date createdOn, int source, String message) {
+	public ReportData(int id, Date createdOn, int source, String message) {
+		super();
+		this.id = id;
 		this.createdOn = createdOn;
 		this.source = source;
 		this.message = message;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public Date getCreatedOn() {
@@ -44,7 +55,8 @@ public class ReportData {
 
 	@Override
 	public String toString() {
-		return "ReportData [createdOn=" + createdOn + ", source=" + source + ", message=" + message + "]";
+		return "ReportData [id=" + id + ", createdOn=" + createdOn + ", source=" + source + ", message=" + message
+		        + "]";
 	}
 
 }

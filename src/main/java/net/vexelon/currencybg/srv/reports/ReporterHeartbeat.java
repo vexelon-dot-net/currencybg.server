@@ -30,7 +30,7 @@ public class ReporterHeartbeat implements Runnable {
 			}
 
 			if (errorMessages != null) {
-				Reporters reporterType = Reporters.valueOf(GlobalConfig.INSTANCE.getReportType());
+				Reporters reporterType = Reporters.getByName(GlobalConfig.INSTANCE.getReportType());
 
 				if (reporterType != null) {
 					Reporter reporter = reporterType.newInstance();
@@ -39,7 +39,7 @@ public class ReporterHeartbeat implements Runnable {
 					reporter.send();
 
 					// Delete send errors
-					dataSource.deleteReports();
+					dataSource.deleteReports(reports);
 				}
 
 			}
