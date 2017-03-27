@@ -3,6 +3,7 @@ package net.vexelon.currencybg.srv.reports;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +30,7 @@ public class ReporterHeartbeat implements Runnable {
 				errorMessages.append(reportData.getMessage());
 			}
 
-			if (errorMessages != null) {
+			if (!StringUtils.isEmpty(errorMessages)) {
 				Reporters reporterType = Reporters.getByName(GlobalConfig.INSTANCE.getReportType());
 
 				if (reporterType != null) {
