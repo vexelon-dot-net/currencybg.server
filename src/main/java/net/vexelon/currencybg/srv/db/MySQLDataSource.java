@@ -590,7 +590,7 @@ public class MySQLDataSource implements DataSource {
 	@Override
 	public void addReport(String message) throws DataSourceException {
 
-		String insertSQL = "INSERT INTO cbg_reports (message) VALUES (?)";
+		String insertSQL = "INSERT INTO cbg_reports (message, createdon) VALUES (?,now())";
 
 		if (log.isTraceEnabled() && isLogSql) {
 			log.trace("[SQL] {}", insertSQL);
