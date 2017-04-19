@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Charsets;
 
+import net.vexelon.currencybg.srv.reports.ReporterHeartbeat;
+
 public class Bootstrap {
 
 	private static final Logger log = LoggerFactory.getLogger(Bootstrap.class);
@@ -76,8 +78,11 @@ public class Bootstrap {
 		}
 
 		log.info("Booting threads ...");
+		executor.scheduleWithFixedDelay(new ReporterHeartbeat(), Defs.REPORTER_UPDATE_FIRST_INTERVAL,
+		        Defs.REPORTER_UPDATES_PERIODIC_INTERVAL, TimeUnit.SECONDS);
 		executor.scheduleWithFixedDelay(new Heartbeat(), Defs.UPDATE_FIRST_INTERVAL, Defs.UPDATES_PERIODIC_INTERVAL,
-				TimeUnit.SECONDS);
+		        TimeUnit.SECONDS);
+
 	}
 
 	public void stop() {

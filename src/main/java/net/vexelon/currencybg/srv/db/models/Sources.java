@@ -4,8 +4,10 @@ import net.vexelon.currencybg.srv.remote.BNBSource;
 import net.vexelon.currencybg.srv.remote.FIBSource;
 import net.vexelon.currencybg.srv.remote.Factorin;
 import net.vexelon.currencybg.srv.remote.Polana1;
+import net.vexelon.currencybg.srv.remote.SocieteGenerale;
 import net.vexelon.currencybg.srv.remote.Source;
 import net.vexelon.currencybg.srv.remote.TavexSource;
+import net.vexelon.currencybg.srv.remote.UnicreditSource;
 import net.vexelon.currencybg.srv.reports.Reporter;
 
 public enum Sources {
@@ -14,7 +16,9 @@ public enum Sources {
 	FIB(100),
 	TAVEX(200),
 	POLANA1(300),
-	FACTORIN(400);
+	FACTORIN(400),
+	UNICREDIT(500),
+	SGEB(600);
 
 	private int id;
 
@@ -67,6 +71,14 @@ public enum Sources {
 		// FACTORIN
 		case 400:
 			return new Factorin(reporter);
+
+		// UNICREDIT
+		case 500:
+			return new UnicreditSource(reporter);
+
+		// Societe Generale Express Bank
+		case 600:
+			return new SocieteGenerale(reporter);
 
 		// <unknown>
 		default:
