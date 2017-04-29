@@ -47,45 +47,47 @@ public class Factorin extends AbstractSource {
 
 		Document doc = Jsoup.parse(input, Charsets.UTF_8.name(), URL_SOURCE);
 
-		Elements contentBox = doc.select("div.public_list");
+		try {
+			Elements contentBox = doc.select("div.public_list");
 
-		// parse update date and time
-		String getDate = contentBox.select("div.public_list > table > tbody > tr > td").text().substring(23);
-		Date updateDate = DateTimeUtils.parseDate(getDate, DATE_FORMAT);
+			// parse update date and time
+			String getDate = contentBox.select("div.public_list > table > tbody > tr > td").text().substring(23);
+			Date updateDate = DateTimeUtils.parseDate(getDate, DATE_FORMAT);
 
-		// Parse table with currencies
-		Elements contentBoxChildren = contentBox.select("div.currency_list.search").get(0).children();
-		int row = 0;
+			// Parse table with currencies
+			Elements contentBoxChildren = contentBox.select("div.currency_list.search").get(0).children();
 
-		for (Element child : contentBoxChildren) {
+			int row = 0;
 
-			try {
-				if (CURRENCY_CODES.contains(child.child(1).text())) {
-					CurrencyData currencyData = new CurrencyData();
-					currencyData.setDate(updateDate);
-					currencyData.setCode(child.child(1).text());
-					currencyData.setBuy(child.child(3).text());
-					currencyData.setSell(child.child(4).text());
-					currencyData.setRatio(1);
-					currencyData.setSource(Sources.FACTORIN.getID());
-					result.add(currencyData);
+			for (Element child : contentBoxChildren) {
+				try {
+					if (CURRENCY_CODES.contains(child.child(1).text())) {
+						CurrencyData currencyData = new CurrencyData();
+						currencyData.setDate(updateDate);
+						currencyData.setCode(child.child(1).text());
+						currencyData.setBuy(child.child(3).text());
+						currencyData.setSell(child.child(4).text());
+						currencyData.setRatio(1);
+						currencyData.setSource(Sources.FACTORIN.getID());
+						result.add(currencyData);
+					}
+				} catch (IndexOutOfBoundsException e) {
+					log.warn("Failed on row='{}', Exception={}", row, e.getMessage());
+					getReporter().write(TAG_NAME, "Could not process currency on row='{}'!", row + "");
 				}
-			} catch (IndexOutOfBoundsException e) {
-				log.warn("Failed on row='{}', Exception={}", row, e.getMessage());
-				getReporter().write(TAG_NAME, "Could not process currency on row='{}'!", row + "");
+
+				row++;
 			}
-			row++;
+
+			return normalizeCurrencyData(result);
+		} catch (RuntimeException e) {
+			throw new IOException(e);
 		}
-
-		return normalizeCurrencyData(result);
-
 	}
 
 	@Override
 	public void getRates(final Callback callback) throws SourceException {
 		try {
-			final AbstractSource source = this;
-
 			doGet(URL_SOURCE, new HTTPCallback() {
 
 				@Override
