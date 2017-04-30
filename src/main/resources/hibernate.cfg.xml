@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory>
+		<property name="hibernate.bytecode.use_reflection_optimizer">false</property>
+		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="hibernate.connection.username">root</property>
+		<!-- <property name="hibernate.connection.password">MpF2BS2QenL8wX6W</property>-->
+		<!-- <property name="hibernate.connection.password"></property>-->
+		<!-- <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/tutorials</property>-->
+		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/currencybg</property>
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+		<property name="show_sql">true</property>
+
+		<property name="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
+		<property name="hibernate.c3p0.min_size">7</property>
+		<property name="hibernate.c3p0.max_size">53</property>
+		<property name="hibernate.c3p0.timeout">100</property>
+		<property name="hibernate.c3p0.max_statements">50</property>
+		<property name="hibernate.c3p0.idle_test_period">1000</property>
+		<property name="hibernate.c3p0.validate">true</property>
+		<property name="hibernate.connection.provider_class">org.hibernate.service.jdbc.connections.internal.C3P0ConnectionProvider</property>
+
+
+		<mapping resource="currencybg/APIKey.hbm.xml"></mapping>
+		<mapping resource="currencybg/Currency.hbm.xml"></mapping>
+		<mapping resource="currencybg/Report.hbm.xml"></mapping>
+	</session-factory>
+</hibernate-configuration>

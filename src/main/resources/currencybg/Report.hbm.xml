@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+ 
+ <hibernate-mapping>
+    <class name="net.vexelon.currencybg.srv.db.models.Report" table="cbg_reports" catalog="currencybg">
+        <id name="id" type="java.lang.Integer">
+            <column name="ID" />
+            <generator class="identity" />
+        </id>
+        <property name="createdOn" type="date">
+            <column name="createdon" not-null="true" unique="true" />
+        </property>
+        <property name="message" type="string">
+            <column name="message" length="65535" not-null="true" unique="true" />
+        </property>
+    </class>
+</hibernate-mapping>
+ 
+<!-- <hibernate-mapping>
+    <class name="com.javacodegeeks.Student" table="student" catalog="tutorials">
+        <id name="studentId" type="java.lang.Integer">
+            <column name="STUDENT_ID" />
+            <generator class="identity" />
+        </id>
+        <property name="studentName" type="string">
+            <column name="STUDENT_NAME" length="10" not-null="true" unique="true" />
+        </property>
+        <property name="studentAge" type="string">
+            <column name="STUDENT_Age" length="20" not-null="true" unique="true" />
+        </property>
+    </class>
+</hibernate-mapping>-->

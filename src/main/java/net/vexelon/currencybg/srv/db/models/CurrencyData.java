@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class CurrencyData {
 
+	private Integer id;
 	private String code;
 	private int ratio = 0; // default
 	private String buy = "0"; // default
@@ -22,6 +23,14 @@ public class CurrencyData {
 		this.sell = sell;
 		this.date = date;
 		this.source = source;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getCode() {
@@ -75,7 +84,7 @@ public class CurrencyData {
 	@Override
 	public String toString() {
 		return "CurrencyData [code=" + code + ", ratio=" + ratio + ", buy=" + buy + ", sell=" + sell + ", date=" + date
-				+ ", source=" + source + "]";
+		        + ", source=" + source + "]";
 	}
 
 }
