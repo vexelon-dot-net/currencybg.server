@@ -45,45 +45,48 @@ public class SocieteGenerale extends AbstractSource {
 
 		Document doc = Jsoup.parse(input, Charsets.UTF_8.name(), URL_SOURCE);
 
-		// Parse date
-		String currentTimeSofia = LocalTime.now(ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA))
-		        .format(DateTimeFormatter.ofPattern("HH:mm")).toString();
+		try {
+			// Parse date
+			String currentTimeSofia = LocalTime.now(ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA))
+			        .format(DateTimeFormatter.ofPattern("HH:mm")).toString();
 
-		Element dateArrtibute = doc
-		        .select("div.layout-3-4.text-resize > div.layout-2-4.last.text-resize > h2.heading-normal").first();
-		String currentDateTime = dateArrtibute.text().substring(dateArrtibute.text().length() - 10).replace("-", ".")
-		        + " " + currentTimeSofia;
-		Date updateDate = DateTimeUtils.parseDate(currentDateTime, DATE_FORMAT);
+			Element dateArrtibute = doc
+			        .select("div.layout-3-4.text-resize > div.layout-2-4.last.text-resize > h2.heading-normal").first();
+			String currentDateTime = dateArrtibute.text().substring(dateArrtibute.text().length() - 10).replace("-",
+			        ".") + " " + currentTimeSofia;
+			Date updateDate = DateTimeUtils.parseDate(currentDateTime, DATE_FORMAT);
 
-		// Parse data content
-		Element content = doc.select("div.layout-2-4.last.text-resize > div.text.text-resize > table > tbody").first();
-		Elements children = content.children();
+			// Parse data content
+			Element content = doc.select("div.layout-2-4.last.text-resize > div.text.text-resize > table > tbody")
+			        .first();
+			Elements children = content.children();
 
-		int row = 1;
-		for (Element child : children) {
-			CurrencyData currencyData = new CurrencyData();
-			try {
-				if (row > 0) {
-					currencyData.setDate(updateDate);
-					currencyData.setCode(child.child(1).text());
-					currencyData.setBuy(child.child(3).text());
-					currencyData.setSell(child.child(4).text());
-					currencyData.setRatio(1);
-					currencyData.setSource(Sources.SGEB.getID());
-					result.add(currencyData);
+			int row = 1;
+
+			for (Element child : children) {
+				CurrencyData currencyData = new CurrencyData();
+				try {
+					if (row > 0) {
+						currencyData.setDate(updateDate);
+						currencyData.setCode(child.child(1).text());
+						currencyData.setBuy(child.child(3).text());
+						currencyData.setSell(child.child(4).text());
+						currencyData.setRatio(1);
+						currencyData.setSource(Sources.SGEB.getID());
+						result.add(currencyData);
+					}
+				} catch (IndexOutOfBoundsException e) {
+					log.warn("Failed on row='{}', Exception={}", row, e.getMessage());
+					getReporter().write(TAG_NAME, "Could not process currency on row='{}'!", row + "");
 				}
 
-			} catch (IndexOutOfBoundsException e) {
-				log.warn("Failed on row='{}', Exception={}", row, e.getMessage());
-				getReporter().write(TAG_NAME, "Could not process currency on row='{}'!", row + "");
+				row++;
 			}
 
-			row++;
-
+			return normalizeCurrencyData(result);
+		} catch (RuntimeException e) {
+			throw new IOException(e);
 		}
-
-		return normalizeCurrencyData(result);
-
 	}
 
 	@Override

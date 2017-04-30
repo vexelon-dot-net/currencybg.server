@@ -41,42 +41,45 @@ public class FIBSource extends AbstractSource {
 
 		Document doc = Jsoup.parse(input, Charsets.UTF_8.name(), URL_SOURCE);
 
-		Element contentBox = doc.select("#column-right > section.content-box > div.text").get(1);
+		try {
+			Element contentBox = doc.select("#column-right > section.content-box > div.text").get(1);
 
-		// parse update date and time
-		String getDate = contentBox.textNodes().get(0).text().substring(20).trim();
-		Date updateDate = DateTimeUtils.parseDate(getDate, DATE_FORMAT);
+			// parse update date and time
+			String getDate = contentBox.textNodes().get(0).text().substring(20).trim();
+			Date updateDate = DateTimeUtils.parseDate(getDate, DATE_FORMAT);
 
-		// parse table with currencies
-		Elements contentBoxChildren = contentBox.children();
-		Element tbody = contentBoxChildren.select("table > tbody").first();
-		Elements children = tbody.children();
+			// parse table with currencies
+			Elements contentBoxChildren = contentBox.children();
+			Element tbody = contentBoxChildren.select("table > tbody").first();
+			Elements children = tbody.children();
 
-		int row = 0;
-		for (Element child : children) {
-			CurrencyData currencyData = new CurrencyData();
-			try {
-				if (row > 0) {
-					currencyData.setDate(updateDate);
-					currencyData.setCode(child.child(1).text());
-					currencyData.setBuy(child.child(4).text());
-					currencyData.setSell(child.child(5).text());
-					currencyData.setRatio(Integer.parseInt(child.child(2).text()));
-					currencyData.setSource(Sources.FIB.getID());
-					result.add(currencyData);
+			int row = 0;
+
+			for (Element child : children) {
+				CurrencyData currencyData = new CurrencyData();
+				try {
+					if (row > 0) {
+						currencyData.setDate(updateDate);
+						currencyData.setCode(child.child(1).text());
+						currencyData.setBuy(child.child(4).text());
+						currencyData.setSell(child.child(5).text());
+						currencyData.setRatio(Integer.parseInt(child.child(2).text()));
+						currencyData.setSource(Sources.FIB.getID());
+						result.add(currencyData);
+					}
+
+				} catch (IndexOutOfBoundsException e) {
+					log.warn("Failed on row='{}', Exception={}", row, e.getMessage());
+					getReporter().write(TAG_NAME, "Could not process currency on row='{}'!", row + "");
 				}
 
-			} catch (IndexOutOfBoundsException e) {
-				log.warn("Failed on row='{}', Exception={}", row, e.getMessage());
-				getReporter().write(TAG_NAME, "Could not process currency on row='{}'!", row + "");
+				row++;
 			}
 
-			row++;
-
+			return normalizeCurrencyData(result);
+		} catch (RuntimeException e) {
+			throw new IOException(e);
 		}
-
-		return normalizeCurrencyData(result);
-
 	}
 
 	@Override

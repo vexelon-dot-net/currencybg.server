@@ -137,8 +137,6 @@ public class BNBSource extends AbstractSource {
 	@Override
 	public void getRates(final Callback callback) throws SourceException {
 		try {
-			final AbstractSource source = this;
-
 			doGet(URL_BNB_FORMAT_EN, new HTTPCallback() {
 
 				@Override

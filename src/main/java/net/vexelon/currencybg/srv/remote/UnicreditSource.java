@@ -41,51 +41,54 @@ public class UnicreditSource extends AbstractSource {
 
 		Document doc = Jsoup.parse(input, Charsets.UTF_8.name(), URL_SOURCE);
 
-		// Parse date and time
-		Element dateArrtibute = doc
-		        .select("div.container > div.gray-background.exchnage-form-container > div.row > div.col-xs-12.col-sm-12 > form#index_table_form.form-inline.searchform > div.form-group.col-xs-12.col-sm-3.col-md-3 > div.controls > input[name=date]")
-		        .first();
-		String date = dateArrtibute.attr("value");
+		try {
+			// Parse date and time
+			Element dateArrtibute = doc
+			        .select("div.container > div.gray-background.exchnage-form-container > div.row > div.col-xs-12.col-sm-12 > form#index_table_form.form-inline.searchform > div.form-group.col-xs-12.col-sm-3.col-md-3 > div.controls > input[name=date]")
+			        .first();
+			String date = dateArrtibute.attr("value");
 
-		Element timeArrtibute = doc
-		        .select("div.container > div.gray-background.exchnage-form-container > div.row > div.col-xs-12.col-sm-12 > form#index_table_form.form-inline.searchform > div.form-group.col-xs-12.col-sm-3.col-md-3 > div.controls.clockpicker > input[name=time]")
-		        .first();
-		String time = timeArrtibute.attr("value");
+			Element timeArrtibute = doc
+			        .select("div.container > div.gray-background.exchnage-form-container > div.row > div.col-xs-12.col-sm-12 > form#index_table_form.form-inline.searchform > div.form-group.col-xs-12.col-sm-3.col-md-3 > div.controls.clockpicker > input[name=time]")
+			        .first();
+			String time = timeArrtibute.attr("value");
 
-		Date updateDate = DateTimeUtils.parseDate(date.replace("/", ".") + " " + time, DATE_FORMAT);
+			Date updateDate = DateTimeUtils.parseDate(date.replace("/", ".") + " " + time, DATE_FORMAT);
 
-		// Parse data content
-		Element content = doc
-		        .select("div.container > div.index-currency-table > div.row > div.col-xs-12 > table.table--exchange.table--exchange--responsive > tbody")
-		        .first();
+			// Parse data content
+			Element content = doc
+			        .select("div.container > div.index-currency-table > div.row > div.col-xs-12 > table.table--exchange.table--exchange--responsive > tbody")
+			        .first();
 
-		Elements children1 = content.children();
+			Elements children1 = content.children();
 
-		int row = 0;
-		for (Element child : children1) {
-			CurrencyData currencyData = new CurrencyData();
-			try {
-				if (row > 0) {
-					currencyData.setDate(updateDate);
-					currencyData.setCode(child.child(0).text());
-					currencyData.setBuy(child.child(2).text().replace(",", "."));
-					currencyData.setSell(child.child(3).text().replace(",", "."));
-					currencyData.setRatio(Integer.parseInt(child.child(1).text()));
-					currencyData.setSource(Sources.UNICREDIT.getID());
-					result.add(currencyData);
+			int row = 0;
+			for (Element child : children1) {
+				CurrencyData currencyData = new CurrencyData();
+				try {
+					if (row > 0) {
+						currencyData.setDate(updateDate);
+						currencyData.setCode(child.child(0).text());
+						currencyData.setBuy(child.child(2).text().replace(",", "."));
+						currencyData.setSell(child.child(3).text().replace(",", "."));
+						currencyData.setRatio(Integer.parseInt(child.child(1).text()));
+						currencyData.setSource(Sources.UNICREDIT.getID());
+						result.add(currencyData);
+					}
+
+				} catch (IndexOutOfBoundsException e) {
+					log.warn("Failed on row='{}', Exception={}", row, e.getMessage());
+					getReporter().write(TAG_NAME, "Could not process currency on row='{}'!", row + "");
 				}
 
-			} catch (IndexOutOfBoundsException e) {
-				log.warn("Failed on row='{}', Exception={}", row, e.getMessage());
-				getReporter().write(TAG_NAME, "Could not process currency on row='{}'!", row + "");
+				row++;
+
 			}
 
-			row++;
-
+			return normalizeCurrencyData(result);
+		} catch (RuntimeException e) {
+			throw new IOException(e);
 		}
-
-		return normalizeCurrencyData(result);
-
 	}
 
 	@Override
