@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -18,9 +22,11 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 
+import net.vexelon.currencybg.srv.Defs;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.reports.Reporter;
+import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 
 public class TavexSource extends AbstractSource {
 
@@ -48,13 +54,11 @@ public class TavexSource extends AbstractSource {
 		Document doc = Jsoup.parse(input, Charsets.UTF_8.name(), URL_SOURCE);
 
 		try {
-			// Parse update date
-			// String[] components =
-			// doc.select("div.timer.timer--flexible.calculator__timer").get(0).text().substring(31)
-			// .replaceAll("\\s+", "").split(",");
-			// Date updateDate = DateTimeUtils
-			// .parseDate(components[0].substring(0, 10) + " " +
-			// components[1].substring(0, 5), DATE_FORMAT);
+
+			String currentDateTimeSofia = LocalDateTime.now(ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA))
+			        .format(DateTimeFormatter.ofPattern(DATE_FORMAT)).toString();
+
+			Date updateDate = DateTimeUtils.parseDate(currentDateTimeSofia, DATE_FORMAT);
 
 			// Parse table with currencies
 			Elements span = doc.select("div.table-flex__body").get(0).children();
@@ -74,7 +78,7 @@ public class TavexSource extends AbstractSource {
 					}
 					currencyData.setRatio(1);
 					currencyData.setSource(Sources.TAVEX.getID());
-					// currencyData.setDate(updateDate);
+					currencyData.setDate(updateDate);
 					result.add(currencyData);
 				} catch (IndexOutOfBoundsException e) {
 					log.warn("Failed on row='{}', Exception={}", row, e.getMessage());
