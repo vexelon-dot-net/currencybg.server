@@ -3,11 +3,12 @@ package net.vexelon.currencybg.srv.db;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.sql.Connection;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +23,7 @@ import net.vexelon.currencybg.srv.api.Currencies;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.CurrencySource;
 import net.vexelon.currencybg.srv.db.models.ReportData;
+import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 import net.vexelon.currencybg.srv.utils.GsonDateTimeSerializer;
 import net.vexelon.currencybg.srv.utils.HibernateUtil;
 
@@ -79,9 +81,21 @@ public class HibernateDataSource implements DataSource {
 		try (CloseableSession session = new CloseableSession(HibernateUtil.getSessionFactory().openSession())) {
 			session.delegate().beginTransaction();
 
-			Query query = session.delegate()
-			        .createSQLQuery("SELECT code, ratio,  buy,  sell, date, source FROM cbg_currencies");
-			currencies = query.list();
+			Date nextDay = DateTimeUtils.addDays(timeFrom, 1);
+
+			SQLQuery query = session.delegate().createSQLQuery(
+			        "SELECT code, ratio,  buy,  sell, date, source FROM cbg_currencies  WHERE date > (:today) AND date < (:nextDay)");
+			query.setParameter("today", new Timestamp(timeFrom.getTime()));
+			query.setParameter("nextDay", DateTimeUtils.toSqlDate(nextDay));
+
+			List<CurrencyData> rows = query.list();
+
+			// String sql = "SELECT c FROM cbg_currencies c WHERE SOURCE =
+			// (:source) ";
+			// TypedQuery<CurrencyData> query =
+			// session.delegate().createQuery(sql);
+			// query.setParameter("cource", 100);
+			// List<CurrencyData> result = query.getResultList();
 
 			// session.delegate().save(apiKey);
 			//
