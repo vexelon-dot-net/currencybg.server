@@ -45,42 +45,45 @@ public class Polana1 extends AbstractSource {
 
 		Document doc = Jsoup.parse(input, Charsets.UTF_8.name(), URL_SOURCE);
 
-		Element contentBox = doc.select("div.content-center ").first();
-		Elements contentChildren = contentBox.children();
+		try {
+			Element contentBox = doc.select("div.content-center ").first();
+			Elements contentChildren = contentBox.children();
 
-		String currentTimeSofia = LocalTime.now(ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA))
-		        .format(DateTimeFormatter.ofPattern("HH:mm")).toString();
+			String currentTimeSofia = LocalTime.now(ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA))
+			        .format(DateTimeFormatter.ofPattern("HH:mm")).toString();
 
-		String currentDateTime = contentChildren.select("h1").first().text().substring(26).trim() + " "
-		        + currentTimeSofia;
-		Date updateDate = DateTimeUtils.parseDate(currentDateTime, DATE_FORMAT);
+			String currentDateTime = contentChildren.select("h1").first().text().substring(26).trim() + " "
+			        + currentTimeSofia;
+			Date updateDate = DateTimeUtils.parseDate(currentDateTime, DATE_FORMAT);
 
-		Element contentBoxChildren = contentChildren.select("table > tbody").first();
-		Elements children = contentBoxChildren.children();
+			Element contentBoxChildren = contentChildren.select("table > tbody").first();
+			Elements children = contentBoxChildren.children();
 
-		int row = 0;
-		for (Element child : children) {
-			row++;
-			CurrencyData currencyData = new CurrencyData();
-			try {
+			int row = 0;
 
-				currencyData.setDate(updateDate);
-				currencyData.setCode(child.child(1).text().replace("\u00a0", ""));
-				currencyData.setBuy(child.child(3).text().replace("\u00a0", ""));
-				currencyData.setSell(child.child(4).text().replace("\u00a0", ""));
-				currencyData.setRatio(Integer.parseInt(child.child(2).text().replace("\u00a0", "")));
-				currencyData.setSource(Sources.POLANA1.getID());
-				result.add(currencyData);
+			for (Element child : children) {
+				row++;
 
-			} catch (IndexOutOfBoundsException e) {
-				log.warn("Failed on row='{}', Exception={}", row, e.getMessage());
-				getReporter().write(TAG_NAME, "Could not process currency on row='{}'!", row + "");
+				CurrencyData currencyData = new CurrencyData();
+				try {
+					currencyData.setDate(updateDate);
+					currencyData.setCode(child.child(1).text().replace("\u00a0", ""));
+					currencyData.setBuy(child.child(3).text().replace("\u00a0", ""));
+					currencyData.setSell(child.child(4).text().replace("\u00a0", ""));
+					currencyData.setRatio(Integer.parseInt(child.child(2).text().replace("\u00a0", "")));
+					currencyData.setSource(Sources.POLANA1.getID());
+
+					result.add(currencyData);
+				} catch (IndexOutOfBoundsException e) {
+					log.warn("Failed on row='{}', Exception={}", row, e.getMessage());
+					getReporter().write(TAG_NAME, "Could not process currency on row='{}'!", row + "");
+				}
 			}
 
+			return normalizeCurrencyData(result);
+		} catch (RuntimeException e) {
+			throw new IOException(e);
 		}
-
-		return normalizeCurrencyData(result);
-
 	}
 
 	@Override

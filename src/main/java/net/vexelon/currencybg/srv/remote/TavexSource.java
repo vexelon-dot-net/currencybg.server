@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 
+import net.vexelon.currencybg.srv.Defs;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.reports.Reporter;
@@ -49,41 +53,45 @@ public class TavexSource extends AbstractSource {
 
 		Document doc = Jsoup.parse(input, Charsets.UTF_8.name(), URL_SOURCE);
 
-		// Parse update date
-		String[] components = doc.select("div.timer.timer--flexible.calculator__timer").get(0).text().substring(31)
-		        .replaceAll("\\s+", "").split(",");
-		Date updateDate = DateTimeUtils.parseDate(components[0].substring(0, 10) + " " + components[1].substring(0, 5),
-		        DATE_FORMAT);
+		try {
 
-		// Parse table with currencies
-		Elements span = doc.select("div.table-flex__body").get(0).children();
+			String currentDateTimeSofia = LocalDateTime.now(ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA))
+			        .format(DateTimeFormatter.ofPattern(DATE_FORMAT)).toString();
 
-		int row = 0;
-		for (Element spanChild : span) {
-			CurrencyData currencyData = new CurrencyData();
-			try {
-				currencyData.setCode(spanChild.child(0).child(1).text());
-				currencyData.setBuy(spanChild.child(1).text());
-				if ("-".equals(currencyData.getBuy())) {
-					currencyData.setBuy("");
+			Date updateDate = DateTimeUtils.parseDate(currentDateTimeSofia, DATE_FORMAT);
+
+			// Parse table with currencies
+			Elements span = doc.select("div.table-flex__body").get(0).children();
+
+			int row = 0;
+			for (Element spanChild : span) {
+				CurrencyData currencyData = new CurrencyData();
+				try {
+					currencyData.setCode(spanChild.child(0).child(1).text());
+					currencyData.setBuy(spanChild.child(1).text());
+					if ("-".equals(currencyData.getBuy())) {
+						currencyData.setBuy("");
+					}
+					currencyData.setSell(spanChild.child(2).text());
+					if ("-".equals(currencyData.getSell())) {
+						currencyData.setSell("");
+					}
+					currencyData.setRatio(1);
+					currencyData.setSource(Sources.TAVEX.getID());
+					currencyData.setDate(updateDate);
+					result.add(currencyData);
+				} catch (IndexOutOfBoundsException e) {
+					log.warn("Failed on row='{}', Exception={}", row, e.getMessage());
+					getReporter().write(TAG_NAME, "Could not process currency on row='{}'!", row + "");
 				}
-				currencyData.setSell(spanChild.child(2).text());
-				if ("-".equals(currencyData.getSell())) {
-					currencyData.setSell("");
-				}
-				currencyData.setRatio(1);
-				currencyData.setSource(Sources.TAVEX.getID());
-				currencyData.setDate(updateDate);
-				result.add(currencyData);
-			} catch (IndexOutOfBoundsException e) {
-				log.warn("Failed on row='{}', Exception={}", row, e.getMessage());
-				getReporter().write(TAG_NAME, "Could not process currency on row='{}'!", row + "");
+
+				row++;
 			}
 
-			row++;
+			return normalizeCurrencyData(result);
+		} catch (RuntimeException e) {
+			throw new IOException(e);
 		}
-
-		return normalizeCurrencyData(result);
 	}
 
 	@Override
