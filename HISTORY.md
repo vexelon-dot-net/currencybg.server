@@ -1,10 +1,15 @@
 Currency BG Server Changes
 ==========================
 
+## 1.2.1
+
+  * Fixed an issue with Tavex date time parsing [#81](../../issues/81)
+  * Fixed an issue with uncaught RuntimException on source parsing [#59](../../issues/59)
+  
 ## 1.2
 
   * Added Societe Generale currencies source [#63](../../issues/63)
-  * Added Unicredit currencies source [#21](../../issues/21)
+  * Added UniCredit currencies source [#21](../../issues/21)
   * Fixed a major issue with time zones when fetching currencies [#77](../../issues/77)
   * Enhanced reports sending [#51](../../issues/51)
   
