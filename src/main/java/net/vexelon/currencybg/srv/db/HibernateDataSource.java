@@ -75,6 +75,22 @@ public class HibernateDataSource implements DataSource {
 		// }
 	}
 
+	@Override
+	public String getAllCurrentRatesAfter(Integer sourceId, Date timeFrom) throws DataSourceException {
+
+		List<CurrencyData> currencies = Lists.newArrayList();
+		currencies = getCurrentRatesAfter(sourceId, timeFrom);
+
+		Gson gson = new GsonBuilder().setDateFormat(Defs.DATEFORMAT_ISO_8601)
+		        .registerTypeHierarchyAdapter(Date.class, new GsonDateTimeSerializer(Defs.DATETIME_TIMEZONE_SOFIA))
+		        .create();
+		Type type = new TypeToken<List<CurrencyData>>() {
+		}.getType();
+
+		return gson.toJson(currencies, type);
+	}
+
+	@SuppressWarnings("unchecked")
 	private List<CurrencyData> getCurrentRatesAfter(Integer sourceId, Date timeFrom) throws DataSourceException {
 		List<CurrencyData> currencies = Lists.newArrayList();
 
@@ -83,94 +99,26 @@ public class HibernateDataSource implements DataSource {
 
 			Date nextDay = DateTimeUtils.addDays(timeFrom, 1);
 
-			SQLQuery query = session.delegate().createSQLQuery(
-			        "SELECT code, ratio,  buy,  sell, date, source FROM cbg_currencies  WHERE date > (:today) AND date < (:nextDay)");
+			String sqlSelect = "SELECT id, code, ratio,  buy,  sell, date, source FROM cbg_currencies  WHERE date > (:today) AND date < (:nextDay)";
+			if (sourceId != null) {
+				sqlSelect += "AND source = (:source) ORDER BY date asc";
+			} else {
+				sqlSelect += "ORDER BY date asc";
+			}
+
+			SQLQuery query = session.delegate().createSQLQuery(sqlSelect);
 			query.setParameter("today", new Timestamp(timeFrom.getTime()));
 			query.setParameter("nextDay", DateTimeUtils.toSqlDate(nextDay));
+			if (sourceId != null) {
+				query.setParameter("source", sourceId);
+			}
+			query.addEntity(CurrencyData.class);
 
-			List<CurrencyData> rows = query.list();
-
-			// String sql = "SELECT c FROM cbg_currencies c WHERE SOURCE =
-			// (:source) ";
-			// TypedQuery<CurrencyData> query =
-			// session.delegate().createQuery(sql);
-			// query.setParameter("cource", 100);
-			// List<CurrencyData> result = query.getResultList();
-
-			// session.delegate().save(apiKey);
-			//
-			// session.delegate().getTransaction().commit();
+			currencies = query.list();
 
 		}
-		return null;
+		return currencies;
 
-		// PreparedStatement preparedStatement = null;
-		// ResultSet rs = null;
-		//
-		// Date nextDay = DateTimeUtils.addDays(timeFrom, 1);
-		//
-		// String sqlSelect = " SELECT code, ratio, buy, sell, date, source FROM
-		// cbg_currencies WHERE date > ? AND date < ? ";
-		// if (sourceId != null) {
-		// sqlSelect += "AND source = ? ORDER BY date asc";
-		// } else {
-		// sqlSelect += "ORDER BY date asc";
-		// }
-		//
-		// if (log.isTraceEnabled() && isLogSql) {
-		// log.trace("[SQL] {}", sqlSelect);
-		// }
-		//
-		// try {
-		// preparedStatement =
-		// dbConnection.prepareStatement(sqlSelect.toString());
-		// preparedStatement.setTimestamp(1, new Timestamp(timeFrom.getTime()));
-		// preparedStatement.setDate(2, DateTimeUtils.toSqlDate(nextDay));
-		// if (sourceId != null) {
-		// preparedStatement.setInt(3, sourceId);
-		// }
-		//
-		// rs = preparedStatement.executeQuery();
-		//
-		// while (rs.next()) {
-		// currencies.add(new CurrencyData(rs.getString(1), rs.getInt(2),
-		// rs.getString(3), rs.getString(4),
-		// rs.getTimestamp(5), rs.getInt(6)));
-		// }
-		//
-		// return currencies;
-		//
-		// } catch (SQLException e) {
-		// throw new DataSourceException("SQL Exception in method
-		// getCurrentRatesAfter!", e);
-		//
-		// } finally {
-		// // TODO - close 2 PreprareStatement
-		// if (rs != null) {
-		// try {
-		// rs.close();
-		// } catch (SQLException e) {
-		// log.error("Problem with close of ResultSet(for selectSQL) in method
-		// getCurrentRatesAfter!", e);
-		// }
-		// }
-		//
-		// if (preparedStatement != null) {
-		// try {
-		// preparedStatement.close();
-		// } catch (SQLException e) {
-		// log.error("Problem with close of PreparedStatement(for selectSQL) in
-		// method getCurrentRatesAfter!",
-		// e);
-		// }
-		// }
-		// }
-	}
-
-	@Override
-	public String getAllCurrentRatesAfter(Integer sourceId, Date timeFrom) throws DataSourceException {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

@@ -96,14 +96,14 @@ public class Currencies extends AbstractJunction {
 	public Response getAllCurrentRatesAfter(@PathParam("timeFrom") String timeFrom,
 	        @PathParam("sourceId") Integer sourceId, @HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
 
-		try (DataSource source = new MySQLDataSource()) {
+		try (DataSource source = /* new MySQLDataSource() */new HibernateDataSource()) {
 			verifyAccess();
 
 			source.connect();
 
-			if (!source.isCheckAuthentication(apiKey)) {
-				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
-			}
+			// if (!source.isCheckAuthentication(apiKey)) {
+			// throw new ApiAccessException(Response.Status.UNAUTHORIZED);
+			// }
 
 			// String localTimeFrom = DateTimeUtils.toTimeZone(timeFrom,
 			// Defs.DATETIME_TIMEZONE_SOFIA);
@@ -129,9 +129,8 @@ public class Currencies extends AbstractJunction {
 	public Response getAllCurrentRatesAfter(@PathParam("timeFrom") String timeFrom,
 	        @HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
 
-		try (DataSource source = new HibernateDataSource()/*
-		                                                   * MySQLDataSource()
-		                                                   */) {
+		try (DataSource source = new HibernateDataSource()
+		/* new MySQLDataSource() */) {
 			verifyAccess();
 
 			source.connect();

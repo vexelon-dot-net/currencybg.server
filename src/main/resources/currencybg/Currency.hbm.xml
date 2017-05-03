@@ -20,7 +20,7 @@
         <property name="sell" type="string">
             <column name="SELL" length="10" not-null="true" unique="true" />
         </property>
-        <property name="date" type="date">
+        <property name="date" type="timestamp">
             <column name="DATE" not-null="true" unique="true" />
         </property>
         <property name="source" type="java.lang.Integer">
