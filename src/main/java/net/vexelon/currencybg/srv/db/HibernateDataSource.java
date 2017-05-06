@@ -147,7 +147,22 @@ public class HibernateDataSource implements DataSource {
 
 	@Override
 	public boolean isCheckAuthentication(String authenticationKey) throws DataSourceException {
-		// TODO Auto-generated method stub
+		try (CloseableSession session = new CloseableSession(HibernateUtil.getSessionFactory().openSession())) {
+			session.delegate().beginTransaction();
+
+			String sqlSelect = "SELECT 1 FROM cbg_apikeys WHERE key_value = (:keyValue) AND status = 0";
+
+			SQLQuery query = session.delegate().createSQLQuery(sqlSelect);
+			query.setParameter("keyValue", authenticationKey);
+
+			// query.addEntity(CurrencyData.class);
+
+			if (query.list().size() > 0) {
+				return true;
+			}
+
+		}
+
 		return false;
 	}
 

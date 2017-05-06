@@ -101,9 +101,9 @@ public class Currencies extends AbstractJunction {
 
 			source.connect();
 
-			// if (!source.isCheckAuthentication(apiKey)) {
-			// throw new ApiAccessException(Response.Status.UNAUTHORIZED);
-			// }
+			if (!source.isCheckAuthentication(apiKey)) {
+				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
+			}
 
 			// String localTimeFrom = DateTimeUtils.toTimeZone(timeFrom,
 			// Defs.DATETIME_TIMEZONE_SOFIA);
@@ -134,9 +134,9 @@ public class Currencies extends AbstractJunction {
 			verifyAccess();
 
 			source.connect();
-			// if (!source.isCheckAuthentication(apiKey)) {
-			// throw new ApiAccessException(Response.Status.UNAUTHORIZED);
-			// }
+			if (!source.isCheckAuthentication(apiKey)) {
+				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
+			}
 
 			// String localTimeFrom = DateTimeUtils.toTimeZone(timeFrom,
 			// Defs.DATETIME_TIMEZONE_SOFIA);
