@@ -27,15 +27,15 @@ import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.reports.Reporter;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 
-public class Crypto extends AbstractSource {
+public class CryptoBGSource extends AbstractSource {
 
 	private static final Logger log = LoggerFactory.getLogger(TavexSource.class);
-	private static final String TAG_NAME = Crypto.class.getSimpleName();
+	private static final String TAG_NAME = CryptoBGSource.class.getSimpleName();
 
 	private static final String URL_SOURCE = "https://crypto.bg/";
 	private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
 
-	public Crypto(Reporter reporter) {
+	public CryptoBGSource(Reporter reporter) {
 		super(reporter);
 		// TODO Auto-generated constructor stub
 	}
@@ -64,7 +64,7 @@ public class Crypto extends AbstractSource {
 			Element span = doc.select("div#tickers_header.ticker-data > table.rates-hdr > tbody > tr.bitcoin").get(0);
 
 			CurrencyData currencyData = new CurrencyData();
-			currencyData.setCode("BTC");
+			currencyData.setCode(Defs.BITCOINS);
 			currencyData.setBuy(span.child(1).text());
 			currencyData.setSell(span.child(2).text());
 			currencyData.setRatio(1);
@@ -87,7 +87,7 @@ public class Crypto extends AbstractSource {
 				public void onRequestFailed(Exception e) {
 					getReporter().write(TAG_NAME, "Connection failure= {}", ExceptionUtils.getStackTrace(e));
 
-					Crypto.this.close();
+					CryptoBGSource.this.close();
 					callback.onFailed(e);
 				}
 
@@ -107,7 +107,7 @@ public class Crypto extends AbstractSource {
 						getReporter().write(TAG_NAME, "Request was canceled! No currencies were downloaded.");
 					}
 
-					Crypto.this.close();
+					CryptoBGSource.this.close();
 					callback.onCompleted(result);
 				}
 			});

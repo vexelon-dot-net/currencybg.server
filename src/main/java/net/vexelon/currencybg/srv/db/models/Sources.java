@@ -1,7 +1,7 @@
 package net.vexelon.currencybg.srv.db.models;
 
 import net.vexelon.currencybg.srv.remote.BNBSource;
-import net.vexelon.currencybg.srv.remote.Crypto;
+import net.vexelon.currencybg.srv.remote.CryptoBGSource;
 import net.vexelon.currencybg.srv.remote.FIBSource;
 import net.vexelon.currencybg.srv.remote.Factorin;
 import net.vexelon.currencybg.srv.remote.Polana1;
@@ -84,7 +84,7 @@ public enum Sources {
 
 		// Crypto (Bitcoin Source)
 		case 700:
-			return new Crypto(reporter);
+			return new CryptoBGSource(reporter);
 
 		// <unknown>
 		default:
