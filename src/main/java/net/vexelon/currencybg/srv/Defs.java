@@ -49,6 +49,10 @@ public final class Defs {
 	public static final long REPORTER_UPDATE_FIRST_INTERVAL = 10;// seconds
 	public static final long REPORTER_UPDATES_PERIODIC_INTERVAL = 60 * 60;// 1
 	                                                                      // hour
+	/*
+	 * Currencies
+	 */
+	public static final String BITCOINS = "BTC";
 
 	/*
 	 * HTTP API specific
