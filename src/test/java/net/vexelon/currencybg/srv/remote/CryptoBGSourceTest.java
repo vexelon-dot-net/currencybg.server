@@ -17,7 +17,7 @@ public class CryptoBGSourceTest {
 
 		try {
 			List<CurrencyData> rates = new CryptoBGSource(new NullReporter())
-			        .getCryptoRates(TestUtils.getTestResource("/crypto_bg_source.html"));
+			        .getCryptoRates(TestUtils.getTestResource("/crypto_bg_source_arrow.html"));
 
 			assertTrue(rates.get(0).getCode().equals("BTC"));
 			assertTrue(rates.get(0).getRatio() == 1);
