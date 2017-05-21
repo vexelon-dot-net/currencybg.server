@@ -1,0 +1,1840 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta content='width=device-width, initial-scale=1.0' name='viewport'>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<script type="text/javascript">window.NREUM||(NREUM={});NREUM.info={"beacon":"bam.nr-data.net","errorBeacon":"bam.nr-data.net","licenseKey":"5145fba79c","applicationID":"11847022","transactionName":"dFsPQBYKVQ4ERxZEXERdFVsWFhYLD1FcSg==","queueTime":0,"applicationTime":96,"agent":""}</script>
+<script type="text/javascript">window.NREUM||(NREUM={}),__nr_require=function(e,n,t){function r(t){if(!n[t]){var o=n[t]={exports:{}};e[t][0].call(o.exports,function(n){var o=e[t][1][n];return r(o||n)},o,o.exports)}return n[t].exports}if("function"==typeof __nr_require)return __nr_require;for(var o=0;o<t.length;o++)r(t[o]);return r}({1:[function(e,n,t){function r(){}function o(e,n,t){return function(){return i(e,[c.now()].concat(u(arguments)),n?null:this,t),n?void 0:this}}var i=e("handle"),a=e(2),u=e(3),f=e("ee").get("tracer"),c=e("loader"),s=NREUM;"undefined"==typeof window.newrelic&&(newrelic=s);var p=["setPageViewName","setCustomAttribute","setErrorHandler","finished","addToTrace","inlineHit","addRelease"],d="api-",l=d+"ixn-";a(p,function(e,n){s[n]=o(d+n,!0,"api")}),s.addPageAction=o(d+"addPageAction",!0),s.setCurrentRouteName=o(d+"routeName",!0),n.exports=newrelic,s.interaction=function(){return(new r).get()};var m=r.prototype={createTracer:function(e,n){var t={},r=this,o="function"==typeof n;return i(l+"tracer",[c.now(),e,t],r),function(){if(f.emit((o?"":"no-")+"fn-start",[c.now(),r,o],t),o)try{return n.apply(this,arguments)}finally{f.emit("fn-end",[c.now()],t)}}}};a("setName,setAttribute,save,ignore,onEnd,getContext,end,get".split(","),function(e,n){m[n]=o(l+n)}),newrelic.noticeError=function(e){"string"==typeof e&&(e=new Error(e)),i("err",[e,c.now()])}},{}],2:[function(e,n,t){function r(e,n){var t=[],r="",i=0;for(r in e)o.call(e,r)&&(t[i]=n(r,e[r]),i+=1);return t}var o=Object.prototype.hasOwnProperty;n.exports=r},{}],3:[function(e,n,t){function r(e,n,t){n||(n=0),"undefined"==typeof t&&(t=e?e.length:0);for(var r=-1,o=t-n||0,i=Array(o<0?0:o);++r<o;)i[r]=e[n+r];return i}n.exports=r},{}],4:[function(e,n,t){n.exports={exists:"undefined"!=typeof window.performance&&window.performance.timing&&"undefined"!=typeof window.performance.timing.navigationStart}},{}],ee:[function(e,n,t){function r(){}function o(e){function n(e){return e&&e instanceof r?e:e?f(e,u,i):i()}function t(t,r,o,i){if(!d.aborted||i){e&&e(t,r,o);for(var a=n(o),u=m(t),f=u.length,c=0;c<f;c++)u[c].apply(a,r);var p=s[y[t]];return p&&p.push([b,t,r,a]),a}}function l(e,n){v[e]=m(e).concat(n)}function m(e){return v[e]||[]}function w(e){return p[e]=p[e]||o(t)}function g(e,n){c(e,function(e,t){n=n||"feature",y[t]=n,n in s||(s[n]=[])})}var v={},y={},b={on:l,emit:t,get:w,listeners:m,context:n,buffer:g,abort:a,aborted:!1};return b}function i(){return new r}function a(){(s.api||s.feature)&&(d.aborted=!0,s=d.backlog={})}var u="nr@context",f=e("gos"),c=e(2),s={},p={},d=n.exports=o();d.backlog=s},{}],gos:[function(e,n,t){function r(e,n,t){if(o.call(e,n))return e[n];var r=t();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(e,n,{value:r,writable:!0,enumerable:!1}),r}catch(i){}return e[n]=r,r}var o=Object.prototype.hasOwnProperty;n.exports=r},{}],handle:[function(e,n,t){function r(e,n,t,r){o.buffer([e],r),o.emit(e,n,t)}var o=e("ee").get("handle");n.exports=r,r.ee=o},{}],id:[function(e,n,t){function r(e){var n=typeof e;return!e||"object"!==n&&"function"!==n?-1:e===window?0:a(e,i,function(){return o++})}var o=1,i="nr@id",a=e("gos");n.exports=r},{}],loader:[function(e,n,t){function r(){if(!x++){var e=h.info=NREUM.info,n=d.getElementsByTagName("script")[0];if(setTimeout(s.abort,3e4),!(e&&e.licenseKey&&e.applicationID&&n))return s.abort();c(y,function(n,t){e[n]||(e[n]=t)}),f("mark",["onload",a()+h.offset],null,"api");var t=d.createElement("script");t.src="https://"+e.agent,n.parentNode.insertBefore(t,n)}}function o(){"complete"===d.readyState&&i()}function i(){f("mark",["domContent",a()+h.offset],null,"api")}function a(){return E.exists&&performance.now?Math.round(performance.now()):(u=Math.max((new Date).getTime(),u))-h.offset}var u=(new Date).getTime(),f=e("handle"),c=e(2),s=e("ee"),p=window,d=p.document,l="addEventListener",m="attachEvent",w=p.XMLHttpRequest,g=w&&w.prototype;NREUM.o={ST:setTimeout,CT:clearTimeout,XHR:w,REQ:p.Request,EV:p.Event,PR:p.Promise,MO:p.MutationObserver};var v=""+location,y={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-1026.min.js"},b=w&&g&&g[l]&&!/CriOS/.test(navigator.userAgent),h=n.exports={offset:u,now:a,origin:v,features:{},xhrWrappable:b};e(1),d[l]?(d[l]("DOMContentLoaded",i,!1),p[l]("load",r,!1)):(d[m]("onreadystatechange",o),p[m]("onload",r)),f("mark",["firstbyte",u],null,"api");var x=0,E=e(4)},{}]},{},["loader"]);</script>
+<title>3027.44 - Crypto.bg - Купи или продай биткойн чрез банков
+	превод, Кеш Терминал, EasyPay, ePay</title>
+<link rel="shortcut icon" type="image/x-icon"
+	href="/assets/crypto-c6d1ce9e1bf47a4944811d96b6477ec1.png" />
+<meta
+	content='Покупко-продажба на биткойн на всички банкомати и каси на EasyPay в България.'
+	name='description'>
+<meta property="og:image" content="https://crypto.bg/logofb.jpg" />
+<meta property="og:title"
+	content="Crypto.bg - покупко-продажба на биткойн, лайткойн" />
+<meta property="og:description"
+	content="Покупко-продажба на биткойн на всички банкомати и каси на EasyPay в България." />
+<link
+	href='https://fonts.googleapis.com/css?family=PT+Sans:400,700&subset=latin,cyrillic'
+	rel='stylesheet' type='text/css'>
+<link rel="stylesheet" media="all"
+	href="/assets/application-d98966d3eb59bc4ec730a1769fbf627a.css"
+	data-turbolinks-track="true" />
+<script src="/assets/application-d8885ca1a7937bc1e80dac1437157bce.js"
+	data-turbolinks-track="true"></script>
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.scripts"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.scripts"></script>
+<![endif]-->
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token"
+	content="GkBPYeNcnQwzoyhRveWlkkaIaSY2xKn6IPJSBguoIDxFW/wssWqRF8gSOmg92uPgcbMGkAk1dRj0/pqTM4BrwA==" />
+</head>
+<body class='no-js'>
+	<div id="fb-root"></div>
+	<script>
+  document.body.className = "";
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=1539835112918988&version=v2.0";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>
+	<header id='header'>
+		<nav class='navbar navbar-default navbar-fixed-top'>
+			<div class='ticker-data' id='tickers_header'>
+				<table class='rates-hdr'>
+					<tr class='bitcoin'>
+						<td class='cur'>BTC / лв.</td>
+						<td class='left'><span class='trend-'><img
+								src="/assets/trend__left-8563ddbc1ce716d12bfb811751c4d7fe.gif"
+								alt="Trend  left" /></span> 3027.44</td>
+						<td class='right'>3152.98</td>
+						<td class='arrow'><span class='trend-'><img
+								src="/assets/trend_-8563ddbc1ce716d12bfb811751c4d7fe.gif"
+								alt="Trend " /></span></td>
+					</tr>
+				</table>
+
+			</div>
+			<div class='container'>
+				<div class='navbar-header'>
+					<button class='navbar-toggle' data-target='.navbar-collapse'
+						data-toggle='collapse' type='button'>
+						<span class='sr-only'>Toggle navigation</span> <span
+							class='icon-bar'></span> <span class='icon-bar'></span> <span
+							class='icon-bar'></span>
+					</button>
+					<a class="navbar-brand" data-no-turbolink="true" href="/"><img
+						src="/assets/cryptobg-logo-48d98f4694f353ca2b99b9031d60c52b.png"
+						alt="Cryptobg logo" /></a>
+				</div>
+				<div class='collapse navbar-collapse'>
+					<ul class='nav navbar-nav'>
+					</ul>
+					<ul class="nav navbar-nav navbar-right" data-no-turbolink>
+						<li class='dropdown'><a class='dropdown-toggle'
+							data-toggle='dropdown' href='#'> Меню <span class='caret'></span>
+						</a>
+							<ul class="dropdown-menu" data-no-turbolink>
+								<li><a href="/search">Проверка на поръчка</a></li>
+								<li class='divider'></li>
+								<li><a target="_blank"
+									href="https://community.crypto.bg/t/crypto-bg/31">Отговори
+										на въпроси</a></li>
+								<li class='divider'></li>
+								<li><a onclick="triggerPane3()" href="#">Принципи на
+										сайта</a></li>
+								<li class='divider'></li>
+								<li><a onclick="triggerFooter()" href="#">Контакти</a></li>
+							</ul></li>
+						<li class='menu-lang'><a href="http://crypto.bg/?locale=en"><img
+								src="/assets/en-94e4f210dc5e65b012ab9b7e92da7ec3.png" alt="En" /></a></li>
+
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+	</header>
+	<div class="row converter" ng-app="traderApp">
+		<div id='ticker-data'>
+			<script>
+  document.title = '3152.98 лв. - Crypto.bg - Купи или продай биткойн чрез банков превод, Кеш Терминал, EasyPay, ePay';
+</script>
+
+		</div>
+		<div ng-controller="HomeCtrl"
+			ng-init="init('3027.436927', '', '', '3152.979187', '', '', '0.01', '1.0', '6000.0', '30000.0', '0.1', '0.0', '30000.0', '0.1', '0.0', 'bg', 1, '0.0009', 0)">
+			<div id='tickers'>
+				<script>
+  document.title = '3152.98 лв. - Crypto.bg - Купи или продай биткойн чрез банков превод, Кеш Терминал, EasyPay, ePay';
+</script>
+				<script>
+  (function() {
+    var appElement, appScope, controllerScope;
+  
+    appElement = document.querySelector('[ng-app=traderApp]');
+  
+    appScope = angular.element(appElement).scope();
+  
+    controllerScope = appScope.$$childHead;
+  
+    controllerScope.$apply(function() {
+      controllerScope.bitcoin_buy_rate = parseFloat(3152.979187);
+      controllerScope.bitcoin_sell_rate = parseFloat(3027.436927);
+      controllerScope.litecoin_buy_rate = parseFloat();
+      controllerScope.litecoin_sell_rate = parseFloat();
+      controllerScope.dogecoin_buy_rate = parseFloat();
+      controllerScope.dogecoin_sell_rate = parseFloat();
+      if (controllerScope.rateFrozen === 0) {
+        if (controllerScope.currency === 'bitcoin') {
+          if (controllerScope.type === "buy") {
+            controllerScope.rate = parseFloat(3152.979187);
+            controllerScope.current_rate = parseFloat(3152.979187);
+          } else if (controllerScope.type === "sell") {
+            controllerScope.rate = parseFloat(3027.436927);
+            controllerScope.current_rate = parseFloat(3027.436927);
+          }
+        } else if (controllerScope.currency === 'litecoin') {
+          if (controllerScope.type === "buy") {
+            controllerScope.rate = parseFloat();
+            controllerScope.current_rate = parseFloat();
+          } else if (controllerScope.type === "sell") {
+            controllerScope.rate = parseFloat();
+            controllerScope.current_rate = parseFloat();
+          }
+        } else if (controllerScope.currency === 'dogecoin') {
+          if (controllerScope.type === "buy") {
+            controllerScope.rate = parseFloat();
+            controllerScope.current_rate = parseFloat();
+          } else if (controllerScope.type === "sell") {
+            controllerScope.rate = parseFloat();
+            controllerScope.current_rate = parseFloat();
+          }
+        }
+        controllerScope.changeCrypt();
+      } else {
+        if (controllerScope.currency === 'bitcoin') {
+          if (controllerScope.type === "buy") {
+            controllerScope.current_rate = parseFloat(3152.979187);
+          } else if (controllerScope.type === "sell") {
+            controllerScope.current_rate = parseFloat(3027.436927);
+          }
+        } else if (controllerScope.currency === 'litecoin') {
+          if (controllerScope.type === "buy") {
+            controllerScope.current_rate = parseFloat();
+          } else if (controllerScope.type === "sell") {
+            controllerScope.current_rate = parseFloat();
+          }
+        } else if (controllerScope.currency === 'dogecoin') {
+          if (controllerScope.type === "buy") {
+            controllerScope.current_rate = parseFloat();
+          } else if (controllerScope.type === "sell") {
+            controllerScope.current_rate = parseFloat();
+          }
+        }
+      }
+      controllerScope.max_buy_bitcoin = parseFloat(30000.0);
+      controllerScope.max_buy_litecoin = parseFloat(0.1);
+      controllerScope.max_buy_dogecoin = parseFloat(0.0);
+      controllerScope.max_sell_bitcoin = parseFloat(30000.0);
+      controllerScope.max_sell_litecoin = parseFloat(0.1);
+      controllerScope.max_sell_dogecoin = parseFloat(0.0);
+      controllerScope.setMin();
+      controllerScope.setMax();
+    });
+  
+  }).call(this);
+</script>
+
+			</div>
+			<div id='hero'>
+				<div class='container'>
+					<div class='fuelux' ng-show='wizard &gt; 1'>
+						<div class='wizard' id='MyWizard'>
+							<ul class='steps'>
+								<li ng-class="{active: wizard==1, complete: wizard > 1}"><span
+									class='badge badge-info'>1</span>Валута <span class='chevron'></span>
+								</li>
+								<li ng-class="{active: wizard==2, complete: wizard > 2}"><span
+									class='badge'>2</span>Операция <span class='chevron'></span></li>
+								<li ng-class="{active: wizard==3, complete: wizard > 3}"><span
+									class='badge'>3</span>Сума <span class='chevron'></span></li>
+								<li ng-class="{active: wizard==4, complete: wizard > 4}"><span
+									class='badge'>4</span>Данни <span class='chevron'></span></li>
+								<li ng-class="{active: wizard==5, complete: wizard > 5}"><span
+									class='badge'>5</span>Статус <span class='chevron'></span></li>
+							</ul>
+						</div>
+					</div>
+					<div class='row-fluid animated fadeInUp'>
+						<div class='span12'>
+							<div class='carousel slide' data-interval='false'
+								id='home-carousel'>
+								<div class='carousel-inner'>
+									<div class='active item'>
+										<div class='row-fluid'>
+											<div
+												class='col-md-11 animated rotateInDownLeft block block-data'>
+												<a class="simple-link"
+													ng-click="setBtc(); carouselNext(); setWizard2()">
+													<h3 class='center cur-start'>
+														започни от тук <img id="img-cur" class="img-cur-start"
+															src="/assets/bit_slider_4-e525fc95ce58e6f66ae28eb0176be282.png"
+															alt="Bit slider 4" />
+													</h3>
+												</a>
+												<table class='fr'>
+													<tr>
+														<td class='c1'>
+															<div class='left-tips'>
+																<h3 class='strong'>
+																	Как се <span class='dred'>купува</span> биткойн:
+																</h3>
+																<ul class='frul list-unstyled'>
+																	<li><img class="img_bul_fr"
+																		src="/assets/li-bullet-7e1d29472d2f57abba733e76995e6bb1.gif"
+																		alt="Li bullet" /> Избирате желаното количество
+																		биткойн</li>
+																	<li><img class="img_bul_fr"
+																		src="/assets/li-bullet-7e1d29472d2f57abba733e76995e6bb1.gif"
+																		alt="Li bullet" /> Въвеждате своя биткойн адрес</li>
+																	<li><img class="img_bul_fr"
+																		src="/assets/li-bullet-7e1d29472d2f57abba733e76995e6bb1.gif"
+																		alt="Li bullet" /> Ние ви даваме данни за плащане</li>
+																	<li><img class="img_bul_fr"
+																		src="/assets/li-bullet-7e1d29472d2f57abba733e76995e6bb1.gif"
+																		alt="Li bullet" /> Плащате с ePay, EasyPay, ПИБ -
+																		готово!</li>
+																</ul>
+																<a target="_blank"
+																	href="https://community.crypto.bg/t/crypto-bg/118/1">Прочетете
+																	подробно упътване</a>
+															</div>
+														</td>
+														<td class='c2'>
+															<div
+																class='buttons-currencies buttons-currencies-revised'>
+																<a
+																	class="btn btn-red btn-square-sm btn-block btn-operation strong"
+																	ng-click="setBtc(); setBuy(); carouselNext(); setWizard3(); clearBgn()">
+																	<i class="fa fa-bitcoin"></i> КУПЕТЕ <span
+																	ng-show="currency == 'bitcoin'"> {{currencyLabel
+																		| uppercase}} </span>
+																</a> <a
+																	class="btn btn-blue btn-square-sm btn-block btn-operation strong"
+																	ng-click="setBtc(); setSell(); carouselNext(); setWizard3(); clearBgn()">
+																	<i class="fa fa-bitcoin"></i> ПРОДАЙТЕ <span
+																	ng-show="currency == 'bitcoin'"> {{currencyLabel
+																		| uppercase}} </span>
+																</a>
+															</div>
+														</td>
+														<td class='c3'>
+															<div class='right-tips'>
+																<h3 class='strong'>
+																	Как се <span class='dred'>продава</span> биткойн:
+																</h3>
+																<ul class='frul list-unstyled'>
+																	<li><img class="img_bul_fr"
+																		src="/assets/li-bullet-7e1d29472d2f57abba733e76995e6bb1.gif"
+																		alt="Li bullet" /> Въвеждате количество за продажба</li>
+																	<li><img class="img_bul_fr"
+																		src="/assets/li-bullet-7e1d29472d2f57abba733e76995e6bb1.gif"
+																		alt="Li bullet" /> Въвеждате данни за получаване на
+																		левове</li>
+																	<li><img class="img_bul_fr"
+																		src="/assets/li-bullet-7e1d29472d2f57abba733e76995e6bb1.gif"
+																		alt="Li bullet" /> Пращате ни биткойните</li>
+																	<li><img class="img_bul_fr"
+																		src="/assets/li-bullet-7e1d29472d2f57abba733e76995e6bb1.gif"
+																		alt="Li bullet" /> Получавате парите по EasyPay,
+																		ePay, банкова с-ка</li>
+																</ul>
+																<a target="_blank"
+																	href="https://community.crypto.bg/t/crypto-bg/121/1">Прочетете
+																	подробно упътване</a>
+															</div>
+														</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+									</div>
+									<div class='item'>
+										<div class='row-fluid'>
+											<div
+												class='col-md-5 span4 animated rotateInDownLeft block block-left'>
+												<p class='no-bottom p-left-question'>{{calcText}}</p>
+												<p class='min-max'>
+													Поне {{min_cur_displayed}}, но не повече от {{max | number:
+													5}} {{currencyLabelPluralAlt}} <br> <span
+														ng-show="type=='buy'"> Може да въведете и сумата в
+														лева, за която да купите {{currencyLabelPlural}} </span> <span
+														ng-show="type=='sell'"> Може да въведете и сумата в
+														лева, за която да продадете {{currencyLabelPlural}} </span>
+												</p>
+											</div>
+											<div class='col-md-1'></div>
+											<div
+												class='col-md-5 animated rotateInUpRight block block-data'>
+												<div class='buttons-currencies-calc'>
+													<form class="form form-horizontal"
+														data-ng-submit="update()" name="optionsForm">
+														<div class="input-group wizard-calc wiz-calc-coin">
+															<input type="text" required valid-number name="coins"
+																class="form-control cur-input-1" ng-model="crypt"
+																ng-change="changeCrypt()" placeholder="Количество..."
+																onfocus="this.placeholder = ''"
+																onblur="this.placeholder = 'Количество...'">
+															<div class="input-group-addon">
+																{{currencyLabelPlural}}</div>
+														</div>
+														<div class="calc-icon">
+															<span class="glyphicon glyphicon-retweet"></span>
+														</div>
+														<div class="input-group wizard-calc wiz-calc-levs">
+															<input type="text" required valid-number name="bgns"
+																class="form-control cur-input-3" ng-model="bgn"
+																ng-change="changeBgn()" placeholder="За сума..."
+																onfocus="this.placeholder = ''"
+																onblur="this.placeholder = 'За сума...'">
+															<div class="input-group-addon">лв.</div>
+														</div>
+														<div class='clear'></div>
+														<div class='calc-rate'>
+															<span class='label label-default'> Курс : {{rate |
+																number:5}} </span>
+														</div>
+														<div class='buttons-wiz-bf'>
+															<div class='wiz-but-prev'>
+																<a class="btn btn-back"
+																	ng-click="carouselPrev(); setWizard2()"> <span
+																	class="glyphicon glyphicon-backward"></span> Назад
+																</a>
+															</div>
+															<div class='wiz-but-next'>
+																<button type="submit" class="btn btn-red btn-nobold"
+																	ng-disabled="crypt < min_cur_displayed || crypt > max || crypt == null"
+																	ng-click="carouselNext(); setWizard4(); goToStep2()">
+																	Продължи <span class="glyphicon glyphicon-forward"></span>
+																</button>
+															</div>
+															<div class='clear'></div>
+														</div>
+													</form>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class='item'>
+										<div class='row-fluid'>
+											<div
+												class='col-md-5 span4 animated rotateInDownLeft block block-left'>
+												<p class='p-left-question'
+													ng-show="step==2 &amp;&amp; type=='sell' &amp;&amp; !sellType">
+													Изберете как да ви изплатим сумата в лева.</p>
+												<p class='p-left-question'
+													ng-show="step==2 &amp;&amp; type=='sell' &amp;&amp; !sellType &amp;&amp; bgn &gt; 5000">
+													Изплащане по Easypay е възможно за суми до 5000 лв.</p>
+												<p class='p-left-question'
+													ng-show="step==2 &amp;&amp; type=='buy' &amp;&amp; !buyType &amp;&amp; bgn &lt;= 5000">
+													Как желаете да платите?</p>
+												<p class='p-left-question'
+													ng-show="step==2 &amp;&amp; type=='buy' &amp;&amp; !buyType &amp;&amp; bgn &gt; 5000">
+													Покупки за над 5000 лв. са възможни само чрез банков
+													превод, кеш депозит в клон на ПИБ или по Epay. Предлагаме
+													други платежни средства за поръчки до 5000 лв.</p>
+												<div class='l33'
+													ng-show="step==2 &amp;&amp; type=='sell' &amp;&amp; sellType == 'bank'">
+													<p class='p-left-question'>Моля въведете данните,
+														необходими за извършване на банков превод. Ползвайте
+														активен имейл адрес, на който ще ви известим за статуса на
+														поръчката.</p>
+												</div>
+												<div class='l33'
+													ng-show="step==2 &amp;&amp; type=='sell' &amp;&amp; sellType == 'epay'">
+													<p class='p-left-question'>Попълнете КИН-а си в Epay,
+														както и актуален email адрес</p>
+												</div>
+												<div class='l44'
+													ng-show="step==2 &amp;&amp; type=='sell' &amp;&amp; sellType == 'easypay'">
+													<p class='p-left-question'>Попълнете лични данни на
+														получателя, както и актуален email адрес</p>
+												</div>
+												<div class='l-buy'
+													ng-show="step==2 &amp;&amp; type=='buy' &amp;&amp; buyType">
+													<p class='p-left-question'>Попълнете вашия
+														{{currencyLabel}} адрес и валиден email адрес.</p>
+												</div>
+											</div>
+											<div class='col-md-1'></div>
+											<div
+												class='col-md-5 animated rotateInUpRight block block-data'>
+												<div class='buttons-currencies-calc'>
+													<div class='det' ng-show="step==2 &amp;&amp; type=='buy'">
+														<div class='dett' ng-show='!buyType'>
+															<a
+																class="btn btn-red strong btn-block-spaced btn-block btn-paytype"
+																ng-click="setBuyTypeBank()"> <span class='eplogo'>
+																	<img
+																	src="/assets/bank2-55adcd6aab9a358573ddd79053bd8573.png"
+																	alt="Bank2" />
+															</span> Чрез банков превод (такса: {{calculateFee(bgn, "bank")}}
+																лв.)
+																<div class='clear'></div>
+															</a> <a
+																class="btn btn-red strong btn-block-spaced btn-block btn-paytype"
+																ng-click="setBuyTypeBank()"> <span class='eplogo'>
+																	<img
+																	src="/assets/bank-deeecac7186fe699e0094e75a41c1f24.png"
+																	alt="Bank" />
+															</span> В брой на каса на ПИБ (такса: {{calculateFee(bgn,
+																"bank")}} лв.)
+																<div class='clear'></div>
+															</a> <a
+																class="btn btn-red strong btn-block-spaced btn-block btn-paytype"
+																ng-show="bgn <= 5000" ng-click="setBuyTypeEasypay()">
+																<span class='eplogo'> <img
+																	src="/assets/easypay_logo-5d8def276f1689c51e29e14ee671fae2.png"
+																	alt="Easypay logo" />
+															</span> На каса на Easypay (такса: {{calculateFee(bgn,
+																"easypay")}} лв.)
+																<div class='clear'></div>
+															</a> <a
+																class="btn btn-red strong btn-block-spaced btn-block btn-paytype"
+																ng-click="setBuyTypeEpay()"> <span class='eplogo'>
+																	<img
+																	src="/assets/epay_logo-1fc397f98be9ad86b955bb20288f140c.png"
+																	alt="Epay logo" />
+															</span> Онлайн през Epay (такса: {{calculateFee(bgn, "epay")}}
+																лв.)
+																<div class='clear'></div>
+															</a> <a
+																class="btn btn-red strong btn-block-spaced cashterminal-mobile-button btn-block btn-paytype"
+																ng-show="bgn <= 5000"
+																ng-click="setBuyTypeCashTerminal()"> <span
+																class='eplogo'> <img
+																	src="/assets/cashterminal-7f682568c1ca8c42742220161b022d4a.png"
+																	alt="Cashterminal" />
+															</span> В брой от автомат на КЕШ ТЕРМИНАЛ (такса:
+																{{calculateFee(bgn, "cashterminal")}} лв.)
+																<div class='clear'></div>
+															</a> <a class="btn btn-back btn-block-spaced btn-block"
+																ng-click="goToStep1(); carouselPrev(); setWizard3()">
+																Назад </a>
+														</div>
+														<div class='dett' ng-show='buyType'>
+															<div class='pinput'>
+																<input type="text" ng-required="type=='buy'"
+																	class="form-control" ng-model="receiver_address"
+																	placeholder="{{currencyLabel}} адрес за получаване *"
+																	onfocus="this.placeholder = ''"
+																	onblur="this.placeholder = 'адрес за получаване *'">
+															</div>
+															<div class='pinput'>
+																<input type="email" ng-required="type=='buy'"
+																	class="form-control" ng-model="email"
+																	placeholder="email адрес за връзка с вас *"
+																	onfocus="this.placeholder = ''"
+																	onblur="this.placeholder = 'email адрес за връзка с вас *'">
+															</div>
+														</div>
+													</div>
+													<div class='det' ng-show="step==2 &amp;&amp; type=='sell'">
+														<div class='dett' ng-show='!sellType'>
+															<a
+																class="btn btn-red strong btn-block-spaced btn-block btn-paytype"
+																ng-click="setSellTypeEpay()"> <span class='eplogo'>
+																	<img
+																	src="/assets/epay_logo-1fc397f98be9ad86b955bb20288f140c.png"
+																	alt="Epay logo" />
+															</span> По микросметка в Epay (такса: {{calculateFee(bgn,
+																"epay")}} лв.)
+																<div class='clear'></div>
+															</a> <a
+																class="btn btn-red strong btn-block-spaced btn-block btn-paytype"
+																ng-show="bgn <= 5000" ng-click="setSellTypeEasypay()">
+																<span class='eplogo'> <img
+																	src="/assets/easypay_logo-5d8def276f1689c51e29e14ee671fae2.png"
+																	alt="Easypay logo" />
+															</span> В брой на каса на EasyPay (такса: {{calculateFee(bgn,
+																"easypay")}} лв.)
+																<div class='clear'></div>
+															</a> <a
+																class="btn btn-red strong btn-block-spaced btn-block btn-paytype"
+																ng-click="setSellTypeBank()"> <span class='eplogo'>
+																	<img
+																	src="/assets/bank-deeecac7186fe699e0094e75a41c1f24.png"
+																	alt="Bank" />
+															</span> Чрез банков превод (такса: {{calculateFee(bgn, "bank")}}
+																лв.)
+																<div class='clear'></div>
+															</a> <a class="btn btn-back btn-block-spaced btn-block"
+																ng-click="goToStep1(); carouselPrev(); setWizard3()">
+																Назад </a>
+														</div>
+														<div class='dett' ng-show='sellType'>
+															<p
+																ng-show="validEgn == false &amp;&amp; sellType == 'easypay'">
+																<span class='label label-danger'> Невалиден ЕГН.
+																	Проверете изписването и възрастта (18+) </span>
+															</p>
+															<div class='pinput' ng-show="sellType == 'epay'">
+																<input type="text"
+																	ng-required="type=='sell' && sellType == 'epay'"
+																	ng-model="epay_kin" class="form-control"
+																	placeholder="Epay номер на клиента*"
+																	onfocus="this.placeholder = ''"
+																	onblur="this.placeholder = 'Epay номер на клиента*'">
+															</div>
+															<div class='pinput' ng-show="sellType == 'easypay'">
+																<input type="text"
+																	ng-required="type=='sell' && sellType == 'easypay'"
+																	class="form-control" ng-model="customer_name"
+																	placeholder="Трите имена на получателя*"
+																	onfocus="this.placeholder = ''"
+																	onblur="this.placeholder = 'Трите имена на получателя*'">
+															</div>
+															<div class='pinput' ng-show="sellType == 'bank'">
+																<input type="text"
+																	ng-required="type=='sell' && sellType == 'bank'"
+																	class="form-control" ng-model="customer_name"
+																	placeholder="Трите имена на получателя*"
+																	onfocus="this.placeholder = ''"
+																	onblur="this.placeholder = 'Трите имена на получателя*'">
+															</div>
+															<div class='pinput' ng-show="sellType == 'bank'">
+																<input type="text"
+																	ng-required="type=='sell' && sellType == 'bank'"
+																	class="form-control" ng-model="customer_iban" ng-iban
+																	placeholder="IBAN на получателя*"
+																	onfocus="this.placeholder = ''"
+																	onblur="this.placeholder = 'IBAN на получателя*'">
+															</div>
+															<div class='pinput' ng-show="sellType == 'easypay'">
+																<input type="text"
+																	ng-required="type=='sell' && sellType == 'easypay'"
+																	ng-change="validateEgn()" class="form-control"
+																	ng-model="egn" placeholder="ЕГН на получателя*"
+																	onfocus="this.placeholder = ''"
+																	onblur="this.placeholder = 'ЕГН на получателя*'">
+															</div>
+															<div class='pinput'>
+																<input type="email" ng-required="type=='sell'"
+																	class="form-control" ng-model="email"
+																	placeholder="email адрес за връзка с вас *"
+																	onfocus="this.placeholder = ''"
+																	onblur="this.placeholder = 'email адрес за връзка с вас *'">
+															</div>
+														</div>
+													</div>
+													<div class='buttons-wiz-bf'
+														ng-show="(step==2 &amp;&amp; type=='buy' &amp;&amp; buyType) || (step==2 &amp;&amp; type=='sell' &amp;&amp; sellType)">
+														<div class='wiz-but-prev'>
+															<a class="btn btn-back" ng-click="dataBackButton()">
+																<span class="glyphicon glyphicon-backward"></span> Назад
+															</a>
+														</div>
+														<div class='wiz-but-next'>
+															<button type="submit" class="btn btn-red btn-nobold"
+																ng-disabled="email == null || crypt < min_cur || crypt > max || crypt == null || ( type=='sell' && sellType == 'epay' && epay_kin == null) || ( type=='sell' && sellType == 'easypay' && (customer_name == null || egn == null || validEgn == false)) || ( type=='sell' && sellType == 'bank' && (customer_name == null || customer_iban == null)) || ( type=='buy' && receiver_address == null)"
+																ng-click="carouselNext(); setWizard5()">
+																Продължи <span class="glyphicon glyphicon-forward"></span>
+															</button>
+														</div>
+														<div class='clear'></div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class='row-fluid cashterminal-row'
+											ng-show="step==2 &amp;&amp; type=='buy' &amp;&amp; !buyType &amp;&amp; bgn &lt;= 5000">
+											<div
+												class='col-md-5 span4 animated rotateInDownLeft cashterminal'>
+												<div class='l-buy'
+													ng-show="step==2 &amp;&amp; type=='buy' &amp;&amp; !buyType">
+													<p></p>
+													<a
+														class="btn btn-red logo-ct strong btn-block-spaced btn-block btn-paytype"
+														ng-click="setBuyTypeCashTerminal()"> <span
+														class='eplogo'> <img
+															src="/assets/cashterminal_logo_2-336faaf1ff1f0e572bf00159a8b4f83a.png"
+															alt="Cashterminal logo 2" />
+													</span> В брой от автомат на <br> КЕШ ТЕРМИНАЛ
+														<div class='clear'></div>
+													</a>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class='item'>
+										<div class='row-fluid'>
+											<div
+												class='col-md-6 span4 animated rotateInDownLeft block block-left'>
+												<h3 class='white'>Данни за обмена</h3>
+												<table class='confirmations'>
+													<tr ng-show='receiver_address != null'>
+														<td>{{currencyLabel | capitalize}} адрес:</td>
+														<td>{{receiver_address}}</td>
+													</tr>
+													<tr ng-show='epay_kin != null'>
+														<td>Epay КИН:</td>
+														<td>{{epay_kin}}</td>
+													</tr>
+													<tr ng-show='customer_name != null'>
+														<td>Име на получателя:</td>
+														<td>{{customer_name}}</td>
+													</tr>
+													<tr ng-show='egn != null'>
+														<td>ЕГН на получателя:</td>
+														<td>{{egn}}</td>
+													</tr>
+													<tr ng-show='email != null'>
+														<td>E-mail на получателя:</td>
+														<td>{{email}}</td>
+													</tr>
+													<tr>
+														<td>{{currencyLabel | capitalize}} сума:</td>
+														<td>{{crypt | number:5}}</td>
+													</tr>
+													<tr
+														ng-show="sellType != 'bank' &amp;&amp; fee &gt; 0 &amp;&amp; buyType != 'cashterminal'">
+														<td>Такса на Epay:</td>
+														<td>{{fee | number:2}} лв.</td>
+													</tr>
+													<tr
+														ng-show="sellType != 'bank' &amp;&amp; fee &gt; 0  &amp;&amp; buyType == 'cashterminal'">
+														<td>Такса на КТ</td>
+														<td>{{fee | number:2}} лв.</td>
+													</tr>
+													<tr ng-show="type == 'buy'">
+														<td>Такса по транзакцията:</td>
+														<td>{{tx_fee_bgn | number:2}} лв.</td>
+													</tr>
+													<tr>
+														<td>{{sumLegend}}</td>
+														<td>{{grandTotal | number:2}} лв.</td>
+													</tr>
+													<tr ng-show="sellType == 'bank'">
+														<td>IBAN на получателя</td>
+														<td>{{customer_iban}}</td>
+													</tr>
+												</table>
+											</div>
+											<div
+												class='col-md-5 animated rotateInUpRight block block-data'>
+												<div class='finalize'>
+													<p
+														ng-show="fee &gt; 0 &amp;&amp; type == 'buy' &amp;&amp; buyType == 'cashterminal'">
+														<em> Данните за вашата поръчка, дадени в ляво, са
+															само ориентировъчни. Цената, по която ще закупите
+															биткойните, ще бъде определена в момента на внасянето на
+															парите в устройството на кеш терминал. </em>
+													</p>
+													<p
+														ng-show="fee &gt; 0 &amp;&amp; type == 'buy' &amp;&amp; buyType != 'cashterminal'">
+														<em> <span class='aaa1'
+															ng-show="buyType == 'epay' || buyType == 'easypay' || buyType == 'atm'">
+																Таксата на Epay за тази сума е: </span> <span class='aaa2'
+															ng-show="buyType == 'bank'"> Таксата на банката за
+																тази сума е: </span> {{fee | number:2}} лв. Ако сте заявили
+															количество биткойни, тази такса ще бъде добавена към
+															левовата сума за плащане. Ако сте заявили сума в лева,
+															таксата ще бъде приспадната от количеството биткойни.
+														</em>
+													</p>
+													<p ng-show="buyType == 'epay' &amp;&amp; type == 'buy'">
+														<em> Плащането през Epay изисква предварително
+															одобрен КИН. Ако не разполагате с такъв, може да се
+															свържете с нас за валидация или да платите тази поръчка
+															на банкомат или Easypay. </em>
+													</p>
+													<p ng-show="fee &gt; 0 &amp;&amp; type == 'sell'">
+														<em> <span class='aaa1'
+															ng-show="sellType == 'epay' || sellType == 'easypay'">
+																Таксата на Epay за тази сума е: </span> <span class='aaa2'
+															ng-show="sellType == 'bank'"> Таксата на банката
+																за тази сума е: </span> {{fee | number:2}} лв. Ако сте заявили
+															количество биткойни, тази такса ще бъде извадена от
+															сумата за получаване в лева. Ако сте заявили сумата в
+															лева, таксата ще бъде прибавена към количеството
+															биткойни.
+														</em>
+													</p>
+													<p
+														ng-show="grandTotal &gt; 200 &amp;&amp; type == 'sell' &amp;&amp; sellType == 'epay'">
+														<em> За да получите това плащане от нас, трябва да
+															имате статус <span class='red bold'>Регистриран
+																клиент - физическо лице</span> . За да го получите, трябва да
+															посетите каса на EasyPay. <span class='blue bold'><a
+																target="_blank"
+																href="https://www.epay.bg/index.cgi?action=wikibox&amp;wpage=limits_macs_bg">Прочетете
+																	упътването....</a></span>
+														</em>
+													</p>
+													<p ng-show="type == 'buy' &amp;&amp; buyType == 'bank'">
+														При първо плащане по банкова сметка от непознат IBAN
+														биткойните ще бъдат изпратени към вас след 17:00 часа на
+														следващия работен ден: <a target="_blank"
+															href="https://community.crypto.bg/t/topic/100">Прочетете
+															подробности...</a> <br> <span class='lred'>Това
+															ограничение не важи за покупки в кеш, извършени на каса в
+															клон на ПИБ.</span>
+													</p>
+													<form id="trade-form" class="new-trade-form"
+														action="/create_trade" accept-charset="UTF-8"
+														method="post">
+														<input name="utf8" type="hidden" value="&#x2713;" /><input
+															type="hidden" name="authenticity_token"
+															value="GkBPYeNcnQwzoyhRveWlkkaIaSY2xKn6IPJSBguoIDxFW/wssWqRF8gSOmg92uPgcbMGkAk1dRj0/pqTM4BrwA==" />
+														<div class='buttonsfinalize'>
+															<div class='order-checkbox-wizard'>
+																<div class="checkbox checkbox-success">
+																	<input type="checkbox" name="autorecalc" value=""
+																		ng-model='autorecalc' id="chk2"> <label
+																		for="chk2"> <a class="terms-link"
+																		data-toggle="modal" data-target="#modal-autorecalc"
+																		data-backdrop="static"> Автоматично преизчисление
+																			при промяна на курса </a>
+																	</label>
+																</div>
+																<div class="checkbox checkbox-success">
+																	<input type="checkbox" name="terms" value=""
+																		ng-model='termsSelected' id="chk1"> <label
+																		for="chk1"> <a class="terms-link"
+																		data-toggle="modal" data-target="#modal-terms"
+																		data-backdrop="static"> Споделям принципите на
+																			сайта </a>
+																	</label>
+																</div>
+															</div>
+															<input type="hidden" name="currency" value="{{currency}}">
+															<input type="hidden" name="type" value="{{type}}">
+															<input type="hidden" name="rate" value="{{rate}}">
+															<input type="hidden" name="sell_type"
+																value="{{sellType}}"> <input type="hidden"
+																name="buy_type" value="{{buyType}}"> <input
+																type="hidden" name="master_field"
+																value="{{masterField}}"> <input type="hidden"
+																name="customer_address" value="{{receiver_address}}">
+															<input type="hidden" name="coins" value="{{crypt}}">
+															<input type="hidden" name="bgns" value="{{bgn}}">
+															<input type="hidden" name="due_levs"
+																value="{{grandTotal}}"> <input type="hidden"
+																name="customer_epay_number" value="{{epay_kin}}">
+															<input type="hidden" name="customer_name"
+																value="{{customer_name}}"> <input type="hidden"
+																name="customer_iban" value="{{customer_iban}}">
+															<input type="hidden" name="customer_bic"
+																value="{{customer_bic}}"> <input type="hidden"
+																name="customer_egn" value="{{egn}}"> <input
+																type="hidden" name="email" value="{{email}}"> <input
+																type="hidden" name="autorecalc" value="{{autorecalc}}">
+														</div>
+														<div class='buttons-wiz-bf'>
+															<div class='wiz-but-prev'>
+																<a class="btn btn-back"
+																	ng-click="carouselPrev(); setWizard4()"> <span
+																	class="glyphicon glyphicon-backward"></span> Назад
+																</a>
+															</div>
+															<div class='wiz-but-next'>
+																<button type="submit" class="btn btn-red btn-nobold"
+																	data-disable-with="Моля изчакайте..."
+																	ng-disabled="email == null || crypt < min_cur || crypt > max || crypt == null || ( type=='sell' && sellType == 'epay' && epay_kin == null) || ( type=='sell' && sellType == 'easypay' && (customer_name == null || egn == null || validEgn == false)) || ( type=='sell' && sellType == 'bank' && (customer_name == null || customer_iban == null)) || ( type=='buy' && receiver_address == null) || termsSelected == false">
+																	{{buttonText}} <span
+																		class="glyphicon glyphicon-forward"></span>
+																</button>
+															</div>
+															<div class='clear'></div>
+														</div>
+													</form>
+
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<script>
+  $('.btn').button()
+</script>
+		</div>
+	</div>
+	<div class='modal' id='modal-terms'>
+		<div class='modal-dialog'>
+			<div class='modal-content'>
+				<div class='modal-header'>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">×</button>
+					<h4 class="modal-title">Принципи и етос на сайта</h4>
+				</div>
+				<div class='modal-body'>
+					<p>﻿Водещият принцип в Crypto.bg е предоставянето на лесен
+						достъп за всички до крипто валутите - а оттам и пълна свобода за
+						всички в разпореждането със собствените им средства. Желаем да
+						спомогнем на всеки да стане независим от посредници, банки,
+						регулаторни органи и прочие.</p>
+					<p>Водени от тези принципи сме положили всички усилия да
+						обезопасим сайта и да гарантираме на всички съвестни потребители
+						100% сигурност на средствата им.</p>
+					<p>Ако и вие споделяте тези принципи, никога няма да се стигне
+						до прилагането на единственото условие при ползването на сайта:
+						Всички взаимотоотношения между потребителите на Crypto.bg и
+						неговите създатели (Биткойн Солюшънс ЕООД) се уреждат от Законите,
+						действащи в България.</p>
+					<p>Благодарим ви за доверието.</p>
+				</div>
+				<div class='modal-footer'>
+					<button type="button" class="btn btn-default" data-dismiss="modal">
+						Затвори</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class='modal' id='modal-autorecalc'>
+		<div class='modal-dialog'>
+			<div class='modal-content'>
+				<div class='modal-header'>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">×</button>
+					<h4 class="modal-title">Автоматично преизчисление при промяна
+						на курса</h4>
+				</div>
+				<div class='modal-body'>
+					<p>
+						Както знаете, ако цената на биткойн се промени значително във
+						времето между поръчката и получаване на плащането от нас, ние ще
+						ви предложим преизчисление по актуалния курс или връщане на
+						плащането. Опитът показва, че в 95% от случаите, клиентите ни
+						избират преизчисление. За това, въведохме възможност за вас да
+						укажете, дали искате автоматично преизчисление, или не.
+						Автоматичното преизчисление работи и в случаите, когато сумата по
+						полученото плащане е неточна: различна от заявената; в тези случаи
+						поръчката ще се преизчисли според изпратената сума. Прочетете
+						подробности на следния линк: <a
+							href="https://community.crypto.bg/t/topic/387">https://community.crypto.bg/t/topic/387</a>
+					</p>
+				</div>
+				<div class='modal-footer'>
+					<button type="button" class="btn btn-default" data-dismiss="modal">
+						Затвори</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id='body'>
+		<div class='container'>
+			<div id="staticApp">
+				<div id="staticAppCtrl" ng-controller="StaticHomeCtrl"
+					ng-init="init('bg')">
+					<div class='clear'></div>
+					<div id="newsCarousel"
+						class="row-fluid margin-bottom-30 carousel slide">
+						<div class="carousel-inner">
+							<div class="item">
+								<p class='news-item'>
+									<a target="_blank"
+										href="https://community.crypto.bg/t/gladiacoin/643">Gladiacoin
+										е пирамида - не давайте и стотинка там</a>
+								</p>
+							</div>
+							<div class="item">
+								<p class='news-item'>
+									<a target="_blank"
+										href="https://community.crypto.bg/t/jaxx-io/497">Преминете
+										на Jaxx.io - универсален крипто портфейл</a>
+								</p>
+							</div>
+							<div class="item">
+								<p class='news-item'>
+									<a target="_blank"
+										href="https://community.crypto.bg/t/topic/416">Относно
+										бавното потвърждение на транзакциите в блокчейна</a>
+								</p>
+							</div>
+						</div>
+						<ol class="carousel-indicators">
+							<li data-target="#newsCarousel" data-slide-to="0"></li>
+							<li data-target="#newsCarousel" data-slide-to="1"></li>
+							<li data-target="#newsCarousel" data-slide-to="2"></li>
+						</ol>
+					</div>
+					<div class='clear'></div>
+					<div class='row-fluid margin-bottom-30' id='home-services'>
+						<div class='col-md-4'>
+							<a href="https://community.crypto.bg" target="_blank">
+								<div class='service clearfix serv1'
+									data-mouseover='/bulb_inverted.png'
+									ng-class="{'sactive': pane==1}">
+									<div class='circle'>
+										<span ng-show='pane != 1'> <img
+											class="img-bullet img-bulb"
+											data-mouseover="/bulb_inverted.png"
+											src="/assets/bulb-3facd68aa8fa6cdc8f107bf79c3fbda4.png"
+											alt="Bulb" />
+										</span> <span ng-show='pane == 1'> <img class="img-bullet"
+											src="/assets/bulb_inverted-a96935dba94b3f6aec733f224489d2d9.png"
+											alt="Bulb inverted" />
+										</span>
+									</div>
+									<div class='desc'>
+										<h3 class='strong'>Биткойн форум</h3>
+										<p class='white'>Включете се в изцяло p2p-базираната
+											платформа за дискусии</p>
+									</div>
+								</div>
+							</a>
+						</div>
+						<div class='col-md-4'>
+							<a href="https://community.crypto.bg/t/crypto-bg/31"
+								target="_blank">
+								<div class='service clearfix serv2'
+									data-mouseover='/q_inverted.png'
+									ng-class="{'sactive': pane==2}">
+									<div class='circle'>
+										<span ng-show='pane != 2'> <img
+											class="img-bullet-q img-q" data-mouseover="/q_inverted.png"
+											src="/assets/q-17fc4a815a21d65c5dffb4283d9928fc.png" alt="Q" />
+										</span> <span ng-show='pane == 2'> <img class="img-bullet-q"
+											src="/assets/q_inverted-84ea266a3cc4fd7dbd012ec9c668c3b0.png"
+											alt="Q inverted" />
+										</span>
+									</div>
+									<div class='desc'>
+										<h3 class='strong'>F.A.Q.</h3>
+										<p class='white'>Отговори на често и не толкова често
+											поставяни въпроси</p>
+									</div>
+								</div>
+							</a>
+						</div>
+						<div class='col-md-4'>
+							<div class='service clearfix serv3'
+								data-mouseover='/terms_inverted.png'
+								ng-class="{'sactive': pane==3}" ng-click='toggle_3()'>
+								<div class='circle'>
+									<span ng-show='pane != 3'> <img
+										class="img-bullet-t img-terms"
+										data-mouseover="/terms_inverted.png"
+										src="/assets/terms-13049f5659f1d78e5b4b1408f77b4dde.png"
+										alt="Terms" />
+									</span> <span ng-show='pane == 3'> <img class="img-bullet-t"
+										src="/assets/terms_inverted-41910fa94eaef1aeabb0fb25f6f8e368.png"
+										alt="Terms inverted" />
+									</span>
+								</div>
+								<div class='desc'>
+									<h3 class='strong'>Принципи</h3>
+									<p>Ние не поставяме условия за ползване...</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class='clear'></div>
+					<div class='row-fluid margin-top-20 margin-bottom-20'>
+						<div data-no-turbolink>
+							<div class='col-md-12 text-block' id='pane1' ng-show='pane==1'>
+							</div>
+
+							<div class='col-md-12 text-block' id='pane2' ng-show='pane==2'>
+								<div class='panel-group' id='faq-accordion'>
+									<h3 class='text'>За разплащанията с лева</h3>
+									<div class='panel panel-default'>
+										<div class='panel-heading'>
+											<h4 class='panel-title'>
+												<a data-parent='#faq-accordion' data-toggle='collapse'
+													href='#collapse1'> Какви са платежните такси? </a>
+											</h4>
+										</div>
+										<div class='panel-collapse collapse' id='collapse1'>
+											<div class='panel-body'>
+												<p>
+													Краткият отговор на този въпрос е: <i>безбожно високи</i>.
+													Дългият отговор е, че различните методи имат различни по
+													размер такси. За да можем да предлагаме ниски спредове,
+													бяхме принудени да "отдадем" тези такси на вас. С
+													извинението, че както за покупка, така и за продажба,
+													предлагаме безплатни за вас методи. Ако ви се струват
+													високи таксите при другите методи (а те са), може да
+													ползвате някой от безплатните и по този начин да търгувате
+													на предложения от нас ултра нисък за този вид услуга марж.
+												</p>
+												<p>Ето и таблица с таксите за всеки вид метод.</p>
+												<p>
+												<table class="table table-striped table-condensed">
+													<tr>
+														<th>&nbsp;</th>
+														<th>Каса на EasyPay</th>
+														<th>Банкомат</th>
+														<th>По КИН в ePay</th>
+														<th>Банков път</th>
+													</tr>
+													<tr>
+														<td>Когато КУПУВАТЕ:</td>
+														<td>1.2%</td>
+														<td>1.2%</td>
+														<td>1.2%</td>
+														<td>-</td>
+													</tr>
+													<tr>
+														<td>Когато ПРОДАВАТЕ:</td>
+														<td><a href="http://easypay.bg/?p=tarifa4"
+															target="_blank">кликни тук</a></td>
+														<td>-</td>
+														<td>0%</td>
+														<td>1 лв.</td>
+													</tr>
+												</table>
+												</p>
+											</div>
+										</div>
+									</div>
+									<div class='panel panel-default'>
+										<div class='panel-heading'>
+											<h4 class='panel-title'>
+												<a data-parent='#faq-accordion' data-toggle='collapse'
+													href='#collapse2'> Как да платим на банкомат? </a>
+											</h4>
+										</div>
+										<div class='panel-collapse collapse' id='collapse2'>
+											<div class='panel-body'>
+												<p>
+													Може да платите с дебитна карта на <a
+														href="https://www.epay.bg/?page=front&p=b-pay_atm_emv"
+														title="Банкомати за ePay" target="_blank">почти всички
+														банкомати в България.</a> (Само тези на ОББ не поддържат
+													BPay). За целта изберете от менюто на банкомата <i>B-Pay</i>
+													или <i>Други услуги,</i> после въведете номера на търговец
+													(60 000) и уникалния код, който сме ви показали в края на
+													поръчката. След това ще трябва само да въведете пин кода на
+													картата и плащането ще бъде изпълнено веднага: още преди да
+													си извадите картата от банкомата, биткойните ще пристигнат
+													на зададения от вас биткойн адрес.
+												</p>
+											</div>
+										</div>
+									</div>
+									<div class='panel panel-default'>
+										<div class='panel-heading'>
+											<h4 class='panel-title'>
+												<a data-parent='#faq-accordion' data-toggle='collapse'
+													href='#collapse3'> Как да платим на каса на EasyPay? </a>
+											</h4>
+										</div>
+										<div class='panel-collapse collapse' id='collapse3'>
+											<div class='panel-body'>
+												<p>
+													Отивате до която и да е <a
+														href="http://www.easypay.bg/?p=offices"
+														title="Карта на каси на EasyPay" target="_blank">каса
+														на EasyPay в страната</a>, представяте номера, който сме ви
+													изписали по време на поръчката (пращаме ви го и по имейл),
+													и плащате в брой. Докато си вземате довиждане с касиерката,
+													ще сме пратили койните по зададения от вас биткойн адрес
+													(може да е на роднина в чужбина).
+												</p>
+											</div>
+										</div>
+									</div>
+									<div class='panel panel-default'>
+										<div class='panel-heading'>
+											<h4 class='panel-title'>
+												<a data-parent='#faq-accordion' data-toggle='collapse'
+													href='#collapse4'> Как да платим с ePay? </a>
+											</h4>
+										</div>
+										<div class='panel-collapse collapse' id='collapse4'>
+											<div class='panel-body'>
+												<p>Съвсем скоро ще можете да платите мигновено и по
+													микросметка в ePay (където може да ползвате регистрирана
+													при тях дебитна и/или кредитна карта) от удобството на
+													собствения си дом.</p>
+											</div>
+										</div>
+									</div>
+									<div class='panel panel-default'>
+										<div class='panel-heading'>
+											<h4 class='panel-title'>
+												<a data-parent='#faq-accordion' data-toggle='collapse'
+													href='#collapse5'> Как да получим пари на каса на
+													EasyPay? </a>
+											</h4>
+										</div>
+										<div class='panel-collapse collapse' id='collapse5'>
+											<div class='panel-body'>
+												<p>
+													Когато продавате биткойни или други крипто-валути (надяваме
+													се, защото копаете такива, а не поради друга причина,
+													защото би било грешка), ще трябва да ни предоставите трите
+													имена и ЕГН-то на получателя (може и да не сте вие самите).
+													<strong>След около час</strong> може да се явите на всяка <a
+														href="http://www.easypay.bg/?p=offices"
+														title="Карта на каси на EasyPay" target="_blank">каса
+														на EasyPay</a> с личната си карта и да получите парите в кеш.
+													Чудесен начин да пратите пари на някой в България, ако сте
+													в чужбина: просто давате неговите лични данни и ни
+													превеждате крипто валутата. Напълно анонимно, законно и
+													евтино - сбогом на кожодерите от Western Union, Instagram и
+													прочие.
+												</p>
+											</div>
+										</div>
+									</div>
+									<div class='panel panel-default'>
+										<div class='panel-heading'>
+											<h4 class='panel-title'>
+												<a data-parent='#faq-accordion' data-toggle='collapse'
+													href='#collapse6'> Как да получим пари по микросметка в
+													ePay? </a>
+											</h4>
+										</div>
+										<div class='panel-collapse collapse' id='collapse6'>
+											<div class='panel-body'>
+												<p>Може да си преведете пари по ваша (или на познат)
+													микросметка в ePay, след което от там парите да се ползват
+													към хиляди онлайн търговци, да плащате битовите си сметка
+													без такси, или пък да ги изтеглите към банковата си сметка
+													с превод по IBAN.</p>
+												<p>Освен че е удобен, това е и безплатен метод и ви го
+													препоръчваме, само обърнете внимание на следното.</p>
+												<p>
+													<strong>ВАЖНО:</strong> За да може да получавате повече от
+													300 лв в сметката си в ePay, трябва да се явите
+													предварително и еднократно лично на каса на EasyPay и да
+													покажете личната си карта. Данните ви ще бъдат сверени, а
+													ограниченията по сметката премахнати: ще може да получавате
+													каквито и да са суми по сметката си.
+												</p>
+											</div>
+										</div>
+									</div>
+									<div class='panel panel-default'>
+										<div class='panel-heading'>
+											<h4 class='panel-title'>
+												<a data-parent='#faq-accordion' data-toggle='collapse'
+													href='#collapse7'> Как да ползваме друго платежно
+													средство? </a>
+											</h4>
+										</div>
+										<div class='panel-collapse collapse' id='collapse7'>
+											<div class='panel-body'>
+												<p>Поддържаме почти всички други разплащателни средства,
+													но за целта трябва да се свържете предварително с нас. Тъй
+													като при тези видове разплащания се изисква ръчна намеса,
+													цените ни ще са с 5% надценка от цената на борсата.</p>
+											</div>
+										</div>
+									</div>
+									<div class='panel panel-default'>
+										<div class='panel-heading'>
+											<h4 class='panel-title'>
+												<a data-parent='#faq-accordion' data-toggle='collapse'
+													href='#collapse8'> До какви суми може да
+													купуваме/продаваме </a>
+											</h4>
+										</div>
+										<div class='panel-collapse collapse' id='collapse8'>
+											<div class='panel-body'>
+												<p>Ползването на автоматичните, анонимни методи за
+													разплащане е възможно само до 2000 лева на сделка. Ако
+													искате по-висока сума, моля да се свържете с нас. И тук
+													както по-горе ще е необходима ръчна намеса и цената, на
+													която сме успели да ги купим на борсата, ще стане ясна едва
+													след покупката. Ликвидността на биткойн борсите е все още
+													плитка и покупка от няколко биткойна "разтваря" спреда до
+													няколко евро.</p>
+											</div>
+										</div>
+									</div>
+									<h3 class='text'>Биткойн и други крипто портфейли</h3>
+									<div class='panel panel-default'>
+										<div class='panel-heading'>
+											<h4 class='panel-title'>
+												<a data-parent='#faq-accordion' data-toggle='collapse'
+													href='#collapse9'> Защо ни е крипто-портфейл </a>
+											</h4>
+										</div>
+										<div class='panel-collapse collapse' id='collapse9'>
+											<div class='panel-body'>
+												<p>За да си купите биткойн или друга крипто валута,
+													трябва да притежавате портфейл за тази валута. Ако купувате
+													биткойни с мобилен телефон на банкомат или каса на EasyPay,
+													предварително копирайте адреса, на който искате да получите
+													койните, за да може после лесно да го пейстнете в полето за
+													това.</p>
+												<p>По-долу ще ви дадем съвети за сигурни портфейли, но
+													сте свободни да ползвате които и да е портфейл - стига да
+													сте проверили, че е сигурен.</p>
+											</div>
+										</div>
+									</div>
+									<div class='panel panel-default'>
+										<div class='panel-heading'>
+											<h4 class='panel-title'>
+												<a data-parent='#faq-accordion' data-toggle='collapse'
+													href='#collapse10'> Портфейли за биткойн </a>
+											</h4>
+										</div>
+										<div class='panel-collapse collapse' id='collapse10'>
+											<div class='panel-body'>
+												<p>
+													Най-сигурният портфейл за ползване е този на
+													BlockChain.info. Как да си отворите такъв (безплатно, само
+													срещу имейл), може да прочетете на следния линк: <a
+														href="http://hash.bg/%d0%ba%d0%b0%d0%ba-%d0%b4%d0%b0-%d1%81%d0%b8-%d0%bd%d0%b0%d0%bf%d1%80%d0%b0%d0%b2%d1%8f-%d0%b1%d0%b8%d1%82%d0%ba%d0%be%d0%b9%d0%bd-%d0%bf%d0%be%d1%80%d1%82%d1%84%d0%b5%d0%b9%d0%bb/"
+														title="Как да си направя онлайн портфейл в BlockChain.info"
+														target="_blank">Как да си направя онлайн портфейл в
+														BlockChain.info?</a>
+												</p>
+												<p>
+													Ако искате да ползвате удобно биткойн за малки плащания в
+													интернет и нямате нищо против Google Chrome, ви съветваме
+													да си сложите <a
+														href="https://chrome.google.com/webstore/detail/kryptokit-bitcoin-wallet/lhhipingoaiddcoalochnbjlkifbpmoj"
+														title="KryptoKit Bitcoin Wallet" target="_blank">KryptoKit
+														Bitcoin Wallet.</a> Непременно му направете backup, който да
+													запишете на друг носител и не дръжте много пари в него,
+													освен ако не ползвате парола.
+												</p>
+												<p>Ако искате да се разплащате с мобилния си телефон
+													(например, ако искате лесно да пренесете повечко пари в
+													чужбина), може да ползвате и мобилното приложение на
+													BlockChain.info, което е достъпно както за Android, така и
+													за iPhone.</p>
+											</div>
+										</div>
+									</div>
+									<div class='panel panel-default'>
+										<div class='panel-heading'>
+											<h4 class='panel-title'>
+												<a data-parent='#faq-accordion' data-toggle='collapse'
+													href='#collapse11'> Портфейли за лайткойн </a>
+											</h4>
+										</div>
+										<div class='panel-collapse collapse' id='collapse11'>
+											<div class='panel-body'>
+												<p>
+													Не съветваме да инвестирате в лайткойн (прочетете следната
+													статия: <a
+														href="http://hash.bg/%d0%b1%d0%b0%d0%bb%d0%be%d0%bd%d1%8a%d1%82-%d0%bb%d0%b0%d0%b9%d1%82%d0%ba%d0%be%d0%b9%d0%bd/"
+														title="Балонът Лайткойн" target="_blank">Балонът
+														Лайткойн</a>). Поддържаме лайткойн само защото има много хора
+													в България, които копаят лайткойн. Всички сайтове, които
+													приемат лайткойн, приемат и биткойн, а цената на биткойн
+													расте и ще расте спрямо лайткойн.
+												</p>
+												<p>За това и няма да препоръчваме лайткойн портфейл,
+													предполага се, че сте достатъчно запознати с него, след
+													като желаете да си го закупите.</p>
+											</div>
+										</div>
+									</div>
+									<div class='panel panel-default'>
+										<div class='panel-heading'>
+											<h4 class='panel-title'>
+												<a data-parent='#faq-accordion' data-toggle='collapse'
+													href='#collapse12'> Портфейли за догекойн </a>
+											</h4>
+										</div>
+										<div class='panel-collapse collapse' id='collapse12'>
+											<div class='panel-body'>
+												<p>
+													Догекойн е най-симпатичната валута и чрез нея може да
+													правите много микро транзакции, с които да подкрепяте
+													каузите, които ви запалват. И доге-тата страдат от същите
+													проблеми като лайткойна, така че не купувайте прекалено
+													много от тях. Препоръчваме ви <a
+														href="https://chrome.google.com/webstore/detail/dogecoin-browser-wallet-d/fcakjkhpcakekaagfkafeafceiemomcm?hl=en"
+														title="Flow Wallet Doge" target="_blank">Doge Flow
+														Wallet,</a> тъй като позволява най-лесното ползване на тази
+													валута по предназначение.
+												</p>
+											</div>
+										</div>
+									</div>
+									<h3 class='text'>Изпълнение на поръчката</h3>
+									<div class='panel panel-default'>
+										<div class='panel-heading'>
+											<h4 class='panel-title'>
+												<a data-parent='#faq-accordion' data-toggle='collapse'
+													href='#collapse13'> Какво ви предлагаме </a>
+											</h4>
+										</div>
+										<div class='panel-collapse collapse' id='collapse13'>
+											<div class='panel-body'>
+												<p>
+													Мисията на Crypto.bg е да даде лесен и евтин за всички
+													българи достъп до света на крипто валутите. Ние ви
+													спестяваме нервите, времето и парите, които са необходими,
+													за да търгувате на някоя от ликвидните крипто-борси в
+													света. Нашите курсове отговарят на тези на <a
+														href="https://www.kraken.com/"
+														title="Kraken bitcoin Exchange" target="_blank">Kraken.com</a>,
+													която е най-стабилната борса, ползвана от Bloomberg.
+													Комисионата ни е между 1 и 2 процента от текущите цени и се
+													надяваме с повишената активност да покрием разходите, които
+													имаме по поддръжка на сайта.
+												</p>
+											</div>
+										</div>
+									</div>
+									<div class='panel panel-default'>
+										<div class='panel-heading'>
+											<h4 class='panel-title'>
+												<a data-parent='#faq-accordion' data-toggle='collapse'
+													href='#collapse14'> Изпълнение на поръчката </a>
+											</h4>
+										</div>
+										<div class='panel-collapse collapse' id='collapse14'>
+											<div class='panel-body'>
+												<p>Тъй като не търгуваме срещу клиентите си, ние
+													изпълняваме незабавно всяка сделка на борсата, след като
+													получим плащане от вас. Ако във времето между вашата заявка
+													на сайта и регистриране на плащането от наша страна, курсът
+													се е променил толкова, че да сме на загуба от сделката, ние
+													няма да я изпълним и ще ви дадем възможност да си вземете
+													парите обратно или да осъществим сделката на актуални към
+													момента цени. Ще ви попитаме за това по имейл, така че моля
+													ви ползвайте винаги актуален имейл адрес, на който ще ви
+													пратим известие за статуса и номера на поръчката.</p>
+											</div>
+										</div>
+									</div>
+									<div class='panel panel-default'>
+										<div class='panel-heading'>
+											<h4 class='panel-title'>
+												<a data-parent='#faq-accordion' data-toggle='collapse'
+													href='#collapse15'> Срокове </a>
+											</h4>
+										</div>
+										<div class='panel-collapse collapse' id='collapse15'>
+											<div class='panel-body'>
+												<p>Когато купувате крипто-валути, сделките се изпълняват
+													мигновено от нас. При продажба на крипто-валута, ние ще
+													изчакаме достатъчен брой потвърждения в съответната блок
+													верига (между 10 и 30 минути). Ако искате да получите
+													парите си на каса на EasyPay, ще е необходим още половин
+													час, за да може те да обработят плащането.</p>
+											</div>
+										</div>
+									</div>
+									<div class='panel panel-default'>
+										<div class='panel-heading'>
+											<h4 class='panel-title'>
+												<a data-parent='#faq-accordion' data-toggle='collapse'
+													href='#collapse16'> Сигурност </a>
+											</h4>
+										</div>
+										<div class='panel-collapse collapse' id='collapse16'>
+											<div class='panel-body'>
+												<p>
+													Ако не забравяте да се уверите, че в адреса на браузера ви
+													действително е изписан адреса <strong>https://crypto.bg</strong>
+													и до него има зелено ключе за сигурна SSL връзка, няма да
+													имате проблеми. Ние сме регистриран търговец при ePay и
+													властите в подобието на държава, в която живеем, имат
+													всичките ни данни, за да може да ни издирите чрез тях. Във
+													футера на сайта има телефон и адрес за връзка с нас, така
+													че се чуствайте спокойни да ни звъннете и да се уверите, че
+													сайтът ни не е фантом. И непременно потърсете отзвук за нас
+													в google, за да бъдете напълно спокойни.
+												</p>
+											</div>
+										</div>
+									</div>
+									<div class='panel panel-default'>
+										<div class='panel-heading'>
+											<h4 class='panel-title'>
+												<a data-parent='#faq-accordion' data-toggle='collapse'
+													href='#collapse17'> Работно време </a>
+											</h4>
+										</div>
+										<div class='panel-collapse collapse' id='collapse17'>
+											<div class='panel-body'>
+												<p>Разсмяхме се с този въпрос :) Биткойн системата
+													"работи" 24 часа в денонощието, 365 дена в годината
+													(понякога и 366) и няма сила в интернет, която да я
+													"свали". По щастливо стечение на обстоятелствата
+													банкоматите и сайтът на ePay имат същото работно време,
+													така че и за Crypto.bg може да се каже, че няма почивки.</p>
+											</div>
+										</div>
+									</div>
+									<div class='panel panel-default'>
+										<div class='panel-heading'>
+											<h4 class='panel-title'>
+												<a data-parent='#faq-accordion' data-toggle='collapse'
+													href='#collapse18'> При други въпроси и проблеми </a>
+											</h4>
+										</div>
+										<div class='panel-collapse collapse' id='collapse18'>
+											<div class='panel-body'>
+												<p>Не се колебайте да се свържете с нас - телефонният ни
+													номер и имейл адрес са изписани най-долу на всяка страница.</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class='col-md-12 text-block' id='pane3' ng-show='pane==3'>
+								<p class='text-first'>﻿Водещият принцип в Crypto.bg е
+									предоставянето на лесен достъп за всички до крипто валутите - а
+									оттам и пълна свобода за всички в разпореждането със
+									собствените им средства. Желаем да спомогнем на всеки да стане
+									независим от посредници, банки, регулаторни органи и прочие.</p>
+								<p>Водени от тези принципи сме положили всички усилия да
+									обезопасим сайта и да гарантираме на всички съвестни
+									потребители 100% сигурност на средствата им.</p>
+								<p>Ако и вие споделяте тези принципи, никога няма да се
+									стигне до прилагането на единственото условие при ползването на
+									сайта: Всички взаимотоотношения между потребителите на
+									Crypto.bg и неговите създатели (Биткойн Солюшънс ЕООД) се
+									уреждат от Законите, действащи в България.</p>
+								<p>Благодарим ви за доверието.</p>
+							</div>
+
+						</div>
+					</div>
+					<div class='row-fluid margin-bottom-5' ng-show='pane==0'>
+						<div class='banner-contain'>
+							<div class='chart' id='ratechart'></div>
+							<p></p>
+							<script>
+  $(function drawChart() {
+      $('#ratechart').highcharts({
+  
+          chart: {
+              type: 'arearange',
+              zoomType: 'x',
+          },
+  
+          title: {
+              // text: 'Курс BTC (7 дни)'
+              text: "Курс BTC (7 дни)"
+          },
+  
+  
+          xAxis: {
+              type: 'datetime'
+          },
+  
+          yAxis: {
+              title: {
+                  text: null
+              }
+          },
+  
+          tooltip: {
+              crosshairs: true,
+              shared: true,
+              valueSuffix: ' лв.'
+          },
+  
+          legend: {
+              enabled: false
+          },
+  
+          series: [{
+              name: 'Лева',
+              data: [[1494279555000, 2960.82, 2843.44],[1494281713000, 2977.78, 2861.00],[1494283667000, 3008.80, 2890.26],[1494285556000, 3003.12, 2885.04],[1494287555000, 2993.08, 2871.69],[1494289460000, 2985.41, 2867.79],[1494291533000, 2998.80, 2877.94],[1494293627000, 3012.74, 2891.57],[1494295792000, 3023.23, 2902.79],[1494297756000, 2998.80, 2875.66],[1494299600000, 3010.00, 2889.32],[1494301412000, 3023.49, 2901.79],[1494303234000, 3026.43, 2906.48],[1494305316000, 3062.58, 2938.61],[1494307353000, 3056.78, 2935.88],[1494309167000, 3050.97, 2931.30],[1494311061000, 3069.97, 2944.63],[1494313224000, 3086.08, 2965.06],[1494315273000, 3094.76, 2969.02],[1494317118000, 3090.23, 2965.57],[1494319248000, 3099.17, 2969.89],[1494321220000, 3098.76, 2971.02],[1494323440000, 3128.96, 3006.26],[1494325416000, 3160.65, 3031.02],[1494327559000, 3192.81, 3065.52],[1494329708000, 3181.87, 3056.96],[1494331683000, 3160.74, 3034.89],[1494333540000, 3153.20, 3028.85],[1494335388000, 3152.14, 3028.37],[1494337213000, 3186.72, 3057.82],[1494339280000, 3184.47, 3054.71],[1494341248000, 3196.72, 3070.42],[1494343406000, 3150.92, 3025.26],[1494345512000, 3168.27, 3042.84],[1494347614000, 3159.61, 3033.33],[1494349814000, 3171.17, 3044.77],[1494351648000, 3172.93, 3046.12],[1494353722000, 3164.69, 3039.74],[1494355526000, 3170.72, 3043.21],[1494357328000, 3168.98, 3044.65],[1494359270000, 3179.83, 3054.94],[1494361120000, 3208.72, 3082.67],[1494362937000, 3222.68, 3096.30],[1494364950000, 3204.63, 3077.13],[1494366861000, 3207.06, 3081.10],[1494368849000, 3203.04, 3077.12],[1494370743000, 3115.45, 2993.27],[1494372604000, 3101.52, 2979.89],[1494374650000, 3101.52, 2974.39],[1494376543000, 3132.52, 3002.21],[1494378667000, 3148.74, 3024.20],[1494380544000, 3130.51, 3001.72],[1494382351000, 3131.89, 3009.07],[1494384222000, 3134.75, 3009.43],[1494386236000, 3141.66, 3013.46],[1494388114000, 3147.09, 3023.27],[1494390269000, 3148.71, 3018.58],[1494392331000, 3152.74, 3029.10],[1494394283000, 3135.31, 3010.56],[1494396143000, 3102.28, 2976.34],[1494398233000, 3104.93, 2976.87],[1494400064000, 3124.75, 2995.35],[1494402184000, 3148.25, 3021.67],[1494404247000, 3135.76, 3012.01],[1494406078000, 3140.91, 3017.38],[1494408140000, 3166.69, 3040.02],[1494410232000, 3173.68, 3047.12],[1494412067000, 3198.58, 3070.81],[1494414140000, 3198.72, 3073.25],[1494415963000, 3203.71, 3075.23],[1494418076000, 3181.55, 3055.80],[1494420140000, 3206.05, 3079.04],[1494421943000, 3210.71, 3079.49],[1494424051000, 3202.54, 3073.28],[1494426136000, 3204.71, 3074.44],[1494428253000, 3193.70, 3068.02],[1494430065000, 3243.93, 3116.69],[1494431878000, 3266.69, 3134.82],[1494433945000, 3290.08, 3159.72],[1494436031000, 3288.68, 3159.71],[1494437839000, 3278.67, 3150.07],[1494439642000, 3286.68, 3155.77],[1494441730000, 3280.77, 3152.11],[1494443607000, 3277.00, 3148.19],[1494445675000, 3255.28, 3124.47],[1494447734000, 3259.01, 3127.87],[1494449555000, 3266.64, 3135.31],[1494451671000, 3265.82, 3131.48],[1494453480000, 3261.77, 3130.10],[1494455287000, 3260.55, 3132.68],[1494457396000, 3229.04, 3101.19],[1494459461000, 3243.90, 3115.51],[1494461554000, 3255.74, 3128.05],[1494463358000, 3255.91, 3128.23],[1494465189000, 3255.89, 3127.14],[1494467255000, 3272.69, 3143.39],[1494469372000, 3250.42, 3119.01],[1494471492000, 3226.65, 3100.09],[1494473531000, 3240.68, 3112.02],[1494475384000, 3244.13, 3116.40],[1494477428000, 3236.06, 3106.04],[1494479311000, 3267.43, 3136.51],[1494481345000, 3260.55, 3132.29],[1494483180000, 3286.67, 3153.49],[1494485019000, 3309.28, 3178.94],[1494487089000, 3323.65, 3184.94],[1494489205000, 3352.86, 3217.86],[1494491009000, 3350.69, 3217.60],[1494493115000, 3367.25, 3229.55],[1494495230000, 3398.64, 3265.35],[1494497240000, 3426.49, 3285.04],[1494499081000, 3398.64, 3265.22],[1494501180000, 3420.26, 3284.57],[1494503004000, 3431.43, 3295.70],[1494505062000, 3418.42, 3282.74],[1494506899000, 3416.64, 3276.33],[1494508942000, 3368.65, 3230.84],[1494510809000, 3404.63, 3267.64],[1494512912000, 3400.93, 3262.67],[1494514933000, 3390.24, 3255.79],[1494516766000, 3395.37, 3257.18],[1494518903000, 3404.64, 3266.13],[1494521038000, 3401.60, 3263.44],[1494523034000, 3404.46, 3268.04],[1494524903000, 3420.81, 3286.64],[1494526944000, 3428.30, 3292.66],[1494528755000, 3428.63, 3292.62],[1494530590000, 3404.96, 3269.26],[1494532438000, 3407.04, 3273.43],[1494534437000, 3390.81, 3257.83],[1494536281000, 3390.64, 3257.67],[1494538083000, 3371.97, 3237.63],[1494539895000, 3384.71, 3249.54],[1494541719000, 3356.66, 3218.45],[1494543765000, 3355.58, 3221.18],[1494545580000, 3331.63, 3199.48],[1494547417000, 3388.64, 3251.42],[1494549478000, 3374.27, 3238.67],[1494551604000, 3375.34, 3242.31],[1494553404000, 3390.81, 3254.68],[1494555505000, 3385.13, 3251.72],[1494557572000, 3376.05, 3243.58],[1494559434000, 3370.73, 3236.92],[1494561515000, 3362.80, 3228.00],[1494563553000, 3356.83, 3223.75],[1494565364000, 3346.21, 3211.73],[1494567217000, 3288.68, 3152.59],[1494569324000, 3309.27, 3174.38],[1494571139000, 3280.66, 3148.33],[1494573176000, 3195.72, 3062.16],[1494575000000, 3236.70, 3107.55],[1494576827000, 3301.46, 3171.24],[1494578658000, 3299.88, 3163.69],[1494580667000, 3298.46, 3167.40],[1494582495000, 3276.45, 3147.94],[1494584606000, 3302.04, 3172.17],[1494586732000, 3309.28, 3179.50],[1494588760000, 3359.15, 3226.94],[1494590603000, 3361.29, 3229.48],[1494592652000, 3358.70, 3226.97],[1494594484000, 3338.98, 3206.01],[1494596544000, 3331.39, 3200.42],[1494598369000, 3309.28, 3179.50],[1494600172000, 3308.74, 3178.98],[1494602013000, 3304.41, 3171.24],[1494604109000, 3260.70, 3132.82],[1494606245000, 3268.77, 3139.19],[1494608255000, 3274.69, 3144.73],[1494610072000, 3283.11, 3153.53],[1494611912000, 3232.89, 3106.11],[1494613990000, 3218.69, 3092.40],[1494616136000, 3248.44, 3119.26],[1494618246000, 3221.94, 3095.59],[1494620060000, 3224.71, 3096.75],[1494622088000, 3202.42, 3075.20],[1494623992000, 3124.75, 3001.90],[1494625955000, 3040.26, 2913.85],[1494627831000, 3121.13, 2994.80],[1494629867000, 3126.74, 2998.40],[1494631743000, 3101.60, 2974.28],[1494633788000, 3152.77, 3029.11],[1494635597000, 3141.71, 3016.02],[1494637748000, 3162.46, 3035.62],[1494639558000, 3143.11, 3017.50],[1494641555000, 3098.69, 2972.95],[1494643363000, 3101.08, 2977.72],[1494645540000, 3079.63, 2949.02],[1494647569000, 3008.37, 2889.12],[1494649380000, 2968.22, 2851.79],[1494651230000, 3027.15, 2900.95],[1494653321000, 3045.29, 2922.26],[1494666216000, 3098.76, 2976.71],[1494668578000, 3088.06, 2963.79],[1494670415000, 3101.26, 2978.75],[1494672246000, 3132.61, 3008.53],[1494674135000, 3142.74, 3018.52],[1494676227000, 3148.28, 3024.80],[1494678291000, 3158.73, 3032.56],[1494680228000, 3190.73, 3065.60],[1494682246000, 3192.10, 3059.91],[1494684317000, 3202.70, 3076.56],[1494686377000, 3219.89, 3089.61],[1494688571000, 3185.74, 3058.22],[1494690373000, 3189.72, 3061.70],[1494692508000, 3173.23, 3048.42],[1494694513000, 3121.95, 2997.52],[1494696453000, 3140.74, 3017.54],[1494698400000, 3151.67, 3027.76],[1494700480000, 3136.74, 3012.86],[1494702363000, 3160.47, 3033.46],[1494704319000, 3200.69, 3073.31],[1494706135000, 3201.32, 3074.37],[1494708149000, 3198.69, 3073.18],[1494710011000, 3192.38, 3065.63],[1494712129000, 3183.59, 3058.34],[1494714126000, 3191.82, 3066.61],[1494716262000, 3231.83, 3104.42],[1494718085000, 3233.89, 3105.19],[1494719913000, 3259.74, 3131.51],[1494721791000, 3272.80, 3142.43],[1494723985000, 3269.32, 3138.59],[1494726017000, 3268.45, 3136.67],[1494728007000, 3284.28, 3151.35],[1494730059000, 3284.69, 3153.19],[1494731957000, 3288.83, 3150.23],[1494734017000, 3290.66, 3161.62],[1494736213000, 3273.45, 3142.95],[1494738386000, 3263.05, 3127.70],[1494740512000, 3287.84, 3156.37],[1494742343000, 3288.65, 3157.37],[1494744433000, 3261.79, 3132.82],[1494746500000, 3285.49, 3156.03],[1494748348000, 3284.83, 3155.49],[1494750331000, 3284.20, 3153.81],[1494752383000, 3306.46, 3167.78],[1494754626000, 3325.83, 3194.29],[1494756596000, 3322.63, 3190.51],[1494758486000, 3318.83, 3180.87],[1494760447000, 3321.39, 3190.93],[1494762357000, 3324.19, 3193.83],[1494764251000, 3329.96, 3199.09],[1494766115000, 3304.42, 3173.05],[1494767917000, 3288.68, 3159.51],[1494769920000, 3286.96, 3154.28],[1494771886000, 3264.69, 3135.77],[1494773906000, 3272.45, 3140.83],[1494775945000, 3278.69, 3148.58],[1494777870000, 3288.68, 3158.46],[1494780033000, 3284.61, 3154.35],[1494782072000, 3281.19, 3152.49],[1494784045000, 3278.06, 3147.94],[1494785995000, 3260.85, 3132.96],[1494788009000, 3235.79, 3106.60],[1494790027000, 3245.51, 3117.94],[1494791908000, 3236.67, 3108.28],[1494793926000, 3239.42, 3111.63],[1494796031000, 3246.53, 3119.21],[1494798106000, 3230.71, 3104.02],[1494800121000, 3243.67, 3116.06],[1494802358000, 3278.65, 3148.19],[1494804580000, 3268.17, 3138.68],[1494806686000, 3273.97, 3142.83],[1494808601000, 3279.29, 3150.40],[1494810494000, 3279.39, 3148.19],[1494812712000, 3272.67, 3144.31],[1494814879000, 3283.93, 3155.15],[1494816988000, 3280.69, 3149.84],[1494818983000, 3275.08, 3143.07],[1494820878000, 3275.39, 3146.85],[1494822805000, 3250.70, 3123.14],[1494824702000, 3253.46, 3125.87],[1494826671000, 3256.22, 3122.95],[1494828480000, 3227.93, 3101.19],[1494830376000, 3212.71, 3085.77],[1494832450000, 3198.67, 3072.84],[1494834487000, 3207.26, 3081.25],[1494836416000, 3222.63, 3093.93],[1494838433000, 3227.73, 3094.47],[1494840583000, 3226.20, 3095.81],[1494842762000, 3193.40, 3059.87],[1494844980000, 3156.47, 3029.58],[1494846805000, 3138.00, 3014.93],[1494848981000, 3166.53, 3041.74],[1494850908000, 3198.63, 3069.55],[1494852933000, 3180.33, 3055.39],[1494854796000, 3193.06, 3066.08],[1494856780000, 3217.66, 3089.77],[1494858609000, 3210.70, 3083.16],[1494860468000, 3193.00, 3065.87],[1494862492000, 3202.08, 3070.04],[1494864450000, 3204.68, 3076.60],[1494866256000, 3180.75, 3055.13],[1494868083000, 3150.32, 3026.75],[1494870239000, 3138.32, 3015.23],[1494872233000, 3153.23, 3027.82],[1494874081000, 3176.72, 3046.39],[1494876099000, 3180.73, 3055.99],[1494877940000, 3184.12, 3055.13],[1494879827000, 3192.72, 3067.50],[1494881994000, 3170.73, 3046.39]]
+          }]
+  
+      });
+    });
+  
+  
+    // Load the fonts
+    Highcharts.createElement('link', {
+       href: '//fonts.googleapis.com/css?family=Unica+One',
+       rel: 'stylesheet',
+       type: 'text/css'
+    }, null, document.getElementsByTagName('head')[0]);
+  
+    Highcharts.theme = {
+       colors: ["#2b908f", "#90ee7e", "#f45b5b", "#7798BF", "#aaeeee", "#ff0066", "#eeaaee",
+          "#55BF3B", "#DF5353", "#7798BF", "#aaeeee"],
+       chart: {
+          backgroundColor:'rgba(255, 255, 255, 0.1)',
+          // backgroundColor: {
+          //    linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+          //    stops: [
+          //       [0, '#2a2a2b'],
+          //       [1, '#3e3e40']
+          //    ]
+          // },
+          style: {
+             fontFamily: "'Unica One', sans-serif"
+          },
+          plotBorderColor: '#606063'
+       },
+       title: {
+          style: {
+             color: '#ffffff',
+             textTransform: 'uppercase',
+             fontSize: '20px'
+          }
+       },
+       subtitle: {
+          style: {
+             color: '#E0E0E3',
+             textTransform: 'uppercase'
+          }
+       },
+       xAxis: {
+          gridLineColor: '#707073',
+          labels: {
+             style: {
+                color: '#E0E0E3'
+             }
+          },
+          lineColor: '#707073',
+          minorGridLineColor: '#505053',
+          tickColor: '#707073',
+          title: {
+             style: {
+                color: '#A0A0A3'
+  
+             }
+          }
+       },
+       yAxis: {
+          gridLineColor: '#707073',
+          labels: {
+             style: {
+                color: '#E0E0E3'
+             }
+          },
+          lineColor: '#707073',
+          minorGridLineColor: '#505053',
+          tickColor: '#707073',
+          tickWidth: 1,
+          title: {
+             style: {
+                color: '#A0A0A3'
+             }
+          }
+       },
+       tooltip: {
+          backgroundColor: 'rgba(0, 0, 0, 0.85)',
+          style: {
+             color: '#F0F0F0'
+          }
+       },
+       plotOptions: {
+          series: {
+             dataLabels: {
+                color: '#ffffff'
+             },
+             marker: {
+                lineColor: '#333'
+             }
+          },
+          boxplot: {
+             fillColor: '#505053'
+          },
+          candlestick: {
+             lineColor: 'white'
+          },
+          errorbar: {
+             color: 'white'
+          }
+       },
+       legend: {
+          itemStyle: {
+             color: '#E0E0E3'
+          },
+          itemHoverStyle: {
+             color: '#FFF'
+          },
+          itemHiddenStyle: {
+             color: '#606063'
+          }
+       },
+       credits: {
+          style: {
+             color: '#666'
+          }
+       },
+       labels: {
+          style: {
+             color: '#707073'
+          }
+       },
+  
+       drilldown: {
+          activeAxisLabelStyle: {
+             color: '#F0F0F3'
+          },
+          activeDataLabelStyle: {
+             color: '#F0F0F3'
+          }
+       },
+  
+       navigation: {
+          buttonOptions: {
+             symbolStroke: '#DDDDDD',
+             theme: {
+                fill: '#505053'
+             }
+          }
+       },
+  
+       // scroll charts
+       rangeSelector: {
+          buttonTheme: {
+             fill: '#505053',
+             stroke: '#000000',
+             style: {
+                color: '#CCC'
+             },
+             states: {
+                hover: {
+                   fill: '#707073',
+                   stroke: '#000000',
+                   style: {
+                      color: 'white'
+                   }
+                },
+                select: {
+                   fill: '#000003',
+                   stroke: '#000000',
+                   style: {
+                      color: 'white'
+                   }
+                }
+             }
+          },
+          inputBoxBorderColor: '#505053',
+          inputStyle: {
+             backgroundColor: '#333',
+             color: 'silver'
+          },
+          labelStyle: {
+             color: 'silver'
+          }
+       },
+  
+       navigator: {
+          handles: {
+             backgroundColor: '#666',
+             borderColor: '#AAA'
+          },
+          outlineColor: '#CCC',
+          maskFill: 'rgba(255,255,255,0.1)',
+          series: {
+             color: '#7798BF',
+             lineColor: '#A6C7ED'
+          },
+          xAxis: {
+             gridLineColor: '#505053'
+          }
+       },
+  
+       scrollbar: {
+          barBackgroundColor: '#808083',
+          barBorderColor: '#808083',
+          buttonArrowColor: '#CCC',
+          buttonBackgroundColor: '#606063',
+          buttonBorderColor: '#606063',
+          rifleColor: '#FFF',
+          trackBackgroundColor: '#404043',
+          trackBorderColor: '#404043'
+       },
+  
+       // special colors for some of the
+       legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
+       background2: '#505053',
+       dataLabelsColor: '#ffffff',
+       textColor: '#C0C0C0',
+       contrastTextColor: '#F0F0F3',
+       maskColor: 'rgba(255,255,255,0.3)'
+    };
+  
+    // Apply the theme
+    Highcharts.setOptions(Highcharts.theme);
+</script>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id='footer'>
+		<div class='container'>
+			<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54478663-1', 'auto');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+			<div class='row footer-spaced'>
+				<div class='col-md-4'>
+					<h4>Контакти</h4>
+					<p>
+						<span class='strong'>E-mail:</span> <br /> <a
+							href="mailto:help@crypto.bg">help@crypto.bg</a>
+					</p>
+				</div>
+				<div class='col-md-4'>
+					<div data-no-turbolink>
+						<h4>Съдържание</h4>
+						<p>
+							<a href="/">Начало</a> <br /> <a href="/search">Проверка на
+								поръчка</a> <br /> <a target="_blank"
+								href="https://community.crypto.bg/t/crypto-bg/31">Отговори
+								на въпроси</a> <br /> <a onclick="triggerPane3()" href="#">Принципи
+								на сайта</a>
+						</p>
+					</div>
+				</div>
+				<div class='col-md-4'>
+					<div class='fb-box'>
+						<div class="fb-like-box" data-href="http://facebook.com/cryptoxbg"
+							data-width="340" data-height="190" data-colorscheme="dark"
+							data-show-faces="true" data-header="false" data-stream="false"
+							data-show-border="true"></div>
+					</div>
+					<div class='fb-like'>
+						<div class="fb-like"
+							data-href="https://www.facebook.com/cryptoxbg" data-width="100"
+							data-layout="button_count" data-action="like"
+							data-show-faces="false" data-share="false"></div>
+					</div>
+				</div>
+			</div>
+			<div class='row'>
+				<div class='span12'>
+					<div class='span6 pull-right' id='quick-menu'>
+						<div data-no-turbolink>
+							<ul class='menu white pull-right footer'>
+								All rights reserved. ©
+								<a href="/">Crypto.bg</a>, 2014-2017
+								<br> You're visiting from: 95.111.77.85
+								<br>
+							</ul>
+						</div>
+					</div>
+					<div class='span6 pull-left' id='copyright'>
+						Собственик на сайта https://crypto.bg е Биткойн Солюшънс ЕООД, ЕИК
+						201360687, гр. София. МОЛ: Стамен Тодоров Горчев <br> Сайтът
+						работи със SSL сертификат, издаден от COMODO RSA <br>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- placeholder var  code -->
+	<script type="text/javascript"
+		src="https://s3.amazonaws.com/assets.freshdesk.com/widget/freshwidget.js"></script>
+	<script type="text/javascript">
+FreshWidget.init("", {"queryString": "&widgetType=popup&formTitle=%D0%9F%D0%BE%D0%BC%D0%BE%D1%89+%D0%B8+%D0%BF%D0%BE%D0%B4%D0%B4%D1%80%D1%8A%D0%B6%D0%BA%D0%B0&searchArea=no", "utf8": "✓", "widgetType": "popup", "buttonType": "text", "buttonText": "Поддръжка", "buttonColor": "white", "buttonBg": "#428bca", "alignment": "4", "offset": "235px", "formHeight": "500px", "url": "https://cryptobg.freshdesk.com"} );
+</script>
+	<!-- / :javascript -->
+	<!-- /   setInterval(function() { -->
+	<!-- / -->
+	<!-- /       $(function drawChart() { -->
+	<!-- /         $('#ratechart').highcharts({ -->
+	<!-- / -->
+	<!-- /             chart: { -->
+	<!-- /                 type: 'arearange', -->
+	<!-- /                 zoomType: 'x', -->
+	<!-- /             }, -->
+	<!-- / -->
+	<!-- /             title: { -->
+	<!-- /                 text: 'Курс BTC (7 дни)' -->
+	<!-- /             }, -->
+	<!-- / -->
+	<!-- / -->
+	<!-- /             xAxis: { -->
+	<!-- /                 type: 'datetime' -->
+	<!-- /             }, -->
+	<!-- / -->
+	<!-- /             yAxis: { -->
+	<!-- /                 title: { -->
+	<!-- /                     text: null -->
+	<!-- /                 } -->
+	<!-- /             }, -->
+	<!-- / -->
+	<!-- /             tooltip: { -->
+	<!-- /                 crosshairs: true, -->
+	<!-- /                 shared: true, -->
+	<!-- /                 valueSuffix: ' лв.' -->
+	<!-- /             }, -->
+	<!-- / -->
+	<!-- /             legend: { -->
+	<!-- /                 enabled: false -->
+	<!-- /             }, -->
+	<!-- / -->
+	<!-- /             series: [{ -->
+	<!-- /                 name: 'Лева', -->
+	<!-- /                 data: #{@btc_rates} -->
+	<!-- /             }] -->
+	<!-- / -->
+	<!-- /         }); -->
+	<!-- /       }); -->
+	<!-- / -->
+	<!-- /     }, 30000); -->
+</body>
+</html>
