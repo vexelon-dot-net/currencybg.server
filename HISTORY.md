@@ -1,6 +1,10 @@
 Currency BG Server Changes
 ==========================
 
+## 1.3
+
+  * Added Bitcoin Solutions source [#68](../../issues/68)
+
 ## 1.2.1
 
   * Fixed an issue with Tavex date time parsing [#81](../../issues/81)
