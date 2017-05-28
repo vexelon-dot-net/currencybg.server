@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `cbg_apikeys` (
   `KEY_VALUE` varchar(64) NOT NULL,
   `STATUS` int(11) NOT NULL DEFAULT '1' COMMENT '0-Active, 1-Inactive',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `cbg_currencies` (
   `DATE` datetime NOT NULL,
   `SOURCE` int(3) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=481681 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 
 -- --------------------------------------------------------
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `cbg_reports` (
   `createdon` datetime NOT NULL,
   `message` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `cbg_sources` (
   `UPDATE_RESTRICTIONS` varchar(1000) DEFAULT '{ 	"wdNotBefore": "06:00", 	"wdNotAfter": "23:00", 	"weNotBefore": "06:00", 	"weNotAfter": "23:00",	 	"weekends": true, 	"sundays": false }',
   `LAST_UPDATE` datetime NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
