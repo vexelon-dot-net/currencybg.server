@@ -99,6 +99,9 @@ public class HibernateDataSource implements DataSource {
 
 			Date nextDay = DateTimeUtils.addDays(timeFrom, 1);
 
+			// String sqlSelect = "SELECT id, code, ratio, buy, sell, date,
+			// source FROM cbg_currencies WHERE date > (:today) AND date <
+			// (:nextDay)";
 			String sqlSelect = "SELECT id, code, ratio,  buy,  sell, date, source FROM cbg_currencies  WHERE date > (:today) AND date < (:nextDay)";
 			if (sourceId != null) {
 				sqlSelect += "AND source = (:source) ORDER BY date asc";
@@ -123,14 +126,50 @@ public class HibernateDataSource implements DataSource {
 
 	@Override
 	public String getAllRates(Date dateFrom) throws DataSourceException {
-		// TODO Auto-generated method stub
-		return null;
+		List<CurrencyData> currencies = Lists.newArrayList();
+		currencies = getAllCurrentRates(null, dateFrom);
+
+		Gson gson = new GsonBuilder().setDateFormat(Defs.DATEFORMAT_ISO_8601)
+		        .registerTypeHierarchyAdapter(Date.class, new GsonDateTimeSerializer(Defs.DATETIME_TIMEZONE_SOFIA))
+		        .create();
+		Type type = new TypeToken<List<CurrencyData>>() {
+		}.getType();
+
+		return gson.toJson(currencies, type);
 	}
 
 	@Override
 	public String getAllRates(Integer sourceId, Date dateFrom) throws DataSourceException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<CurrencyData> getAllCurrentRates(Integer sourceId, Date dateFrom) throws DataSourceException {
+		List<CurrencyData> currencies = Lists.newArrayList();
+
+		try (CloseableSession session = new CloseableSession(HibernateUtil.getSessionFactory().openSession())) {
+			session.delegate().beginTransaction();
+
+			String sqlSelect = "SELECT id, code, ratio,  buy,  sell, date, source FROM cbg_currencies  WHERE DATE(date) = (:date)";
+			if (sourceId != null) {
+				sqlSelect += "AND source = (:source) ORDER BY date asc";
+			} else {
+				sqlSelect += "ORDER BY date asc";
+			}
+
+			SQLQuery query = session.delegate().createSQLQuery(sqlSelect);
+			query.setParameter("date", new Timestamp(dateFrom.getTime()));
+			if (sourceId != null) {
+				query.setParameter("source", sourceId);
+			}
+			query.addEntity(CurrencyData.class);
+
+			currencies = query.list();
+
+		}
+		return currencies;
+
 	}
 
 	@Override

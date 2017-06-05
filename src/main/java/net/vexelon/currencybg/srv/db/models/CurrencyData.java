@@ -2,9 +2,11 @@ package net.vexelon.currencybg.srv.db.models;
 
 import java.util.Date;
 
+import javax.persistence.Transient;
+
 public class CurrencyData {
 
-	private Integer id;
+	private transient Integer id;
 	private String code;
 	private int ratio = 0; // default
 	private String buy = "0"; // default
@@ -25,6 +27,7 @@ public class CurrencyData {
 		this.source = source;
 	}
 
+	@Transient
 	public Integer getId() {
 		return id;
 	}

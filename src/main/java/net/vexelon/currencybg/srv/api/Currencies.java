@@ -49,7 +49,8 @@ public class Currencies extends AbstractJunction {
 	public Response getAllRatesByDate(@PathParam("dateFrom") String dateFrom,
 	        @HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
 
-		try (DataSource source = new MySQLDataSource()) {
+		try (DataSource source = /* new MySQLDataSource() */
+		        new HibernateDataSource()) {
 			verifyAccess();
 
 			source.connect();
@@ -96,7 +97,8 @@ public class Currencies extends AbstractJunction {
 	public Response getAllCurrentRatesAfter(@PathParam("timeFrom") String timeFrom,
 	        @PathParam("sourceId") Integer sourceId, @HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
 
-		try (DataSource source = /* new MySQLDataSource() */new HibernateDataSource()) {
+		try (DataSource source = /* new MySQLDataSource() */
+		        new HibernateDataSource()) {
 			verifyAccess();
 
 			source.connect();
