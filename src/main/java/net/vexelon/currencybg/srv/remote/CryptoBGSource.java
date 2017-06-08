@@ -32,7 +32,7 @@ public class CryptoBGSource extends AbstractSource {
 	private static final Logger log = LoggerFactory.getLogger(TavexSource.class);
 	private static final String TAG_NAME = CryptoBGSource.class.getSimpleName();
 
-	private static final String URL_SOURCE = "https://crypto.bg/";
+	private static final String URL_SOURCE = "https://crypto.bg/tickers_header";// "https://crypto.bg/";
 	private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
 
 	public CryptoBGSource(Reporter reporter) {
@@ -61,7 +61,9 @@ public class CryptoBGSource extends AbstractSource {
 			Date updateDate = DateTimeUtils.parseDate(currentDateTimeSofia, DATE_FORMAT);
 
 			// Parse table with currencies
-			Element span = doc.select("div#tickers_header.ticker-data > table.rates-hdr > tbody > tr.bitcoin").get(0);
+			// Element span = doc.select("div#tickers_header.ticker-data >
+			// table.rates-hdr > tbody > tr.bitcoin").get(0);
+			Element span = doc.select("tbody > tr.bitcoin").get(0);
 
 			CurrencyData currencyData = new CurrencyData();
 			currencyData.setCode(Defs.BITCOINS);
@@ -97,6 +99,9 @@ public class CryptoBGSource extends AbstractSource {
 
 					if (!isCanceled) {
 						try {
+							// String test =
+			                // EntityUtils.toString(response.getEntity());
+
 							result = getCryptoRates(response.getEntity().getContent());
 						} catch (IOException | ParseException e) {
 							log.error("Could not parse source data!", e);

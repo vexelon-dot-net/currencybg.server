@@ -13,16 +13,16 @@ import net.vexelon.currencybg.srv.tests.TestUtils;
 
 public class CryptoBGSourceTest {
 	@Test
-	public void test_CryptoBgSource() {
+	public void test_CryptoBgSource_Header() {
 
 		try {
 			List<CurrencyData> rates = new CryptoBGSource(new NullReporter())
-			        .getCryptoRates(TestUtils.getTestResource("/crypto_bg_source.html"));
+			        .getCryptoRates(TestUtils.getTestResource("/crypto_bg_source_header.html"));
 
 			assertTrue(rates.get(0).getCode().equals("BTC"));
 			assertTrue(rates.get(0).getRatio() == 1);
-			assertTrue(rates.get(0).getBuy().equals("3027.44"));
-			assertTrue(rates.get(0).getSell().equals("3152.98"));
+			assertTrue(rates.get(0).getBuy().equals("4792.00"));
+			assertTrue(rates.get(0).getSell().equals("4992.31"));
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -31,22 +31,41 @@ public class CryptoBGSourceTest {
 
 	}
 
-	@Test
-	public void test_CryptoBgSource_Arrow() {
-
-		try {
-			List<CurrencyData> rates = new CryptoBGSource(new NullReporter())
-			        .getCryptoRates(TestUtils.getTestResource("/crypto_bg_source_arrow.html"));
-
-			assertTrue(rates.get(0).getCode().equals("BTC"));
-			assertTrue(rates.get(0).getRatio() == 1);
-			assertTrue(rates.get(0).getBuy().equals("3027.44"));
-			assertTrue(rates.get(0).getSell().equals("3152.98"));
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-
-	}
+	// @Test
+	// public void test_CryptoBgSource() {
+	//
+	// try {
+	// List<CurrencyData> rates = new CryptoBGSource(new NullReporter())
+	// .getCryptoRates(TestUtils.getTestResource("/crypto_bg_source.html"));
+	//
+	// assertTrue(rates.get(0).getCode().equals("BTC"));
+	// assertTrue(rates.get(0).getRatio() == 1);
+	// assertTrue(rates.get(0).getBuy().equals("3027.44"));
+	// assertTrue(rates.get(0).getSell().equals("3152.98"));
+	//
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// fail(e.getMessage());
+	// }
+	//
+	// }
+	//
+	// @Test
+	// public void test_CryptoBgSource_Arrow() {
+	//
+	// try {
+	// List<CurrencyData> rates = new CryptoBGSource(new NullReporter())
+	// .getCryptoRates(TestUtils.getTestResource("/crypto_bg_source_arrow.html"));
+	//
+	// assertTrue(rates.get(0).getCode().equals("BTC"));
+	// assertTrue(rates.get(0).getRatio() == 1);
+	// assertTrue(rates.get(0).getBuy().equals("3027.44"));
+	// assertTrue(rates.get(0).getSell().equals("3152.98"));
+	//
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// fail(e.getMessage());
+	// }
+	//
+	// }
 }
