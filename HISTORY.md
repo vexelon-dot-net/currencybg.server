@@ -1,6 +1,11 @@
 Currency BG Server Changes
 ==========================
 
+## 1.4
+
+  * Optimizations in Bitcoin Solutions source [#88](../../issues/88)
+  * Added Changepartner currencies source [#66](../../issues/66)
+
 ## 1.3
 
   * Added Bitcoin Solutions source [#68](../../issues/68)
