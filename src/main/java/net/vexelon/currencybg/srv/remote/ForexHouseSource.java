@@ -15,6 +15,7 @@ import org.apache.http.HttpResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +24,7 @@ import com.google.common.collect.Lists;
 
 import net.vexelon.currencybg.srv.Defs;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
+import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.reports.Reporter;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 
@@ -59,20 +61,55 @@ public class ForexHouseSource extends AbstractSource {
 			Date updateDate = DateTimeUtils.parseDate(currentDateTimeSofia, DATE_FORMAT);
 
 			// Parse table with currencies
-			Element span = doc.select("div#tablepress-3_wrapper.dataTables_wrapper.no-footer").first();
+			Elements mainCurrency = doc.select("#tablepress-3 > tbody").first().children();
+			int row = 0;// The first row is for BTC which there is no sell and
+			            // price
+			String[] firstColumn;// It contains code + ratio
+			for (Element child : mainCurrency) {
+				CurrencyData currencyData = new CurrencyData();
+				firstColumn = child.child(2).text().split(" ");
+				try {
+					if (row > 0) {
+						currencyData.setDate(updateDate);
+						currencyData.setCode(firstColumn[1]);
+						currencyData.setBuy(child.child(3).text());
+						currencyData.setSell(child.child(4).text());
+						currencyData.setRatio(Integer.parseInt(firstColumn[0]));
+						currencyData.setSource(Sources.FOREXHOUSE.getID());
+						result.add(currencyData);
 
-			// Get main currencies
-			// Elements mainCurrencies =
-			// span.select("div#tablepress-3_wrapper.dataTables_wrapper.no-footer");
-			//
-			// CurrencyData currencyData = new CurrencyData();
-			// currencyData.setCode(Defs.BITCOINS);
-			// currencyData.setBuy(span.child(1).text());
-			// currencyData.setSell(span.child(2).text());
-			// currencyData.setRatio(1);
-			// currencyData.setSource(Sources.CRYPTO.getID());
-			// currencyData.setDate(updateDate);
-			// result.add(currencyData);
+					}
+
+				} catch (IndexOutOfBoundsException e) {
+					log.warn("Failed on row='{}', Exception={}", row, e.getMessage());
+					getReporter().write(TAG_NAME, "Could not process currency on row='{}'!", row + "");
+				}
+
+				row++;
+			}
+
+			Elements euroCurrency = doc.select("#tablepress-6 > tbody").first().children();
+			for (Element child : euroCurrency) {
+				CurrencyData currencyData = new CurrencyData();
+				firstColumn = child.child(2).text().split(" ");
+				try {
+					if (row > 0 && !firstColumn[1].equals("GIP")) {
+						currencyData.setDate(updateDate);
+						currencyData.setCode(firstColumn[1]);
+						currencyData.setBuy(child.child(3).text().replaceAll("\\s+", ""));
+						currencyData.setSell(child.child(4).text());
+						currencyData.setRatio(Integer.parseInt(firstColumn[0]));
+						currencyData.setSource(Sources.FOREXHOUSE.getID());
+						result.add(currencyData);
+
+					}
+
+				} catch (IndexOutOfBoundsException e) {
+					log.warn("Failed on row='{}', Exception={}", row, e.getMessage());
+					getReporter().write(TAG_NAME, "Could not process currency on row='{}'!", row + "");
+				}
+
+			}
 
 			return normalizeCurrencyData(result);
 		} catch (RuntimeException e) {
