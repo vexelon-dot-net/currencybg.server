@@ -93,7 +93,7 @@ public class ForexHouseSource extends AbstractSource {
 				CurrencyData currencyData = new CurrencyData();
 				firstColumn = child.child(2).text().split(" ");
 				try {
-					if (row > 0 && !firstColumn[1].equals("GIP")) {
+					if (child.child(3).text().length() > 0 && child.child(4).text().length() > 0) {
 						currencyData.setDate(updateDate);
 						currencyData.setCode(firstColumn[1]);
 						currencyData.setBuy(child.child(3).text().replaceAll("\\s+", ""));
