@@ -5,6 +5,7 @@ import net.vexelon.currencybg.srv.remote.ChangepartnerSource;
 import net.vexelon.currencybg.srv.remote.CryptoBGSource;
 import net.vexelon.currencybg.srv.remote.FIBSource;
 import net.vexelon.currencybg.srv.remote.Factorin;
+import net.vexelon.currencybg.srv.remote.ForexHouseSource;
 import net.vexelon.currencybg.srv.remote.Polana1;
 import net.vexelon.currencybg.srv.remote.SocieteGenerale;
 import net.vexelon.currencybg.srv.remote.Source;
@@ -22,7 +23,8 @@ public enum Sources {
 	UNICREDIT(500),
 	SGEB(600),
 	CRYPTO(700),
-	CHANGEPARTNER(800);
+	CHANGEPARTNER(800),
+	FOREXHOUSE(900);
 
 	private int id;
 
@@ -91,6 +93,10 @@ public enum Sources {
 		// Changepartner
 		case 800:
 			return new ChangepartnerSource(reporter);
+
+		// ForexHouse
+		case 900:
+			return new ForexHouseSource(reporter);
 
 		// <unknown>
 		default:
