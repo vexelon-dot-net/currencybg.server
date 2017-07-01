@@ -103,8 +103,8 @@ public class CryptoBGSource extends AbstractSource {
 							result = getCryptoRates(response.getEntity().getContent());
 						} catch (IOException | ParseException e) {
 							log.error("Could not parse source data!", e);
-							getReporter().write(TAG_NAME, "Parse failed= {}", ExceptionUtils.getStackTrace(e),
-			                        "/nHTML DATA: " + htmlData);
+							getReporter().write(TAG_NAME, "Parse failed= {}  HTML= {}", ExceptionUtils.getStackTrace(e),
+			                        htmlData);
 						}
 					} else {
 						log.warn("Request was canceled! No currencies were downloaded.");
