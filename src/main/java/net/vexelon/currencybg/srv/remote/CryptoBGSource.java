@@ -35,6 +35,8 @@ public class CryptoBGSource extends AbstractSource {
 	private static final String URL_SOURCE = "https://crypto.bg/tickers_header";
 	private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
 
+	private String htmlData;
+
 	public CryptoBGSource(Reporter reporter) {
 		super(reporter);
 		// TODO Auto-generated constructor stub
@@ -62,7 +64,7 @@ public class CryptoBGSource extends AbstractSource {
 
 			// Parse table with currencies
 			Element span = doc.select("tbody > tr.bitcoin").get(0);
-
+			htmlData = span.toString();
 			CurrencyData currencyData = new CurrencyData();
 			currencyData.setCode(Defs.BITCOINS);
 			currencyData.setBuy(span.child(1).text());
@@ -101,7 +103,8 @@ public class CryptoBGSource extends AbstractSource {
 							result = getCryptoRates(response.getEntity().getContent());
 						} catch (IOException | ParseException e) {
 							log.error("Could not parse source data!", e);
-							getReporter().write(TAG_NAME, "Parse failed= {}", ExceptionUtils.getStackTrace(e));
+							getReporter().write(TAG_NAME, "Parse failed= {}", ExceptionUtils.getStackTrace(e),
+			                        "/nHTML DATA: " + htmlData);
 						}
 					} else {
 						log.warn("Request was canceled! No currencies were downloaded.");
