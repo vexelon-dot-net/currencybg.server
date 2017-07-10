@@ -39,11 +39,10 @@ public class CryptoBGSource extends AbstractSource {
 
 	public CryptoBGSource(Reporter reporter) {
 		super(reporter);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
-	 * Transforms Tavex HTML data into {@link CurrencyData} models.
+	 * Transforms Crypto BG HTML data into {@link CurrencyData} models.
 	 * 
 	 * @param input
 	 * @return
@@ -54,9 +53,9 @@ public class CryptoBGSource extends AbstractSource {
 		List<CurrencyData> result = Lists.newArrayList();
 
 		Document doc = Jsoup.parse(input, Charsets.UTF_8.name(), URL_SOURCE);
+		htmlData = doc.toString(); // debugging
 
 		try {
-
 			String currentDateTimeSofia = LocalDateTime.now(ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA))
 			        .format(DateTimeFormatter.ofPattern(DATE_FORMAT)).toString();
 
@@ -64,7 +63,6 @@ public class CryptoBGSource extends AbstractSource {
 
 			// Parse table with currencies
 			Element span = doc.select("tbody > tr.bitcoin").get(0);
-			htmlData = span.toString();
 			CurrencyData currencyData = new CurrencyData();
 			currencyData.setCode(Defs.BITCOINS);
 			currencyData.setBuy(span.child(1).text());
@@ -104,7 +102,7 @@ public class CryptoBGSource extends AbstractSource {
 						} catch (IOException | ParseException e) {
 							log.error("Could not parse source data!", e);
 							getReporter().write(TAG_NAME, "Parse failed= {}  HTML= {}", ExceptionUtils.getStackTrace(e),
-			                        htmlData);
+							        htmlData);
 						}
 					} else {
 						log.warn("Request was canceled! No currencies were downloaded.");
