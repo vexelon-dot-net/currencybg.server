@@ -143,10 +143,13 @@ public abstract class AbstractSource implements Source {
 					break;
 				case "BYR":
 					currencyData.setCode("BYN");
+					break;
 				case "RUR":
 					currencyData.setCode("RUB");
+					break;
 				case "CSD":
 					currencyData.setCode("RSD");
+					break;
 				default:
 					break;
 				}
