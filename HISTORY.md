@@ -5,6 +5,8 @@ Currency BG Server Changes
 
   * Optimizations in Bitcoin Solutions source [#88](../../issues/88)
   * Added Changepartner currencies source [#66](../../issues/66)
+  * Added Forex House currencies source [#65](../../issues/65)
+  * Added Allianz Bank currencies source [#64](../../issues/64)
 
 ## 1.3
 
