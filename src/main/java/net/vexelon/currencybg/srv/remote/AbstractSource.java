@@ -136,6 +136,24 @@ public abstract class AbstractSource implements Source {
 					throw new SourceException(tag + " - source cannot be '0' for currency=" + currencyData.getCode());
 				}
 
+				// Check for obsolete currency code
+				switch (currencyData.getCode()) {
+				case "TRL":
+					currencyData.setCode("TRY");
+					break;
+				case "BYR":
+					currencyData.setCode("BYN");
+					break;
+				case "RUR":
+					currencyData.setCode("RUB");
+					break;
+				case "CSD":
+					currencyData.setCode("RSD");
+					break;
+				default:
+					break;
+				}
+
 				if (currencyData.getRatio() < 0) {
 					getReporter().write(getName(), tag + " - invalid ratio. Will use 0.");
 					currencyData.setRatio(0);

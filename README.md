@@ -15,7 +15,7 @@ HTTP API [documentation](docs/API.md)
 
 # Development
 
-Install [Gradle](https://gradle.org/gradle-download/) `3.+` or use the `./gradlew` script.
+Install [Gradle](https://gradle.org/gradle-download/) `4.+` or use the `./gradlew` script.
 
 Create a MySQL database called `currencybg` and run the DDL in `schemas` to create all required tables.
 
