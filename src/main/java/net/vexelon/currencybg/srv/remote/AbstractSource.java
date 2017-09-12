@@ -160,6 +160,9 @@ public abstract class AbstractSource implements Source {
 				}
 
 				if (!currencyData.getBuy().isEmpty()) {
+					// Fixes "cannot parse Buy value=0..465"
+					currencyData.setBuy(currencyData.getBuy().replace("..", "."));
+
 					try {
 						new BigDecimal(currencyData.getBuy());
 					} catch (NumberFormatException e) {
@@ -174,6 +177,9 @@ public abstract class AbstractSource implements Source {
 				}
 
 				if (!currencyData.getSell().isEmpty()) {
+					// Fixes "cannot parse Sell value=0..465"
+					currencyData.setSell(currencyData.getSell().replace("..", "."));
+
 					try {
 						new BigDecimal(currencyData.getSell());
 					} catch (NumberFormatException e) {
