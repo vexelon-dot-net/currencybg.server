@@ -1,6 +1,10 @@
 Currency BG Server Changes
 ==========================
 
+## 1.4.1
+
+  * Fix Forex House parsing issue [#99](../../pull/99)
+
 ## 1.4
 
   * Optimizations in Bitcoin Solutions source [#88](../../issues/88)
