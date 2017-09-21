@@ -20,7 +20,6 @@ jobs:
     steps:
       - checkout
 
-      # Download and cache dependencies
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "build.gradle" }}
@@ -31,14 +30,18 @@ jobs:
 
       - save_cache:
           paths:
-            - ~/.m2
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
+
+      - run: ./gradlew test
+      - store_artifacts:
+          path: build/reports/tests
+          destination: reports
         
-      - run: gradle test
-      - run: gradle build
+      - run: ./gradlew build
 
       - store_artifacts:
-          path: build/libs/*
+          path: build/libs
+          destination: artifacts
 
 
