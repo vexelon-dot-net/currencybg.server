@@ -91,6 +91,13 @@ war {
 	exclude('src/main/webapp/META-INF/**')
 }
 
+
+tasks.withType(Zip) { task ->
+    task.doLast {
+        ant.checksum file: it.archivePath
+    }
+}
+
 tomcat {
     httpPort = 8090
     httpsPort = 8091
