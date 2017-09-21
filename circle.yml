@@ -1,6 +1,13 @@
 version: 2
 jobs:
   build:
+    branches:
+      only:
+        - master
+        - prod
+        - /feature.*/
+        - /bugfix.*/
+
     docker:
       - image: circleci/openjdk:8-jdk
       
@@ -30,6 +37,7 @@ jobs:
         
       - run: gradle test
 
-
+      - store_artifacts:
+          path: build/libs
 
 
