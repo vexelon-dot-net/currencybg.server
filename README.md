@@ -1,8 +1,7 @@
 Currency BG Server
 ============================
 
-[![Build Status](https://travis-ci.org/vexelon-dot-net/currencybg.server.svg?branch=master)](https://travis-ci.org/vexelon-dot-net/currencybg.server)
-[![CircleCI](https://circleci.com/gh/vexelon-dot-net/currencybg.server/tree/master.svg?style=svg)](https://circleci.com/gh/vexelon-dot-net/currencybg.server/tree/master)
+[![CircleCI](https://circleci.com/gh/vexelon-dot-net/currencybg.server/tree/master.svg?style=svg&circle-token=dbb483218ea63d7fa3551c6cc3c3b3fd95f99e1e)](https://circleci.com/gh/vexelon-dot-net/currencybg.server/tree/master)
 
 Currency BG RESTful web service
 
