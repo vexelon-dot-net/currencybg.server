@@ -31,7 +31,7 @@ public final class Defs {
 	public static final String DB_NAME = System.getProperty("DB_NAME");
 	public static final String DB_HOST = System.getProperty("DB_HOST");
 	public static final String DB_PORT = System.getProperty("DB_PORT");
-	public static final String DB_CONNECTION = String.format("jdbc:mysql://%s:%s/%s", DB_HOST, DB_PORT, DB_NAME);
+	public static final String DB_CONNECTION = String.format("jdbc:mysql://%s:%s/%s?useSSL=false", DB_HOST, DB_PORT, DB_NAME);
 	public static final String DB_USER = System.getProperty("DB_USERNAME");
 	public static final String DB_PASSWORD = System.getProperty("DB_PASSWORD");
 
