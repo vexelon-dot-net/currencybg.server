@@ -11,7 +11,7 @@ HTTP API [documentation](docs/API.md)
 
   * JDK `1.8`
   * MySQL `5.5`
-  * Tomcat `7.+`
+  * Jetty `9` or Tomcat `7`
 
 # Development
 
@@ -19,13 +19,14 @@ Install [Gradle](https://gradle.org/gradle-download/) `4.+` or use the `./gradle
 
 Create a MySQL database called `currencybg` and run the DDL in `schemas` to create all required tables.
 
-In order to deploy the local test version you need to first setup the following environment variables, i.e.,
+In order to deploy the local test version you need to first setup the following Java properties, i.e.,
 
     CBG_CFG_PATH=<directory path> // path to where server configurations will be saved
-    OPENSHIFT_MYSQL_DB_HOST=<mysql hostname>
-    OPENSHIFT_MYSQL_DB_PORT=<mysql port>
-    OPENSHIFT_MYSQL_DB_USERNAME=<mysql user>
-    OPENSHIFT_MYSQL_DB_PASSWORD=<mysql password>
+    DB_HOST=<mysql hostname>
+    DB_PORT=<mysql port>
+    DB_NAME=<mysql database>
+    DB_USERNAME=<mysql user>
+    DB_PASSWORD=<mysql password>
 
 To generate Eclipse project files run:
 
