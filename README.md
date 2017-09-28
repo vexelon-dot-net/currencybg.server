@@ -11,22 +11,11 @@ HTTP API [documentation](docs/API.md)
 
   * JDK `1.8`
   * MySQL `5.5`
-  * Jetty `9` or Tomcat `7`
+  * Jetty `9` or Tomcat `8`
 
 # Development
 
 Install [Gradle](https://gradle.org/gradle-download/) `4.+` or use the `./gradlew` script.
-
-Create a MySQL database called `currencybg` and run the DDL in `schemas` to create all required tables.
-
-In order to deploy the local test version you need to first setup the following Java properties, i.e.,
-
-    CBG_CFG_PATH=<directory path> // path to where server configurations will be saved
-    DB_HOST=<mysql hostname>
-    DB_PORT=<mysql port>
-    DB_NAME=<mysql database>
-    DB_USERNAME=<mysql user>
-    DB_PASSWORD=<mysql password>
 
 To generate Eclipse project files run:
 
@@ -36,9 +25,26 @@ To build the project run:
 
 	./gradlew clean build
 
-To start a local test version run:
+## Run Locally
 
-	./gradlew tomcatRun
+Create a MySQL database called `currencybg` and run the DDL in `schemas` to create all required tables.
+
+In order to deploy a local test version the following Java properties need to be setup, i.e.,
+
+    CBG_CFG_PATH=<directory path> // path to where server configurations will be saved
+    DB_HOST=<mysql hostname>
+    DB_PORT=<mysql port>
+    DB_NAME=<mysql database>
+    DB_USERNAME=<mysql user>
+    DB_PASSWORD=<mysql password>
+
+To run locally:
+
+	./gradlew tomcatRun -DCBG_CFG_PATH=<directory path> -DDB_HOST=<host> -DDB_PORT=<port> -DDB_NAME=<database> -DDB_USERNAME=<username> -DDB_PASSWORD=<password> 
+
+To access the API open:
+
+    http://localhost:8090/api
 
 # License
 
