@@ -5,29 +5,29 @@ Currency BG Server
 
 Currency BG RESTful web service
 
-HTTP API [documentation](docs/API.md)
+HTTP [API documentation](docs/API.md)
 
 # Requirements
 
   * JDK `1.8`
   * MySQL `5.5`
-  * Jetty `9` or Tomcat `8`
+  * Tomcat `8` or Jetty `9`
 
 # Development
 
-Install [Gradle](https://gradle.org/gradle-download/) `4.+` or use the `./gradlew` script.
+Install [Gradle](https://gradle.org/gradle-download/) or use the `./gradlew` script.
 
-To generate Eclipse project files run:
+If you use Eclipse, you may generate the Eclipse project files by running:
 
 	./gradlew eclipse
 
 To build the project run:
 
-	./gradlew clean build
+	./gradlew build
 
-## Run Locally
+# Deployment
 
-Create a MySQL database called `currencybg` and run the DDL in `schemas` to create all required tables.
+Create a MySQL database and use the DDL in `schemas` to create all required tables.
 
 In order to deploy a local test version the following Java properties need to be setup, i.e.,
 
@@ -40,7 +40,10 @@ In order to deploy a local test version the following Java properties need to be
 
 To run locally:
 
-	./gradlew tomcatRun -DCBG_CFG_PATH=<directory path> -DDB_HOST=<host> -DDB_PORT=<port> -DDB_NAME=<database> -DDB_USERNAME=<username> -DDB_PASSWORD=<password> 
+	./gradlew tomcatRun \
+      -DCBG_CFG_PATH=<directory path> \
+      -DDB_HOST=<host> -DDB_PORT=<port> -DDB_NAME=<database> \
+      -DDB_USERNAME=<username> -DDB_PASSWORD=<password> 
 
 To access the API open:
 
