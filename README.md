@@ -5,21 +5,31 @@ Currency BG Server
 
 Currency BG RESTful web service
 
-HTTP API [documentation](docs/API.md)
+HTTP [API documentation](docs/API.md)
 
 # Requirements
 
   * JDK `1.8`
   * MySQL `5.5`
-  * Jetty `9` or Tomcat `7`
+  * Tomcat `8` or Jetty `9`
 
 # Development
 
-Install [Gradle](https://gradle.org/gradle-download/) `4.+` or use the `./gradlew` script.
+Install [Gradle](https://gradle.org/gradle-download/) or use the `./gradlew` script.
 
-Create a MySQL database called `currencybg` and run the DDL in `schemas` to create all required tables.
+If you use Eclipse, you may generate the Eclipse project files by running:
 
-In order to deploy the local test version you need to first setup the following Java properties, i.e.,
+	./gradlew eclipse
+
+To build the project run:
+
+	./gradlew build
+
+# Deployment
+
+Create a MySQL database and use the DDL in `schemas` to create all required tables.
+
+In order to deploy a local test version the following Java properties need to be setup, i.e.,
 
     CBG_CFG_PATH=<directory path> // path to where server configurations will be saved
     DB_HOST=<mysql hostname>
@@ -28,17 +38,16 @@ In order to deploy the local test version you need to first setup the following 
     DB_USERNAME=<mysql user>
     DB_PASSWORD=<mysql password>
 
-To generate Eclipse project files run:
+To run locally:
 
-	./gradlew eclipse
+	./gradlew tomcatRun \
+      -DCBG_CFG_PATH=<directory path> \
+      -DDB_HOST=<host> -DDB_PORT=<port> -DDB_NAME=<database> \
+      -DDB_USERNAME=<username> -DDB_PASSWORD=<password> 
 
-To build the project run:
+To access the API open:
 
-	./gradlew clean build
-
-To start a local test version run:
-
-	./gradlew tomcatRun
+    http://localhost:8090/api
 
 # License
 
