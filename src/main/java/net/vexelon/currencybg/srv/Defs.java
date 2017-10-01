@@ -31,7 +31,8 @@ public final class Defs {
 	public static final String DB_NAME = System.getProperty("DB_NAME");
 	public static final String DB_HOST = System.getProperty("DB_HOST");
 	public static final String DB_PORT = System.getProperty("DB_PORT");
-	public static final String DB_CONNECTION = String.format("jdbc:mysql://%s:%s/%s?useSSL=false", DB_HOST, DB_PORT, DB_NAME);
+	public static final String DB_CONNECTION = String.format("jdbc:mysql://%s:%s/%s?useSSL=false", DB_HOST, DB_PORT,
+	        DB_NAME);
 	public static final String DB_USER = System.getProperty("DB_USERNAME");
 	public static final String DB_PASSWORD = System.getProperty("DB_PASSWORD");
 
@@ -53,6 +54,11 @@ public final class Defs {
 	 * Currencies
 	 */
 	public static final String BITCOINS = "BTC";
+	public static final String ETHERIUM = "ETH";
+	public static final String LITECOIN = "LTC";
+	public static final String BITCOUNS_CASH = "BCH";
+	public static final String DASH = "DASH";
+	public static final String DOGECOINS = "DOGE";
 
 	/*
 	 * HTTP API specific
