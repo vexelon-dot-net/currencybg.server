@@ -53,12 +53,12 @@ public final class Defs {
 	/*
 	 * Currencies
 	 */
-	public static final String BITCOINS = "BTC";
-	public static final String ETHERIUM = "ETH";
-	public static final String LITECOIN = "LTC";
-	public static final String BITCOUNS_CASH = "BCH";
-	public static final String DASH = "DASH";
-	public static final String DOGECOINS = "DOGE";
+	public static final String CURRENCY_BITCOINS = "BTC";
+	public static final String CURRENCY_ETHERIUM = "ETH";
+	public static final String CURRENCY_LITECOIN = "LTC";
+	public static final String CURRENCY_BITCOUN_CASH = "BCH";
+	public static final String CURRENCY_DASH = "DASH";
+	public static final String CURRENCY_DOGECOINS = "DOGE";
 
 	/*
 	 * HTTP API specific

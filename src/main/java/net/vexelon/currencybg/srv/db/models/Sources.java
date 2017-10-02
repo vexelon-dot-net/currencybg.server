@@ -4,7 +4,7 @@ import net.vexelon.currencybg.srv.remote.AllianzSource;
 import net.vexelon.currencybg.srv.remote.BNBSource;
 import net.vexelon.currencybg.srv.remote.ChangepartnerSource;
 import net.vexelon.currencybg.srv.remote.CryptoBGSource;
-import net.vexelon.currencybg.srv.remote.CryptoBank;
+import net.vexelon.currencybg.srv.remote.CryptoBankSource;
 import net.vexelon.currencybg.srv.remote.FIBSource;
 import net.vexelon.currencybg.srv.remote.Factorin;
 import net.vexelon.currencybg.srv.remote.ForexHouseSource;
@@ -108,7 +108,7 @@ public enum Sources {
 
 		// CryptoBank
 		case 1100:
-			return new CryptoBank(reporter);
+			return new CryptoBankSource(reporter);
 
 		// <unknown>
 		default:

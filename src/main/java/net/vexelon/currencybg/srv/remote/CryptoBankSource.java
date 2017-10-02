@@ -28,17 +28,17 @@ import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.reports.Reporter;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 
-public class CryptoBank extends AbstractSource {
+public class CryptoBankSource extends AbstractSource {
 
-	private static final Logger log = LoggerFactory.getLogger(TavexSource.class);
-	private static final String TAG_NAME = CryptoBank.class.getSimpleName();
+	private static final Logger log = LoggerFactory.getLogger(CryptoBankSource.class);
+	private static final String TAG_NAME = CryptoBankSource.class.getSimpleName();
 
 	private static final String URL_SOURCE = "https://cryptobank.bg/index.php";
 	private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
 
 	private String htmlData;
 
-	public CryptoBank(Reporter reporter) {
+	public CryptoBankSource(Reporter reporter) {
 		super(reporter);
 	}
 
@@ -70,25 +70,25 @@ public class CryptoBank extends AbstractSource {
 			String currency;
 			for (Element element : spanContent) {
 				if (counter > 0) {
-					currency = element.child(0).select("td > a > img").attr("alt").replace(" обмяна", "");
+					currency = element.child(0).select("td > a > img").attr("alt").split(" ")[0];
 					switch (currency) {
 					case "bitcoin":
-						currencyData.setCode(Defs.BITCOINS);
+						currencyData.setCode(Defs.CURRENCY_BITCOINS);
 						break;
 					case "ether":
-						currencyData.setCode(Defs.ETHERIUM);
+						currencyData.setCode(Defs.CURRENCY_ETHERIUM);
 						break;
 					case "litecoin":
-						currencyData.setCode(Defs.LITECOIN);
+						currencyData.setCode(Defs.CURRENCY_LITECOIN);
 						break;
 					case "bitcoin cash":
-						currencyData.setCode(Defs.BITCOUNS_CASH);
+						currencyData.setCode(Defs.CURRENCY_BITCOUN_CASH);
 						break;
 					case "dash":
-						currencyData.setCode(Defs.DASH);
+						currencyData.setCode(Defs.CURRENCY_DASH);
 						break;
 					case "dogecoin":
-						currencyData.setCode(Defs.DOGECOINS);
+						currencyData.setCode(Defs.CURRENCY_DOGECOINS);
 						break;
 					}
 					// The Replace statement(.replace(",", "")) have been made
@@ -122,7 +122,7 @@ public class CryptoBank extends AbstractSource {
 				public void onRequestFailed(Exception e) {
 					getReporter().write(TAG_NAME, "Connection failure= {}", ExceptionUtils.getStackTrace(e));
 
-					CryptoBank.this.close();
+					CryptoBankSource.this.close();
 					callback.onFailed(e);
 				}
 
@@ -144,7 +144,7 @@ public class CryptoBank extends AbstractSource {
 						getReporter().write(TAG_NAME, "Request was canceled! No currencies were downloaded.");
 					}
 
-					CryptoBank.this.close();
+					CryptoBankSource.this.close();
 					callback.onCompleted(result);
 				}
 			});
