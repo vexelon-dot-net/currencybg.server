@@ -73,7 +73,7 @@ public class CryptoBankSource extends AbstractSource {
 					currency = element.child(0).select("td > a > img").attr("alt").split(" ")[0];
 					switch (currency) {
 					case "bitcoin":
-						currencyData.setCode(Defs.CURRENCY_BITCOINS);
+						currencyData.setCode(Defs.CURRENCY_BITCOIN);
 						break;
 					case "ether":
 						currencyData.setCode(Defs.CURRENCY_ETHERIUM);
@@ -82,13 +82,13 @@ public class CryptoBankSource extends AbstractSource {
 						currencyData.setCode(Defs.CURRENCY_LITECOIN);
 						break;
 					case "bitcoin cash":
-						currencyData.setCode(Defs.CURRENCY_BITCOUN_CASH);
+						currencyData.setCode(Defs.CURRENCY_BITCOIN_CASH);
 						break;
 					case "dash":
 						currencyData.setCode(Defs.CURRENCY_DASH);
 						break;
 					case "dogecoin":
-						currencyData.setCode(Defs.CURRENCY_DOGECOINS);
+						currencyData.setCode(Defs.CURRENCY_DOGECOIN);
 						break;
 					}
 					// The Replace statement(.replace(",", "")) have been made

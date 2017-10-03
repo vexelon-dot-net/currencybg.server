@@ -29,99 +29,99 @@ import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 
 public class CryptoBGSource extends AbstractSource {
 
-	private static final Logger log = LoggerFactory.getLogger(TavexSource.class);
-	private static final String TAG_NAME = CryptoBGSource.class.getSimpleName();
+    private static final Logger log = LoggerFactory.getLogger(TavexSource.class);
+    private static final String TAG_NAME = CryptoBGSource.class.getSimpleName();
 
-	private static final String URL_SOURCE = "https://crypto.bg/tickers_header";
-	private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
+    private static final String URL_SOURCE = "https://crypto.bg/tickers_header";
+    private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
 
-	private String htmlData;
+    private String htmlData;
 
-	public CryptoBGSource(Reporter reporter) {
-		super(reporter);
-	}
+    public CryptoBGSource(Reporter reporter) {
+        super(reporter);
+    }
 
-	/**
-	 * Transforms Crypto BG HTML data into {@link CurrencyData} models.
-	 * 
-	 * @param input
-	 * @return
-	 * @throws IOException
-	 * @throws ParseException
-	 */
-	public List<CurrencyData> getCryptoRates(InputStream input) throws IOException, ParseException {
-		List<CurrencyData> result = Lists.newArrayList();
+    /**
+     * Transforms Crypto BG HTML data into {@link CurrencyData} models.
+     *
+     * @param input
+     * @return
+     * @throws IOException
+     * @throws ParseException
+     */
+    public List<CurrencyData> getCryptoRates(InputStream input) throws IOException, ParseException {
+        List<CurrencyData> result = Lists.newArrayList();
 
-		Document doc = Jsoup.parse(input, Charsets.UTF_8.name(), URL_SOURCE);
-		htmlData = doc.toString(); // debugging
+        Document doc = Jsoup.parse(input, Charsets.UTF_8.name(), URL_SOURCE);
+        htmlData = doc.toString(); // debugging
 
-		try {
-			String currentDateTimeSofia = LocalDateTime.now(ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA))
-			        .format(DateTimeFormatter.ofPattern(DATE_FORMAT)).toString();
+        try {
+            String currentDateTimeSofia = LocalDateTime.now(ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA))
+                    .format(DateTimeFormatter.ofPattern(DATE_FORMAT)).toString();
 
-			Date updateDate = DateTimeUtils.parseDate(currentDateTimeSofia, DATE_FORMAT);
+            Date updateDate = DateTimeUtils.parseDate(currentDateTimeSofia, DATE_FORMAT);
 
-			// Parse table with currencies
-			Element span = doc.select("tbody > tr.bitcoin").get(0);
-			CurrencyData currencyData = new CurrencyData();
-			currencyData.setCode(Defs.BITCOINS);
-			currencyData.setBuy(span.child(1).text());
-			currencyData.setSell(span.child(2).text());
-			currencyData.setRatio(1);
-			currencyData.setSource(Sources.CRYPTO.getID());
-			currencyData.setDate(updateDate);
-			result.add(currencyData);
+            // Parse table with currencies
+            Element span = doc.select("tbody > tr.bitcoin").get(0);
+            CurrencyData currencyData = new CurrencyData();
+            currencyData.setCode(Defs.CURRENCY_BITCOIN);
+            currencyData.setBuy(span.child(1).text());
+            currencyData.setSell(span.child(2).text());
+            currencyData.setRatio(1);
+            currencyData.setSource(Sources.CRYPTO.getID());
+            currencyData.setDate(updateDate);
+            result.add(currencyData);
 
-			return normalizeCurrencyData(result);
-		} catch (RuntimeException e) {
-			throw new IOException(e);
-		}
-	}
+            return normalizeCurrencyData(result);
+        } catch (RuntimeException e) {
+            throw new IOException(e);
+        }
+    }
 
-	@Override
-	public void getRates(Callback callback) throws SourceException {
-		try {
-			doGet(URL_SOURCE, new HTTPCallback() {
+    @Override
+    public void getRates(Callback callback) throws SourceException {
+        try {
+            doGet(URL_SOURCE, new HTTPCallback() {
 
-				@Override
-				public void onRequestFailed(Exception e) {
-					getReporter().write(TAG_NAME, "Connection failure= {}", ExceptionUtils.getStackTrace(e));
+                @Override
+                public void onRequestFailed(Exception e) {
+                    getReporter().write(TAG_NAME, "Connection failure= {}", ExceptionUtils.getStackTrace(e));
 
-					CryptoBGSource.this.close();
-					callback.onFailed(e);
-				}
+                    CryptoBGSource.this.close();
+                    callback.onFailed(e);
+                }
 
-				@Override
-				public void onRequestCompleted(HttpResponse response, boolean isCanceled) {
-					List<CurrencyData> result = Lists.newArrayList();
+                @Override
+                public void onRequestCompleted(HttpResponse response, boolean isCanceled) {
+                    List<CurrencyData> result = Lists.newArrayList();
 
-					if (!isCanceled) {
-						try {
+                    if (!isCanceled) {
+                        try {
 
-							result = getCryptoRates(response.getEntity().getContent());
-						} catch (IOException | ParseException e) {
-							log.error("Could not parse source data!", e);
-							getReporter().write(TAG_NAME, "Parse failed= {}  HTML= {}", ExceptionUtils.getStackTrace(e),
-							        htmlData);
-						}
-					} else {
-						log.warn("Request was canceled! No currencies were downloaded.");
-						getReporter().write(TAG_NAME, "Request was canceled! No currencies were downloaded.");
-					}
+                            result = getCryptoRates(response.getEntity().getContent());
+                        } catch (IOException | ParseException e) {
+                            log.error("Could not parse source data!", e);
+                            getReporter().write(TAG_NAME, "Parse failed= {}  HTML= {}", ExceptionUtils.getStackTrace(e),
+                                    htmlData);
+                        }
+                    } else {
+                        log.warn("Request was canceled! No currencies were downloaded.");
+                        getReporter().write(TAG_NAME, "Request was canceled! No currencies were downloaded.");
+                    }
 
-					CryptoBGSource.this.close();
-					callback.onCompleted(result);
-				}
-			});
-		} catch (URISyntaxException e) {
-			throw new SourceException("Invalid source url - " + URL_SOURCE, e);
-		}
+                    CryptoBGSource.this.close();
+                    callback.onCompleted(result);
+                }
+            });
+        } catch (URISyntaxException e) {
+            throw new SourceException("Invalid source url - " + URL_SOURCE, e);
+        }
 
-	}
+    }
 
-	@Override
-	public String getName() {
-		return TAG_NAME;
-	}
+    @Override
+    public String getName() {
+        return TAG_NAME;
+    }
 
 }
