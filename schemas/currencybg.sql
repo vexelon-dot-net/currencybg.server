@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `cbg_apikeys` (
 
 CREATE TABLE IF NOT EXISTS `cbg_currencies` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `CODE` varchar(3) NOT NULL,
+  `CODE` varchar(10) NOT NULL,
   `RATIO` int(11) NOT NULL,
   `BUY` varchar(10) NOT NULL,
   `SELL` varchar(10) NOT NULL,
