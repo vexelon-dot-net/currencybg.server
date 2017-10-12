@@ -2,6 +2,7 @@ package net.vexelon.currencybg.srv.db.models;
 
 import net.vexelon.currencybg.srv.remote.AllianzSource;
 import net.vexelon.currencybg.srv.remote.BNBSource;
+import net.vexelon.currencybg.srv.remote.BitcoinsHouseSource;
 import net.vexelon.currencybg.srv.remote.ChangepartnerSource;
 import net.vexelon.currencybg.srv.remote.CryptoBGSource;
 import net.vexelon.currencybg.srv.remote.CryptoBankSource;
@@ -28,7 +29,8 @@ public enum Sources {
 	CHANGEPARTNER(800),
 	FOREXHOUSE(900),
 	ALLIANZ(1000),
-	CRYPTOBANK(1100);
+	CRYPTOBANK(1100),
+	BITCOINSHOUSE(1200);
 
 	private int id;
 
@@ -109,6 +111,10 @@ public enum Sources {
 		// CryptoBank
 		case 1100:
 			return new CryptoBankSource(reporter);
+
+		// BitcounsHouse
+		case 1200:
+			return new BitcoinsHouseSource(reporter);
 
 		// <unknown>
 		default:
