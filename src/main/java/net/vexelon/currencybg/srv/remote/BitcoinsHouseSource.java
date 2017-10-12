@@ -39,6 +39,15 @@ public class BitcoinsHouseSource extends AbstractSource {
 	private static final String URL_SOURCE = "http://www.bitcoinshouse.com/chainexplorer/ajax/getLastPrice";
 	private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
 
+	@SuppressWarnings("unchecked")
+	private static final List<Pair<String, String>> pairType = Lists.newArrayList(Pair.of("buy", "sell"),
+	        Pair.of("buyEthereum", "sellEthereum"), Pair.of("buyLitecoin", "sellLitecoin"),
+	        Pair.of("buyRipple", "sellRipple"), Pair.of("buyZcash", "sellZcash"));
+
+	private static final Map<String, String> keymap = ImmutableMap.of("buy", Defs.CURRENCY_BITCOIN, "buyEthereum",
+	        Defs.CURRENCY_ETHERIUM, "buyLitecoin", Defs.CURRENCY_LITECOIN, "buyRipple", Defs.CURRENCY_RIPPLE,
+	        "buyZcash", Defs.CURRENCY_ZCASH);
+
 	private String htmlData;
 
 	public BitcoinsHouseSource(Reporter reporter) {
@@ -62,15 +71,6 @@ public class BitcoinsHouseSource extends AbstractSource {
 
 			Date updateDate = DateTimeUtils.parseDate(currentDateTimeSofia, DATE_FORMAT);
 
-			@SuppressWarnings("unchecked")
-			List<Pair<String, String>> pairType = Lists.newArrayList(Pair.of("buy", "sell"),
-			        Pair.of("buyEthereum", "sellEthereum"), Pair.of("buyLitecoin", "sellLitecoin"),
-			        Pair.of("buyRipple", "sellRipple"), Pair.of("buyZcash", "sellZcash"));
-
-			Map<String, String> keymap = ImmutableMap.of("buy", Defs.CURRENCY_BITCOIN, "buyEthereum",
-			        Defs.CURRENCY_ETHERIUM, "buyLitecoin", Defs.CURRENCY_LITECOIN, "buyRipple", Defs.CURRENCY_RIPPLE,
-			        "buyZcash", Defs.CURRENCY_ZCASH);
-
 			String inputString = IOUtils.toString(input, "UTF-8");
 
 			Gson gson = new GsonBuilder().create();
@@ -82,8 +82,7 @@ public class BitcoinsHouseSource extends AbstractSource {
 			for (Pair<String, String> pair : pairType) {
 				// If some of the values buy or sell is 0, then we skip this
 				// currency
-				if (Double.parseDouble(inputMap.get(pair.getLeft())) != (double) 0
-				        && Double.parseDouble(inputMap.get(pair.getRight())) != (double) 0) {
+				if (!inputMap.get(pair.getLeft()).equals("0") && !inputMap.get(pair.getRight()).equals("0")) {
 					currencyData = new CurrencyData();
 					currencyData.setCode(keymap.get(pair.getLeft()));
 					currencyData.setBuy(inputMap.get(pair.getLeft()));
