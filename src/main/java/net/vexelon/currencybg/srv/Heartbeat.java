@@ -107,7 +107,8 @@ public class Heartbeat implements Runnable {
 
     @Override
     public void run() {
-        log.info("Downloading rates from sources ...");
+        log.trace("Downloading rates from sources ...");
+
         try {
 
             try (final DataSource dataSource = new MySQLDataSource()) {
@@ -128,16 +129,15 @@ public class Heartbeat implements Runnable {
                     sourceCalendar.setTimeInMillis(currencySource.getLastUpdate().getTime()
                             + TimeUnit.SECONDS.toMillis(currencySource.getUpdatePeriod()));
                     if (sourceCalendar.after(nowCalendar)) {
-                        log.trace("Source ({}) update skipped.", currencySource.getSourceId());
+                        log.debug("Source ({}) update skipped.", currencySource.getSourceId());
                         continue;
                     }
 
                     // check if update is allowed on this date
                     SourceUpdateRestrictions updateRestrictions = currencySource.getUpdateRestrictions();
                     if (!isUpdateGo(updateRestrictions)) {
-                        log.trace("Source ({}) updates are disabled for the current time/date!",
+                        log.debug("Source ({}) updates are disabled for the current time/date!",
                                 currencySource.getSourceId());
-
                         continue;
                     }
 
@@ -168,7 +168,7 @@ public class Heartbeat implements Runnable {
 
                                 @Override
                                 public void onCompleted(List<CurrencyData> currencyDataList) {
-                                    log.debug("{} - source download succcesful.", source.getName());
+                                    log.info("{} - source download successful.", source.getName());
 
                                     if (log.isTraceEnabled()) {
                                         // TODO remove this trace log
@@ -210,7 +210,7 @@ public class Heartbeat implements Runnable {
              *
              * @see http://stackoverflow.com/a/24902026
              */
-            log.error("Fatal hearbeat error!", t);
+            log.error("Fatal error!", t);
         }
     }
 }
