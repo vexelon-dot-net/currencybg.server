@@ -12,11 +12,11 @@ import static org.junit.Assert.fail;
 
 public class XChangeBGSourceTest {
     @Test
-    public void test_CryptoBgSource_Header() {
+    public void test_XChangeBG01() {
 
         try {
             List<CurrencyData> rates = new XChangeBGSource(new NullReporter())
-                    .getCryptoRates(TestUtils.getTestResource("/xbg_01.html"));
+                    .getXChangeRates(TestUtils.getTestResource("/xbg_01.html"));
 
             assertTrue(rates.get(0).getCode().equals("BTC"));
             assertTrue(rates.get(0).getRatio() == 1);

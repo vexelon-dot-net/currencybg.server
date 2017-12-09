@@ -46,7 +46,7 @@ public class XChangeBGSource extends AbstractSource {
      * @throws IOException
      * @throws ParseException
      */
-    public List<CurrencyData> getCryptoRates(InputStream input) throws IOException, ParseException {
+    public List<CurrencyData> getXChangeRates(InputStream input) throws IOException, ParseException {
         List<CurrencyData> result = Lists.newArrayList();
 
         Document doc = Jsoup.parse(input, Charsets.UTF_8.name(), URL_SOURCE);
@@ -106,7 +106,7 @@ public class XChangeBGSource extends AbstractSource {
                     if (!isCanceled) {
                         try {
 
-                            result = getCryptoRates(response.getEntity().getContent());
+                            result = getXChangeRates(response.getEntity().getContent());
                         } catch (IOException | ParseException e) {
                             log.error("Could not parse source data!", e);
                             getReporter().write(TAG_NAME, "Parse failed= {} ", ExceptionUtils.getStackTrace(e));
