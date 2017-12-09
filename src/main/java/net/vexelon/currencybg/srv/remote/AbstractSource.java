@@ -31,195 +31,197 @@ import net.vexelon.currencybg.srv.utils.TrustAllX509Manager;
 
 public abstract class AbstractSource implements Source {
 
-	private static final Logger log = LoggerFactory.getLogger(AbstractSource.class);
+    private static final Logger log = LoggerFactory.getLogger(AbstractSource.class);
 
-	protected static final int DEFAULT_SOCKET_TIMEOUT = 3 * 60 * 1000;
-	protected static final int DEFAULT_CONNECT_TIMEOUT = 1 * 60 * 1000;
+    protected static final int DEFAULT_SOCKET_TIMEOUT = 3 * 60 * 1000;
+    protected static final int DEFAULT_CONNECT_TIMEOUT = 1 * 60 * 1000;
 
-	private Reporter reporter;
-	private CloseableHttpAsyncClient client;
+    private Reporter reporter;
+    private CloseableHttpAsyncClient client;
 
-	public AbstractSource(Reporter reporter) {
-		this.reporter = reporter;
-	}
+    public AbstractSource(Reporter reporter) {
+        this.reporter = reporter;
+    }
 
-	public void close() {
-		IOUtils.closeQuietly(client);
-	}
+    public void close() {
+        IOUtils.closeQuietly(client);
+    }
 
-	/**
-	 * Creates an asynchronous HTTP client configuration with default timeouts.
-	 * 
-	 * @param useSSL
-	 * @see #newHttpClient()
-	 */
-	protected static CloseableHttpAsyncClient newHttpAsyncClient(boolean useSSL) {
-		RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(DEFAULT_SOCKET_TIMEOUT)
-		        .setConnectTimeout(DEFAULT_CONNECT_TIMEOUT).build();
+    /**
+     * Creates an asynchronous HTTP client configuration with default timeouts.
+     *
+     * @param useSSL
+     * @see #newHttpClient()
+     */
+    protected static CloseableHttpAsyncClient newHttpAsyncClient(boolean useSSL) {
+        RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(DEFAULT_SOCKET_TIMEOUT)
+                .setConnectTimeout(DEFAULT_CONNECT_TIMEOUT).build();
 
-		HttpAsyncClientBuilder builder = HttpAsyncClients.custom();
+        HttpAsyncClientBuilder builder = HttpAsyncClients.custom();
 
-		if (useSSL) {
-			try {
-				SSLContext context = SSLContext.getInstance("SSL");
-				context.init(null, new TrustManager[] { new TrustAllX509Manager() }, new SecureRandom());
+        if (useSSL) {
+            try {
+                SSLContext context = SSLContext.getInstance("SSL");
+                context.init(null, new TrustManager[]{new TrustAllX509Manager()}, new SecureRandom());
 
-				SSLIOSessionStrategy strategy = new SSLIOSessionStrategy(context,
-				        SSLIOSessionStrategy.getDefaultHostnameVerifier());
+                SSLIOSessionStrategy strategy = new SSLIOSessionStrategy(context,
+                        SSLIOSessionStrategy.getDefaultHostnameVerifier());
 
-				builder.setSSLStrategy(strategy);
-			} catch (Exception e) {
-				log.error("Failed initializing SSL context! Skipped.", e);
-			}
-		}
+                builder.setSSLStrategy(strategy);
+            } catch (Exception e) {
+                log.error("Failed initializing SSL context! Skipped.", e);
+            }
+        }
 
-		return builder.setDefaultRequestConfig(requestConfig).build();
-	}
+        return builder.setDefaultRequestConfig(requestConfig).build();
+    }
 
-	protected CloseableHttpAsyncClient getClient(boolean useSSL) {
-		if (client == null) {
-			client = newHttpAsyncClient(useSSL);
-			client.start();
-		}
-		return client;
-	}
+    protected CloseableHttpAsyncClient getClient(boolean useSSL) {
+        if (client == null) {
+            client = newHttpAsyncClient(useSSL);
+            client.start();
+        }
+        return client;
+    }
 
-	protected void doGet(URI uri, final HTTPCallback httpCallback) {
-		HttpGet httpGet = new HttpGet(uri);
-		getClient(uri.getScheme().startsWith("https")).execute(httpGet, new FutureCallback<HttpResponse>() {
+    protected void doGet(URI uri, final HTTPCallback httpCallback) {
+        HttpGet httpGet = new HttpGet(uri);
+        getClient(uri.getScheme().startsWith("https")).execute(httpGet, new FutureCallback<HttpResponse>() {
 
-			@Override
-			public void failed(Exception e) {
-				httpCallback.onRequestFailed(e);
-			}
+            @Override
+            public void failed(Exception e) {
+                httpCallback.onRequestFailed(e);
+            }
 
-			@Override
-			public void completed(HttpResponse response) {
-				httpCallback.onRequestCompleted(response, false);
-			}
+            @Override
+            public void completed(HttpResponse response) {
+                httpCallback.onRequestCompleted(response, false);
+            }
 
-			@Override
-			public void cancelled() {
-				httpCallback.onRequestCompleted(null, false);
-			}
-		});
-	}
+            @Override
+            public void cancelled() {
+                httpCallback.onRequestCompleted(null, false);
+            }
+        });
+    }
 
-	protected void doGet(String url, final HTTPCallback responseCallback) throws URISyntaxException {
-		doGet(new URI(url), responseCallback);
-	}
+    protected void doGet(String url, final HTTPCallback responseCallback) throws URISyntaxException {
+        doGet(new URI(url), responseCallback);
+    }
 
-	/**
-	 * Verifies that each {@link CurrencyData} entry contains a valid or
-	 * meaningful value. One or more currencies may be removed, if their models
-	 * do not contain a currency code or {@link Sources}.
-	 * 
-	 * @param currencyDataList
-	 *            Immutable currencies list.
-	 * @return Normalized list of {@link CurrencyData} models.
-	 */
-	protected List<CurrencyData> normalizeCurrencyData(final List<CurrencyData> currencyDataList) {
-		List<CurrencyData> result = new ArrayList<CurrencyData>(currencyDataList);
+    /**
+     * Verifies that each {@link CurrencyData} entry contains a valid or
+     * meaningful value. One or more currencies may be removed, if their models
+     * do not contain a currency code or {@link Sources}.
+     *
+     * @param currencyDataList Immutable currencies list.
+     * @return Normalized list of {@link CurrencyData} models.
+     */
+    protected List<CurrencyData> normalizeCurrencyData(final List<CurrencyData> currencyDataList) {
+        List<CurrencyData> result = new ArrayList<CurrencyData>(currencyDataList);
 
-		int i = 0;
-		Iterator<CurrencyData> iterator = result.iterator();
-		while (iterator.hasNext()) {
-			CurrencyData currencyData = iterator.next();
+        int i = 0;
+        Iterator<CurrencyData> iterator = result.iterator();
+        while (iterator.hasNext()) {
+            CurrencyData currencyData = iterator.next();
 
-			try {
-				if (StringUtils.isEmpty(currencyData.getCode())) {
-					throw new SourceException(i + " - missing currency code!");
-				}
-				String tag = "(" + i + ") " + currencyData.getCode();
+            try {
+                if (StringUtils.isEmpty(currencyData.getCode())) {
+                    throw new SourceException(i + " - missing currency code!");
+                }
+                String tag = "(" + i + ") " + currencyData.getCode();
 
-				if (currencyData.getSource() == 0) {
-					throw new SourceException(tag + " - source cannot be '0' for currency=" + currencyData.getCode());
-				}
+                if (currencyData.getSource() == 0) {
+                    throw new SourceException(tag + " - source cannot be '0' for currency=" + currencyData.getCode());
+                }
 
-				// Check for obsolete currency code
-				switch (currencyData.getCode()) {
-				case "TRL":
-					currencyData.setCode("TRY");
-					break;
-				case "BYR":
-					currencyData.setCode("BYN");
-					break;
-				case "RUR":
-					currencyData.setCode("RUB");
-					break;
-				case "CSD":
-					currencyData.setCode("RSD");
-					break;
-				default:
-					break;
-				}
+                // Check for obsolete currency code
+                switch (currencyData.getCode()) {
+                    case "TRL":
+                        currencyData.setCode("TRY");
+                        break;
+                    case "BYR":
+                        currencyData.setCode("BYN");
+                        break;
+                    case "RUR":
+                        currencyData.setCode("RUB");
+                        break;
+                    case "CSD":
+                        currencyData.setCode("RSD");
+                        break;
+                    default:
+                        break;
+                }
 
-				if (currencyData.getRatio() < 0) {
-					getReporter().write(getName(), tag + " - invalid ratio. Will use 0.");
-					currencyData.setRatio(0);
-				}
+                if (currencyData.getRatio() < 0) {
+                    getReporter().write(getName(), tag + " - invalid ratio. Will use 0.");
+                    currencyData.setRatio(0);
+                }
 
-				if (!currencyData.getBuy().isEmpty()) {
-					// Fixes "cannot parse Buy value=0..465"
-					currencyData.setBuy(currencyData.getBuy().replace("..", "."));
+                if (!currencyData.getBuy().isEmpty()) {
+                    // Fixes "cannot parse Buy value=0..465"
+                    currencyData.setBuy(currencyData.getBuy().replace("..", "."));
 
-					try {
-						new BigDecimal(currencyData.getBuy());
-					} catch (NumberFormatException e) {
-						// log.warn(tag + " - cannot parse Buy value=" +
-						// StringUtils.defaultString(currencyData.getBuy()));
-						getReporter().write(getName(),
-						        tag + " - cannot parse Buy value=" + StringUtils.defaultString(currencyData.getBuy()));
+                    try {
+                        new BigDecimal(currencyData.getBuy());
+                    } catch (NumberFormatException e) {
+                        // log.warn(tag + " - cannot parse Buy value=" +
+                        // StringUtils.defaultString(currencyData.getBuy()));
+                        getReporter().write(getName(),
+                                tag + " - cannot parse Buy value=" + StringUtils.defaultString(currencyData.getBuy()));
 
-						// set default
-						currencyData.setBuy("");
-					}
-				}
+                        // set default
+                        currencyData.setBuy("");
+                    }
+                }
 
-				if (!currencyData.getSell().isEmpty()) {
-					// Fixes "cannot parse Sell value=0..465"
-					currencyData.setSell(currencyData.getSell().replace("..", "."));
+                if (!currencyData.getSell().isEmpty()) {
+                    // Fixes "cannot parse Sell value=0..465"
+                    currencyData.setSell(currencyData.getSell().replace("..", "."));
 
-					try {
-						new BigDecimal(currencyData.getSell());
-					} catch (NumberFormatException e) {
-						// log.warn(tag + " - cannot parse Sell value=" +
-						// StringUtils.defaultString(currencyData.getSell()));
-						getReporter().write(getName(), tag + " - cannot parse Sell value="
-						        + StringUtils.defaultString(currencyData.getSell()));
+                    try {
+                        new BigDecimal(currencyData.getSell());
+                    } catch (NumberFormatException e) {
+                        // log.warn(tag + " - cannot parse Sell value=" +
+                        // StringUtils.defaultString(currencyData.getSell()));
+                        getReporter().write(getName(), tag + " - cannot parse Sell value="
+                                + StringUtils.defaultString(currencyData.getSell()));
 
-						// set default
-						currencyData.setSell("");
-					}
-				}
-			} catch (SourceException e) {
-				log.warn("Currency entry normalization error!", e.getMessage());
-				getReporter().write(getName(), e.getMessage());
-				getReporter().write(getName(),
-				        "Removing currency data entry for - " + StringUtils.defaultString(currencyData.getCode()));
+                        // set default
+                        currencyData.setSell("");
+                    }
+                }
 
-				iterator.remove();
-			}
+                if (currencyData.getBuy().isEmpty() && currencyData.getSell().isEmpty()) {
+                    throw new SourceException(tag + " - both sell and buy values are empty for currency=" + currencyData.getCode());
+                }
+            } catch (SourceException e) {
+                log.warn("Currency entry normalization error!", e.getMessage());
+                getReporter().write(getName(), e.getMessage());
+                getReporter().write(getName(),
+                        "Removing currency data entry for - " + StringUtils.defaultString(currencyData.getCode()));
 
-			i += 1;
-		}
+                iterator.remove();
+            }
 
-		return result;
-	}
+            i += 1;
+        }
 
-	public Reporter getReporter() {
-		return reporter;
-	}
+        return result;
+    }
 
-	/**
-	 * HTTP request callback
-	 *
-	 */
-	public interface HTTPCallback {
+    public Reporter getReporter() {
+        return reporter;
+    }
 
-		void onRequestCompleted(final HttpResponse response, boolean isCanceled);
+    /**
+     * HTTP request callback
+     */
+    public interface HTTPCallback {
 
-		void onRequestFailed(Exception e);
-	}
+        void onRequestCompleted(final HttpResponse response, boolean isCanceled);
+
+        void onRequestFailed(Exception e);
+    }
 
 }
