@@ -4,7 +4,6 @@ import javax.ws.rs.core.MediaType;
 
 /**
  * Global constants
- *
  */
 public final class Defs {
 
@@ -20,7 +19,7 @@ public final class Defs {
 	/*
 	 * Global configuration
 	 */
-	public static final String CONFIG_PATH = System.getenv("CBG_CFG_PATH");
+	public static final String CONFIG_PATH = System.getProperty("CBG_CFG_PATH");
 	public static final String CONFIG_FILENAME = "cbg.properties";
 	public static final long CONFIG_RELOAD_INTERVAL = 10; // 10 seconds
 
@@ -28,12 +27,13 @@ public final class Defs {
 	 * Database parameters
 	 */
 	public static final String DB_DRIVER = "com.mysql.jdbc.Driver";
-	public static final String DB_NAME = "currencybg";
-	public static final String DB_HOST = System.getenv("OPENSHIFT_MYSQL_DB_HOST");
-	public static final String DB_PORT = System.getenv("OPENSHIFT_MYSQL_DB_PORT");
-	public static final String DB_CONNECTION = String.format("jdbc:mysql://%s:%s/%s", DB_HOST, DB_PORT, DB_NAME);
-	public static final String DB_USER = System.getenv("OPENSHIFT_MYSQL_DB_USERNAME");
-	public static final String DB_PASSWORD = System.getenv("OPENSHIFT_MYSQL_DB_PASSWORD");
+	public static final String DB_NAME = System.getProperty("DB_NAME");
+	public static final String DB_HOST = System.getProperty("DB_HOST");
+	public static final String DB_PORT = System.getProperty("DB_PORT");
+	public static final String DB_CONNECTION = String.format("jdbc:mysql://%s:%s/%s?useSSL=false", DB_HOST, DB_PORT,
+	        DB_NAME);
+	public static final String DB_USER = System.getProperty("DB_USERNAME");
+	public static final String DB_PASSWORD = System.getProperty("DB_PASSWORD");
 
 	public static final String DATEFORMAT_ISO_8601 = "yyyy-MM-dd'T'HH:mmZ";
 
@@ -48,11 +48,18 @@ public final class Defs {
 	 */
 	public static final long REPORTER_UPDATE_FIRST_INTERVAL = 10;// seconds
 	public static final long REPORTER_UPDATES_PERIODIC_INTERVAL = 60 * 60;// 1
-	                                                                      // hour
+	// hour
 	/*
 	 * Currencies
 	 */
-	public static final String BITCOINS = "BTC";
+	public static final String CURRENCY_BITCOIN = "BTC";
+	public static final String CURRENCY_BITCOIN_CASH = "BCH";
+	public static final String CURRENCY_ETHERIUM = "ETH";
+	public static final String CURRENCY_LITECOIN = "LTC";
+	public static final String CURRENCY_DASH = "DASH";
+	public static final String CURRENCY_DOGECOIN = "DOGE";
+	public static final String CURRENCY_RIPPLE = "XRP";
+	public static final String CURRENCY_ZCASH = "ZEC";
 
 	/*
 	 * HTTP API specific

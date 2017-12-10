@@ -13,7 +13,7 @@ import net.vexelon.currencybg.srv.tests.TestUtils;
 
 public class ForexHouseSourceTest {
 	@Test
-	public void test_CryptoBgSource_Header() {
+	public void test_ForexHouse01() {
 
 		try {
 			List<CurrencyData> rates = new ForexHouseSource(new NullReporter())

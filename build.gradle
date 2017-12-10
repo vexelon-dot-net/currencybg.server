@@ -3,97 +3,100 @@
  *
  */
 buildscript {
-	repositories {
-		jcenter()
-		mavenCentral()
-	}
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
     dependencies {
-        classpath 'com.bmuschko:gradle-tomcat-plugin:2.2.4'
-    }	
+        classpath 'com.bmuschko:gradle-tomcat-plugin:2.3'
+    }
 }
 
 apply plugin: 'eclipse'
 apply plugin: 'eclipse-wtp'
-apply plugin: 'java' 
+apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'com.bmuschko.tomcat'
 
-def appVersion = '1.4.1'
-def tomcatVersion = '7.0.54'
+def appVersion = '1.5.0'
+def tomcatVersion = '8.0.42'
 sourceCompatibility = JavaVersion.VERSION_1_8
 
 //compileTestJava.options.encoding = 'UTF-8'
 
 repositories {
-	jcenter()
-	mavenCentral()
-}
-
-eclipse {
-	project {
-		natures 'org.eclipse.buildship.core.gradleprojectnature',
-				'org.eclipse.jdt.core.javanature',
-				'org.eclipse.wst.common.modulecore.ModuleCoreNature',
-				'org.eclipse.wst.common.project.facet.core.nature',				
-				'org.eclipse.jem.workbench.JavaEMFNature',
-				'org.eclipse.wst.jsdt.core.jsNature'
-	}
-	project.referencedProjects.each { evaluationDependsOn it }
-	jdt {
-    	sourceCompatibility = JavaVersion.VERSION_1_8
-    	targetCompatibility = JavaVersion.VERSION_1_8
-    }
-  	//classpath.plusConfigurations += [ configurations.compile, configurations.testCompile ]
-    classpath {
-    	downloadJavadoc = true
-    }
+    jcenter()
+    mavenCentral()
 }
 
 dependencies {
-	compile 'commons-io:commons-io:2.5',
-			'commons-beanutils:commons-beanutils:1.9.2',
-			'org.apache.commons:commons-lang3:3.4',
-			'org.apache.commons:commons-configuration2:2.0',
-			'org.apache.httpcomponents:httpasyncclient:4.1.2',
-			'org.slf4j:slf4j-log4j12:1.7.+',
-			'com.google.guava:guava:20.0',
-			'com.google.code.gson:gson:2.7',
-			'com.sun.jersey:jersey-core:1.19',
-			'com.sun.jersey:jersey-servlet:1.19',
-			'com.sun.jersey:jersey-server:1.19',
-			'mysql:mysql-connector-java:5.1.40',
-			'org.jsoup:jsoup:1.10.2',
-			'com.github.pengrad:java-telegram-bot-api:2.1.1',
-			'xpp3:xpp3:1.1.3.+'
+    compile 'commons-io:commons-io:2.5',
+            'commons-beanutils:commons-beanutils:1.9.2',
+            'org.apache.commons:commons-lang3:3.4',
+            'org.apache.commons:commons-configuration2:2.0',
+            'org.apache.httpcomponents:httpasyncclient:4.1.2',
+            'org.slf4j:slf4j-log4j12:1.7.+',
+            'com.google.guava:guava:20.0',
+            'com.google.code.gson:gson:2.7',
+            'com.sun.jersey:jersey-core:1.19',
+            'com.sun.jersey:jersey-servlet:1.19',
+            'com.sun.jersey:jersey-server:1.19',
+            'mysql:mysql-connector-java:5.1.40',
+            'org.jsoup:jsoup:1.10.2',
+            'com.github.pengrad:java-telegram-bot-api:2.1.1',
+            'xpp3:xpp3:1.1.3.+',
+            'com.sparkpost:sparkpost-lib:0.16.1'
     providedCompile 'javax.servlet:javax.servlet-api:3.0.+',
-    				'javax.servlet.jsp:jsp-api:2.2'
+            'javax.servlet.jsp:jsp-api:2.2'
 
-	// https://mvnrepository.com/artifact/com.sparkpost/sparkpost-lib
-	compile group: 'com.sparkpost', name: 'sparkpost-lib', version: '0.16.1'
-	
     testCompile 'junit:junit:4.+'
-    
+
     tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
-           "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
-           "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"    
+            "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
+            "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
 }
 
 war {
-	manifest {
-		def manifestClasspath = configurations.compile.collect { it.getName() }.join(',')
-    	attributes (
-    		"Class-Path": manifestClasspath,
-    		"Implementation-Vendor": 'Vexelon Microservices',
-    		"Implementation-Title": 'CurrencyBG Server',
-    		"Implementation-Version": appVersion
-    	)		
-	}
-	exclude('src/main/webapp/META-INF/**')
+    manifest {
+        def manifestClasspath = configurations.compile.collect { it.getName() }.join(',')
+        attributes(
+                "Class-Path": manifestClasspath,
+                "Implementation-Vendor": 'Vexelon Microservices',
+                "Implementation-Title": 'CurrencyBG Server',
+                "Implementation-Version": appVersion
+        )
+    }
+    exclude('src/main/webapp/META-INF/**')
+}
+
+tasks.withType(Zip) { task ->
+    task.doLast {
+        ant.checksum file: it.archivePath
+    }
+}
+
+eclipse {
+    project {
+        natures 'org.eclipse.buildship.core.gradleprojectnature',
+                'org.eclipse.jdt.core.javanature',
+                'org.eclipse.wst.common.modulecore.ModuleCoreNature',
+                'org.eclipse.wst.common.project.facet.core.nature',
+                'org.eclipse.jem.workbench.JavaEMFNature',
+                'org.eclipse.wst.jsdt.core.jsNature'
+    }
+    project.referencedProjects.each { evaluationDependsOn it }
+    jdt {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    //classpath.plusConfigurations += [ configurations.compile, configurations.testCompile ]
+    classpath {
+        downloadJavadoc = true
+    }
 }
 
 tomcat {
     httpPort = 8090
-    httpsPort = 8091
     enableSSL = false
-    contextPath = 'currencybg'
+    contextPath = '/'
 }

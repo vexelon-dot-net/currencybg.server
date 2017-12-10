@@ -1,43 +1,53 @@
 Currency BG Server
 ============================
 
-[![Build Status](https://travis-ci.org/vexelon-dot-net/currencybg.server.svg?branch=master)](https://travis-ci.org/vexelon-dot-net/currencybg.server)
+[![CircleCI](https://circleci.com/gh/vexelon-dot-net/currencybg.server/tree/master.svg?style=svg&circle-token=dbb483218ea63d7fa3551c6cc3c3b3fd95f99e1e)](https://circleci.com/gh/vexelon-dot-net/currencybg.server/tree/master)
 
 Currency BG RESTful web service
 
-HTTP API [documentation](docs/API.md)
+HTTP [API documentation](docs/API.md)
 
 # Requirements
 
   * JDK `1.8`
   * MySQL `5.5`
-  * Tomcat `7.+`
+  * Tomcat `8` or Jetty `9`
 
 # Development
 
-Install [Gradle](https://gradle.org/gradle-download/) `4.+` or use the `./gradlew` script.
+Install [Gradle](https://gradle.org/gradle-download/) or use the `./gradlew` script.
 
-Create a MySQL database called `currencybg` and run the DDL in `schemas` to create all required tables.
-
-In order to deploy the local test version you need to first setup the following environment variables, i.e.,
-
-    CBG_CFG_PATH=<directory path> // path to where server configurations will be saved
-    OPENSHIFT_MYSQL_DB_HOST=<mysql hostname>
-    OPENSHIFT_MYSQL_DB_PORT=<mysql port>
-    OPENSHIFT_MYSQL_DB_USERNAME=<mysql user>
-    OPENSHIFT_MYSQL_DB_PASSWORD=<mysql password>
-
-To generate Eclipse project files run:
+If you use Eclipse, you may generate the Eclipse project files by running:
 
 	./gradlew eclipse
 
 To build the project run:
 
-	./gradlew clean build
+	./gradlew build
 
-To start a local test version run:
+# Deployment
 
-	./gradlew tomcatRun
+Create a MySQL database and use the DDL in `schemas` to create all required tables.
+
+In order to deploy a local test version the following Java properties need to be setup, i.e.,
+
+    CBG_CFG_PATH=<directory path> // path to where server configurations will be saved
+    DB_HOST=<mysql hostname>
+    DB_PORT=<mysql port>
+    DB_NAME=<mysql database>
+    DB_USERNAME=<mysql user>
+    DB_PASSWORD=<mysql password>
+
+To run locally:
+
+	./gradlew tomcatRun \
+      -DCBG_CFG_PATH=<directory path> \
+      -DDB_HOST=<host> -DDB_PORT=<port> -DDB_NAME=<database> \
+      -DDB_USERNAME=<username> -DDB_PASSWORD=<password> 
+
+To access the API open:
+
+    http://localhost:8090/api
 
 # License
 

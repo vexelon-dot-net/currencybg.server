@@ -1,18 +1,24 @@
 Currency BG Server Changes
 ==========================
 
+## 1.5.0
+
+  * Added CryptoBank currencies source [#97](../../issues/97)
+  * Added xchange.bg currencies source [#98](../../issues/98)
+  * Added BitcoinsHouse currencies source [#101](../../issues/101)
+
 ## 1.4.1
 
   * Fix Forex House parsing issue [#99](../../pull/99)
 
-## 1.4
+## 1.4.0
 
   * Optimizations in Bitcoin Solutions source [#88](../../issues/88)
   * Added Changepartner currencies source [#66](../../issues/66)
   * Added Forex House currencies source [#65](../../issues/65)
   * Added Allianz Bank currencies source [#64](../../issues/64)
 
-## 1.3
+## 1.3.0
 
   * Added Bitcoin Solutions source [#68](../../issues/68)
 
@@ -21,7 +27,7 @@ Currency BG Server Changes
   * Fixed an issue with Tavex date time parsing [#81](../../issues/81)
   * Fixed an issue with uncaught RuntimException on source parsing [#59](../../issues/59)
   
-## 1.2
+## 1.2.0
 
   * Added Societe Generale currencies source [#63](../../issues/63)
   * Added UniCredit currencies source [#21](../../issues/21)

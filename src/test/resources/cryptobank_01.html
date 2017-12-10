@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<!-- jsn_epic_free 6.2.2 -->
+<html lang="" dir="ltr">
+<head>
+	<base href="https://cryptobank.bg/" />
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="keywords" content="биткойн, лайткойн, етер криптовалута, Крипто-борса, търговия, bitcoin, litecoin, ether, Ethereum, coin exchange, buy bitcoin, sell bitcoin, покупка биткойн, продажба биткойн, търговия криптовалути" />
+	<meta name="description" content="Бърза и лесна обмяна на биткойни и други криптовалути. Инвестиции и участие в проекти с криптовалути. Борса за търговия с биткойн, лайткойн и етер, Криптобанк България" />
+	<meta name="generator" content="Joomla! - Open Source Content Management" />
+	<title>Покупко - Продажба на биткойни, лайткойни и етери от Криптобанк България</title>
+	<link href="/images/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
+	<link href="/media/jui/css/bootstrap.min.css?be18e3a5355bbe4f183f282f215b6ceb" rel="stylesheet" type="text/css" />
+	<link href="/media/jui/css/bootstrap-responsive.min.css?be18e3a5355bbe4f183f282f215b6ceb" rel="stylesheet" type="text/css" />
+	<link href="/media/jui/css/bootstrap-extended.css?be18e3a5355bbe4f183f282f215b6ceb" rel="stylesheet" type="text/css" />
+	<link href="/plugins/system/jsntplframework/assets/3rd-party/bootstrap/css/bootstrap-frontend.min.css" rel="stylesheet" type="text/css" />
+	<link href="/templates/system/css/system.css" rel="stylesheet" type="text/css" />
+	<link href="/templates/system/css/general.css" rel="stylesheet" type="text/css" />
+	<link href="/templates/jsn_epic_free/css/template.css" rel="stylesheet" type="text/css" />
+	<link href="/templates/jsn_epic_free/css/colors/blue.css" rel="stylesheet" type="text/css" />
+	<link href="/templates/jsn_epic_free/css/styles/business.css" rel="stylesheet" type="text/css" />
+	<link href="/media/system/css/modal.css?be18e3a5355bbe4f183f282f215b6ceb" rel="stylesheet" type="text/css" />
+	<style type="text/css">
+	#jsn-page,
+	#jsn-pos-topbar {
+		width: 960px;
+		min-width: 960px;
+	}
+	</style>
+	<script type="application/json" class="joomla-script-options new">{"csrf.token":"497d605b40fd502d7dfb975563b89c11","system.paths":{"root":"","base":""}}</script>
+	<script src="/media/jui/js/jquery.min.js?be18e3a5355bbe4f183f282f215b6ceb" type="text/javascript"></script>
+	<script src="/media/jui/js/jquery-noconflict.js?be18e3a5355bbe4f183f282f215b6ceb" type="text/javascript"></script>
+	<script src="/media/jui/js/jquery-migrate.min.js?be18e3a5355bbe4f183f282f215b6ceb" type="text/javascript"></script>
+	<script src="/media/jui/js/bootstrap.min.js?be18e3a5355bbe4f183f282f215b6ceb" type="text/javascript"></script>
+	<script src="/media/system/js/caption.js?be18e3a5355bbe4f183f282f215b6ceb" type="text/javascript"></script>
+	<script src="/media/system/js/mootools-core.js?be18e3a5355bbe4f183f282f215b6ceb" type="text/javascript"></script>
+	<script src="/media/system/js/core.js?be18e3a5355bbe4f183f282f215b6ceb" type="text/javascript"></script>
+	<script src="/media/system/js/mootools-more.js?be18e3a5355bbe4f183f282f215b6ceb" type="text/javascript"></script>
+	<script src="/plugins/system/jsntplframework/assets/joomlashine/js/noconflict.js" type="text/javascript"></script>
+	<script src="/plugins/system/jsntplframework/assets/joomlashine/js/utils.js" type="text/javascript"></script>
+	<script src="/templates/jsn_epic_free/js/jsn_template.js" type="text/javascript"></script>
+	<script src="/media/system/js/modal.js?be18e3a5355bbe4f183f282f215b6ceb" type="text/javascript"></script>
+	<script src="/templates/jsn_epic_free/js/custom.js" type="text/javascript"></script>
+	<script type="text/javascript">
+jQuery(function($){ $(".dropdown-toggle").dropdown(); });jQuery(window).on('load',  function() {
+				new JCaption('img.caption');
+			});
+				JSNTemplate.initTemplate({
+					templatePrefix			: "jsn_epic_free_",
+					templatePath			: "/templates/jsn_epic_free",
+					enableRTL				: 0,
+					enableGotopLink			: 1,
+					enableMobile			: 0,
+					enableMobileMenuSticky	: 1,
+					enableDesktopMenuSticky	: 0,
+					responsiveLayout		: [],
+					mobileMenuEffect		: ""
+				});
+			
+					window.addEvent("domready", JSNUtils.setDesktopOnMobile);
+				
+		jQuery(function($) {
+			SqueezeBox.initialize({});
+			SqueezeBox.assign($('a.modal').get(), {
+				parse: 'rel'
+			});
+		});
+
+		window.jModalClose = function () {
+			SqueezeBox.close();
+		};
+		
+		// Add extra modal close functionality for tinyMCE-based editors
+		document.onreadystatechange = function () {
+			if (document.readyState == 'interactive' && typeof tinyMCE != 'undefined' && tinyMCE)
+			{
+				if (typeof window.jModalClose_no_tinyMCE === 'undefined')
+				{	
+					window.jModalClose_no_tinyMCE = typeof(jModalClose) == 'function'  ?  jModalClose  :  false;
+					
+					jModalClose = function () {
+						if (window.jModalClose_no_tinyMCE) window.jModalClose_no_tinyMCE.apply(this, arguments);
+						tinyMCE.activeEditor.windowManager.close();
+					};
+				}
+		
+				if (typeof window.SqueezeBoxClose_no_tinyMCE === 'undefined')
+				{
+					if (typeof(SqueezeBox) == 'undefined')  SqueezeBox = {};
+					window.SqueezeBoxClose_no_tinyMCE = typeof(SqueezeBox.close) == 'function'  ?  SqueezeBox.close  :  false;
+		
+					SqueezeBox.close = function () {
+						if (window.SqueezeBoxClose_no_tinyMCE)  window.SqueezeBoxClose_no_tinyMCE.apply(this, arguments);
+						tinyMCE.activeEditor.windowManager.close();
+					};
+				}
+			}
+		};
+		
+	</script>
+
+</head>
+<body id="jsn-master" class="jsn-textstyle-business jsn-color-blue jsn-direction-ltr jsn-desktop jsn-joomla-30  jsn-com-content jsn-view-article jsn-itemid-101 jsn-homepage">
+		<div id="jsn-page" class="container">
+		<div id="jsn-page-inner">
+					<div id="jsn-header">
+				<div id="jsn-logo" class="pull-left">
+				<a href="/index.php" title=""><img src="/templates/jsn_epic_free/images/colors/blue/logo.png" alt="" id="jsn-logo-desktop" /></a>				</div>
+				<div id="jsn-headerright" class="pull-right">
+								</div>
+				<div class="clearbreak"></div>
+			</div>
+			<div id="jsn-body">
+							<div id="jsn-menu">
+									<div id="jsn-pos-mainmenu">
+						<div class="_menu jsn-modulecontainer"><div class="jsn-modulecontainer_inner"><div class="jsn-modulecontent">
+<ul class="menu-mainmenu">
+<li  class="current active first"><a class="current" href="/index.php" >
+	<span>
+		НАЧАЛО	</span>
+</a></li><li  class="parent">	<a  href="/" >
+		<span>
+		Обмяна		</span>
+	</a>
+	<ul><li  class="first">		<a class="" href="https://www.cryptobank.bg/tradebtc/index.php" target="_blank" >
+			<span>
+			BTC/BGN			</span>
+		</a>
+</li><li >		<a class="" href="https://www.cryptobank.bg/tradeeth/index.php" target="_blank" >
+			<span>
+			ETH/BGN			</span>
+		</a>
+</li><li >		<a class="" href="https://www.cryptobank.bg/tradeltc/index.php" target="_blank" >
+			<span>
+			LTC/BGN			</span>
+		</a>
+</li><li >		<a class="" href="https://www.cryptobank.bg/tradebch/index.php" target="_blank" >
+			<span>
+			BCH/BGN			</span>
+		</a>
+</li><li >		<a class="" href="https://www.cryptobank.bg/tradedash/index.php" target="_blank" >
+			<span>
+			DASH/BGN			</span>
+		</a>
+</li><li  class="last">		<a class="" href="https://www.cryptobank.bg/tradedoge/index.php" target="_blank" >
+			<span>
+			DOGE/BGN			</span>
+		</a>
+</li></ul></li><li ><a  href="/index.php/nachini-za-plashtane" >
+	<span>
+		Начини на плащане	</span>
+</a></li><li  class="parent">	<a  href="/" >
+		<span>
+		Информация		</span>
+	</a>
+	<ul><li  class="first"><a  href="/index.php/informatziya/2017-10-13-09-52-08" >
+	<span>
+		Чести грешки и проблеми	</span>
+</a></li><li ><a  href="/index.php/informatziya/2017-02-15-16-20-17" >
+	<span>
+		Банкови Преводи	</span>
+</a></li><li ><a  href="/index.php/informatziya/portfeili-za-sahranenie" >
+	<span>
+		Портфейли за съхранение	</span>
+</a></li><li  class="last"><a  href="/index.php/informatziya/targovtzi-priemashti-bitkoin" >
+	<span>
+		Търговци приемащи биткойн	</span>
+</a></li></ul></li><li ><a  href="/index.php/novini" >
+	<span>
+		Новини	</span>
+</a></li><li  class="last"><a  href="/index.php/kontakt" >
+	<span>
+		Контакт	</span>
+</a></li></ul><div class="clearbreak"></div></div></div></div>
+					</div>
+					            <div class="clearbreak"></div>
+				</div>
+							<div id="jsn-content-top" class="">
+					<div id="jsn-promo" class="row-fluid">
+					                    <div id="jsn-pos-promo" class="span12 order1 ">
+	                        <div class=" jsn-modulecontainer"><div class="jsn-modulecontainer_inner"><div><div><div class="jsn-modulecontent"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="refresh" content="300">
+</head> <body>
+
+<table>
+
+<tr style="height: 60px;">
+<td style="background-color: #fffacd; width: 135px; text-align: center;"><a href="https://cryptobank.bg/tradebtc/" target="_blank"> Bitcoin (BTC/BGN) <BR><img src="/tradebtc/img/bitcoin.png" alt="bitcoin обмяна" height="23px" width="84px" border="0"></a></td>
+<td style="background-color: #ffde98; width: 95px; text-align: center;"> <a href="https://cryptobank.bg/tradebtc/sell.php" target="_blank"><b> Продай <BR>25,200.59 лв. </b></a></td>
+<td style="background-color: #ffd87a; width: 95px; text-align: center;"> <a href="https://cryptobank.bg/tradebtc/buy.php" target="_blank"><b> Купи <BR>26,229.18 лв. </b></a></td>
+
+<td style="width: 3px; text-align: center;"></td>
+
+<td style="background-color: #fffacd; width: 135px; text-align: center;"><a href="https://cryptobank.bg/tradeeth/" target="_blank"> Ether (ETH/BGN) <BR><img src="/tradeeth/img/ethereum.png" alt="Ether обмяна" height="23px" width="84px" border="0"></a></td>
+<td style="background-color: #ffde98; width: 95px; text-align: center;"> <a href="https://cryptobank.bg/tradeeth/sell.php" target="_blank"><b> Продай <BR>718.61 лв. </b></a></td>
+<td style="background-color: #ffd87a; width: 95px; text-align: center;"> <a href="https://cryptobank.bg/tradeeth/buy.php" target="_blank"><b> Купи <BR>752.41 лв. </b></a></td>
+
+<td style="width: 3px; text-align: center;"></td>
+
+<td style="background-color: #fffacd; width: 135px; text-align: center;"><a href="https://cryptobank.bg/tradeltc/" target="_blank"> Litecoin (LTC/BGN) <BR><img src="/tradeltc/img/litecoin.png" alt="litecoin обмяна" height="23px" width="84px" border="0"></a></td>
+<td style="background-color: #ffde98; width: 95px; text-align: center;"> <a href="https://cryptobank.bg/tradeltc/sell.php" target="_blank"><b> Продай <BR>229.31 лв. </b></a></td>
+<td style="background-color: #ffd87a; width: 95px; text-align: center;"> <a href="https://cryptobank.bg/tradeltc/buy.php" target="_blank"><b> Купи <BR>241.07 лв. </b></a></td>
+
+</tr><tr style="height: 3px; text-align: center;"></tr><tr style="height: 60px;">
+
+<td style="background-color: #fffacd; width: 135px; text-align: center;"><a href="https://cryptobank.bg/tradedash/" target="_blank"> Dash (DASH/BGN) <BR><img src="/tradedash/img/dash.png" alt="dash обмяна" height="23px" width="84px" border="0"></a></td>
+<td style="background-color: #ffde98; width: 95px; text-align: center;"> <a href="https://cryptobank.bg/tradedash/sell.php" target="_blank"><b> Продай <BR>1,118.46 лв. </b></a></td>
+<td style="background-color: #ffd87a; width: 95px; text-align: center;"> <a href="https://cryptobank.bg/tradedash/buy.php" target="_blank"><b> Купи <BR>1,175.82 лв. </b></a></td>
+
+<td style="width: 3px; text-align: center;"></td>
+
+<td style="background-color: #fffacd; width: 135px; text-align: center;"><a href="https://cryptobank.bg/tradebch/" target="_blank"> Bitcoin cash(BCH/BGN) <BR><img src="/tradebch/img/bitcoin-cash.png" alt="bitcoin cash обмяна" height="23px" width="84px" border="0"></a></td>
+<td style="background-color: #ffde98; width: 95px; text-align: center;"> <a href="https://cryptobank.bg/tradebch/sell.php" target="_blank"><b> Продай <BR>2,136.64 лв. </b></a></td>
+<td style="background-color: #ffd87a; width: 95px; text-align: center;"> <a href="https://cryptobank.bg/tradebch/buy.php" target="_blank"><b> Купи <BR>2,246.21 лв. </b></a></td>
+
+<td style="width: 3px; text-align: center;"></td>
+
+<td style="background-color: #fffacd; width: 135px; text-align: center;"><a href="https://cryptobank.bg/tradedoge/" target="_blank"> Dogecoin (DOGE/BGN) <BR><img src="/tradedoge/img/dogecoin.png" alt="dogecoin обмяна" height="23px" width="84px" border="0"></a></td>
+<td style="background-color: #ffde98; width: 95px; text-align: center;"> <a href="https://cryptobank.bg/tradedoge/sell.php" target="_blank"><b> Продай <BR>0.004227 лв. </b></a></td>
+<td style="background-color: #ffd87a; width: 95px; text-align: center;"> <a href="https://cryptobank.bg/tradedoge/buy.php" target="_blank"><b> Купи <BR>0.004516 лв. </b></a></td>
+
+</tr>
+</table><div class="clearbreak"></div></div></div></div></div></div>
+	                    </div>
+										<div class="clearbreak"></div>
+					</div>
+								</div>
+							<div id="jsn-content" class="">
+					<div id="jsn-content_inner"><div id="jsn-content_inner1"><div id="jsn-content_inner2"><div id="jsn-content_inner3"><div id="jsn-content_inner4"><div id="jsn-content_inner5"><div id="jsn-content_inner6"><div id="jsn-content_inner7" class="row-fluid">
+								<div id="jsn-maincontent" class="span12 order1  row-fluid">
+						<div id="jsn-maincontent_inner"><div id="jsn-maincontent_inner1"><div id="jsn-maincontent_inner2"><div id="jsn-maincontent_inner3"><div id="jsn-maincontent_inner4">
+										<div id="jsn-centercol" class="span12 order1 "><div id="jsn-centercol_inner">
+											<div id="jsn-mainbody-content" class=" jsn-hasmainbodytop jsn-hasmainbody">
+													<div id="jsn-pos-mainbody-top" class="jsn-modulescontainer jsn-horizontallayout jsn-modulescontainer1 row-fluid">
+											<div class=" jsn-modulecontainer span12"><div class="jsn-modulecontainer_inner"><div><div><div class="jsn-modulecontent">
+<div  >
+	<table style="height: 63px; border-color: #000000;" border="2" width="926">
+<tbody>
+<tr style="height: 18px;">
+<td style="width: 914px; height: 18px;">
+<p style="text-align: justify;"><strong><span style="color: #ff0000;">От 06.12.2017г. ПИБ блокира достъпа до банковата сметка под предлог, че ще извършват промени в акаунта ни и до края на работният ден ще ни пуснат сметката.  Никой от банката не ни се обади и сметката ни остана недостъпна. По късно разбрахме, че и колегите от crypto.bg са в същата и ситуация. На 07.12.2017 г. в следобедните часове по телефона ни съобщиха официално че банката съгласно общите им услови прекратява едностранно договора си с нас и не желае да сме им клиент. За момента сайта работи само с Epay и изипей разплащания. <br /></span></strong></p>
+<p style="text-align: justify;"><strong><span style="color: #ff0000;">                                                                                                        *****</span></strong></p>
+<p style="text-align: justify;"><strong><span style="color: #ff0000;">Временно не купуваме етер тъй като етириум транзакциите към нас минават много бавно с до 5 - 10 часа закъснение и няма предпоставки за нормална търговия. Забавянето идва от играта Cryptokitties която блокира транзакциите и за да минават бързо се налага да се изпращат с 4 пъти повече газ. Надяваме се скоро като се отпуши мрежата да започнем да купуваме отново.<br /></span></strong></p>
+<p style="text-align: justify;"><strong><span style="color: #ff0000;">                                                                                                         *****</span></strong></p>
+<p style="text-align: justify;"><strong><span style="color: #ff0000;">Временно спряхме търговията с оригиналният Bitcoin, поради практическата невъзможност да се извършват нормални транзакции. Към момента таксите който трябва да се заплащат за да мине дадена транзакция до 1-2 часов период минават равностойност от 15 лева и пак не е сигурно че това ще се случи. Ние от своя страна се препълваме от чакащи поръчки за изпълнение които не минават и работата ни се затруднава до безкрайност. Ще възстановим обмяната веднага щом има поносими условия за това.</span></strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p> </p></div><div class="clearbreak"></div></div></div></div></div></div>
+										</div>
+													<div id="jsn-mainbody">
+											<div id="system-message-container">
+	</div>
+
+											<div class="item-page" itemscope itemtype="http://schema.org/Article">	
+	<meta itemscope itemprop="mainEntityOfPage" itemType="https://schema.org/WebPage" itemid="https://google.com/article" content=""/>
+	<meta itemprop="inLanguage" content="bg-BG" />
+					
+		
+								<div itemprop="articleBody">
+		<div class="col-md-12" style="text-align: center;"> </div>
+<div>Cryptobank.bg е сайт опериращ като дилър по обмен на криптовалути в български лева за българските потребители.</div>
+<div>Покупко-продажбата на дигитална валута се извършва с разплащане по банков път, през системата на epay.bg и кешово от касите на EasyPay. Закупуване на криптовалута е възможно и през банкомат посредством b-Pay. Към момента извършваме обмен на най-популярната и конвертируема валута биткойн.</div>
+<div class="col-md-12" style="text-align: left;"><span style="font-size: 12pt;"> </span></div>
+<div class="col-md-12" style="text-align: left;"> </div>
+<div class="col-md-12" style="text-align: center;"><img class="center-block" src="/tradebtc/img/bitcoin.png" alt="" /></div>
+<div class="col-md-12" style="text-align: center;"> </div>
+<div class="col-md-12" style="text-align: center;"> </div>
+<div class="col-md-12" style="text-align: left;">Ние вярваме в интелекта и бъдещето на смарт контрактите затова обменяме и Етер.<span style="font-size: 14pt;"><br /></span></div>
+<div class="col-md-12" style="text-align: left;"> </div>
+<div class="col-md-12" style="text-align: left;"> </div>
+<div class="col-md-12" style="text-align: center;"><span style="font-size: 14pt;"><img src="/tradeeth/img/ethereum.png" alt="Етереум" width="307" height="105" /></span></div>
+<div> </div>
+<div>Третата валута която има потенциал за развитие растеж и конвертируемост е лайткойнът затова котираме и него плюс биткойн кеш, даш и догкойн.</div>
+<div> </div>
+<p> </p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="/tradeltc/img/litecoin.png" alt="лайткойн" width="307" height="84" /><img style="display: block; margin-left: auto; margin-right: auto;" src="/tradebch/img/bitcoin-cash.png" alt="Bitcoin cash" width="307" height="64" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="/tradedash/img/dash.png" alt="dash" width="307" height="48" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="/tradedoge/img/dogecoin.png" alt="dogecoin" width="307" height="61" /></p>
+<div> </div>
+<div>Участваме в проекти, подкрепяме разработки, имаме търговски практики с криптовалути. В скоро време ще разширим дейността и услугите в сферата на дигиталните разплащания на нашият сайт много извън обмена на криптовалути.</div>
+<div class="col-md-12" style="text-align: center;"> </div>
+<div class="col-md-12" style="text-align: center;"> </div>	</div>
+
+	
+					</div>
+
+
+										</div>
+												</div>
+				        				</div></div> <!-- end centercol -->
+	        					</div></div></div></div></div></div> <!-- end jsn-maincontent -->
+				                </div></div></div></div></div></div></div></div>
+	            </div>
+						</div>
+					</div>
+	</div>
+	<div id="footer" style="margin-top:50px;background:#18bc9c;padding-top:20px;padding-bottom:20px;">
+			<div class="container">
+				<div class="col-md-12" style="text-align:center;color:#fff;">
+					<span>Copyright © 2016 cryptobank.bg - All rights reserved<br />
+				Криптобанк България<br><br>
+
+<a href="https://www.facebook.com/cryptobank.bg" target="_blank"><img src="/tradebtc/images/Facebook-icon.png" alt="Group Facebook" border="0"></a>  <a href="https://plus.google.com/u/0/communities/116217680883122431474" target="_blank"><img src="/tradebtc/images/GooglePlus-icon.png" alt="Google+" border="0"></a><script>
+(function(i,s,o,g,r,a,m){i['TyxoObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//s.tyxo.com/c.js','tx');
+tx('create', 'TX-269769762456417088');
+tx('pageview');
+</script></span>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
