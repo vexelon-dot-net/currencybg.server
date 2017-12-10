@@ -13,7 +13,7 @@ import net.vexelon.currencybg.srv.tests.TestUtils;
 
 public class AllianzSourceTest {
 	@Test
-	public void test_AllianzSource_Rates01() {
+	public void test_Allianz01() {
 		try {
 			List<CurrencyData> rates = new AllianzSource(new NullReporter())
 			        .getAllianzRates(TestUtils.getTestResource("/allianz_01.html"));

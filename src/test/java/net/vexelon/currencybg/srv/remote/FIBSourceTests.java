@@ -15,7 +15,7 @@ import net.vexelon.currencybg.srv.tests.TestUtils;
 public class FIBSourceTests {
 
 	@Test
-	public void test_Tavex01() {
+	public void test_FIB01() {
 		try {
 			List<CurrencyData> rates = new FIBSource(new NullReporter())
 			        .getFIBRates(TestUtils.getTestResource("/fib01.html"));
