@@ -59,10 +59,10 @@ public class XChangeBGSource extends AbstractSource {
 
             // Parse table with currencies
             Element buyElement = doc.select("li.bitcoin-value > a.buy-button-small > div.hidden-sm").get(0);
-            String buy = sanitizeValue(buyElement.text());
+            String buy = sanitize(buyElement.text());
 
             Element sellElement = doc.select("li.bitcoin-value > a.sell-button-small > div.hidden-sm").get(0);
-            String sell = sanitizeValue(sellElement.text());
+            String sell = sanitize(sellElement.text());
 
             CurrencyData currencyData = new CurrencyData();
             currencyData.setCode(Defs.CURRENCY_BITCOIN);
@@ -79,7 +79,7 @@ public class XChangeBGSource extends AbstractSource {
         }
     }
 
-    private String sanitizeValue(String value) {
+    private static String sanitize(String value) {
         String result = StringUtils.trimToEmpty(value.replaceAll("\\P{Print}", ""));
         result = StringUtils.removeStart(result, ":");
         result = StringUtils.removeEnd(result, ".");
