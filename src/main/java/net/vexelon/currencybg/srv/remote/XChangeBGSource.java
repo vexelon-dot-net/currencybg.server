@@ -46,7 +46,7 @@ public class XChangeBGSource extends AbstractSource {
      * @throws IOException
      * @throws ParseException
      */
-    public List<CurrencyData> getCryptoRates(InputStream input) throws IOException, ParseException {
+    public List<CurrencyData> getXChangeRates(InputStream input) throws IOException, ParseException {
         List<CurrencyData> result = Lists.newArrayList();
 
         Document doc = Jsoup.parse(input, Charsets.UTF_8.name(), URL_SOURCE);
@@ -59,10 +59,10 @@ public class XChangeBGSource extends AbstractSource {
 
             // Parse table with currencies
             Element buyElement = doc.select("li.bitcoin-value > a.buy-button-small > div.hidden-sm").get(0);
-            String buy = sanitizeValue(buyElement.text());
+            String buy = sanitize(buyElement.text());
 
             Element sellElement = doc.select("li.bitcoin-value > a.sell-button-small > div.hidden-sm").get(0);
-            String sell = sanitizeValue(sellElement.text());
+            String sell = sanitize(sellElement.text());
 
             CurrencyData currencyData = new CurrencyData();
             currencyData.setCode(Defs.CURRENCY_BITCOIN);
@@ -79,7 +79,7 @@ public class XChangeBGSource extends AbstractSource {
         }
     }
 
-    private String sanitizeValue(String value) {
+    private static String sanitize(String value) {
         String result = StringUtils.trimToEmpty(value.replaceAll("\\P{Print}", ""));
         result = StringUtils.removeStart(result, ":");
         result = StringUtils.removeEnd(result, ".");
@@ -106,7 +106,7 @@ public class XChangeBGSource extends AbstractSource {
                     if (!isCanceled) {
                         try {
 
-                            result = getCryptoRates(response.getEntity().getContent());
+                            result = getXChangeRates(response.getEntity().getContent());
                         } catch (IOException | ParseException e) {
                             log.error("Could not parse source data!", e);
                             getReporter().write(TAG_NAME, "Parse failed= {} ", ExceptionUtils.getStackTrace(e));
