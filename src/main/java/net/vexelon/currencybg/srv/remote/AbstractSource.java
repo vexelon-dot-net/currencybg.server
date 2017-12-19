@@ -50,8 +50,7 @@ public abstract class AbstractSource implements Source {
     /**
      * Creates an asynchronous HTTP client configuration with default timeouts.
      *
-     * @param useSSL
-     * @see #newHttpClient()
+     * @see #newHttpAsyncClient(boolean)
      */
     protected static CloseableHttpAsyncClient newHttpAsyncClient(boolean useSSL) {
         RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(DEFAULT_SOCKET_TIMEOUT)
@@ -159,8 +158,14 @@ public abstract class AbstractSource implements Source {
                 }
 
                 if (!currencyData.getBuy().isEmpty()) {
+                    String buy = currencyData.getBuy();
+
                     // Fixes "cannot parse Buy value=0..465"
-                    currencyData.setBuy(currencyData.getBuy().replace("..", "."));
+                    buy = buy.replace("..", ".");
+                    // Fixes "cannot parse Buy value=1,655"
+                    buy = buy.replace(",", ".");
+
+                    currencyData.setBuy(buy);
 
                     try {
                         new BigDecimal(currencyData.getBuy());
@@ -176,8 +181,14 @@ public abstract class AbstractSource implements Source {
                 }
 
                 if (!currencyData.getSell().isEmpty()) {
+                    String sell = currencyData.getSell();
+
                     // Fixes "cannot parse Sell value=0..465"
-                    currencyData.setSell(currencyData.getSell().replace("..", "."));
+                    sell = sell.replace("..", ".");
+                    // Fixes "cannot parse Sell value=1,655"
+                    sell = sell.replace(",", ".");
+
+                    currencyData.setSell(sell);
 
                     try {
                         new BigDecimal(currencyData.getSell());

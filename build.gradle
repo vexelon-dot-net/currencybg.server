@@ -18,7 +18,7 @@ apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'com.bmuschko.tomcat'
 
-def appVersion = '1.5.0'
+def appVersion = '1.5.1'
 def tomcatVersion = '8.0.42'
 sourceCompatibility = JavaVersion.VERSION_1_8
 
