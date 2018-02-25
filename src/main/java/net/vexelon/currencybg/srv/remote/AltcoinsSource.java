@@ -1,7 +1,6 @@
 package net.vexelon.currencybg.srv.remote;
 
 import com.google.common.base.Charsets;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
@@ -13,14 +12,8 @@ import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.reports.Reporter;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.http.HttpResponse;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +51,7 @@ public class AltcoinsSource extends AbstractSource {
      *
      * @return Parsed currencies.
      */
-    public List<CurrencyData> getBitcoinsHouseRates(InputStream input) throws IOException, ParseException {
+    public List<CurrencyData> getAltcoinsRates(InputStream input) throws IOException, ParseException {
         List<CurrencyData> result = Lists.newArrayList();
 
         try {
@@ -119,7 +112,7 @@ public class AltcoinsSource extends AbstractSource {
                     if (!isCanceled) {
                         try {
 
-                            result = getBitcoinsHouseRates(response.getEntity().getContent());
+                            result = getAltcoinsRates(response.getEntity().getContent());
                         } catch (IOException | ParseException e) {
                             log.error("Could not parse source data!", e);
                             getReporter().write(TAG_NAME, "Parse failed= {}", ExceptionUtils.getStackTrace(e)
