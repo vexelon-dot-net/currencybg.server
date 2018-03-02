@@ -52,10 +52,7 @@ public class CryptoBankSource extends AbstractSource {
     /**
      * Transforms Crypto Bank HTML data into {@link CurrencyData} models.
      *
-     * @param input
-     * @return
-     * @throws IOException
-     * @throws ParseException
+     * @return Parsed currencies.
      */
     public List<CurrencyData> getCryptoBankRates(InputStream input) throws IOException, ParseException {
         List<CurrencyData> result = Lists.newArrayList();
