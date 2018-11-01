@@ -96,7 +96,7 @@ public enum Sources {
             case 1000:
                 return new AllianzSource(reporter);
 
-            // CryptoBank
+            // CryptoBank (Deprecated)
             case 1100:
                 return new CryptoBankSource(reporter);
 
