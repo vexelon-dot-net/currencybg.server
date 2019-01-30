@@ -26,105 +26,105 @@ import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 
 public class FIBSource extends AbstractSource {
 
-	private static final Logger log = LoggerFactory.getLogger(FIBSource.class);
-	private static final String TAG_NAME = FIBSource.class.getSimpleName();
+    private static final Logger log = LoggerFactory.getLogger(FIBSource.class);
+    private static final String TAG_NAME = FIBSource.class.getSimpleName();
 
-	private static final String URL_SOURCE = "http://www.fibank.bg/bg/page/461";
-	private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
+    private static final String URL_SOURCE = "https://www.fibank.bg/bg/page/461";
+    private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
 
-	public FIBSource(Reporter reporter) {
-		super(reporter);
-	}
+    public FIBSource(Reporter reporter) {
+        super(reporter);
+    }
 
-	public List<CurrencyData> getFIBRates(InputStream input) throws IOException, ParseException {
-		List<CurrencyData> result = Lists.newArrayList();
+    public List<CurrencyData> getFIBRates(InputStream input) throws IOException, ParseException {
+        List<CurrencyData> result = Lists.newArrayList();
 
-		Document doc = Jsoup.parse(input, Charsets.UTF_8.name(), URL_SOURCE);
+        Document doc = Jsoup.parse(input, Charsets.UTF_8.name(), URL_SOURCE);
 
-		try {
-			Element contentBox = doc.select("#column-right > section.content-box > div.text").get(1);
+        try {
+            Element contentBox = doc.select("#column-right > section.content-box > div.text").get(1);
 
-			// parse update date and time
-			String getDate = contentBox.textNodes().get(0).text().substring(20).trim();
-			Date updateDate = DateTimeUtils.parseDate(getDate, DATE_FORMAT);
+            // parse update date and time
+            String getDate = contentBox.textNodes().get(0).text().substring(20).trim();
+            Date updateDate = DateTimeUtils.parseDate(getDate, DATE_FORMAT);
 
-			// parse table with currencies
-			Elements contentBoxChildren = contentBox.children();
-			Element tbody = contentBoxChildren.select("table > tbody").first();
-			Elements children = tbody.children();
+            // parse table with currencies
+            Elements contentBoxChildren = contentBox.children();
+            Element tbody = contentBoxChildren.select("table > tbody").first();
+            Elements children = tbody.children();
 
-			int row = 0;
+            int row = 0;
 
-			for (Element child : children) {
-				CurrencyData currencyData = new CurrencyData();
-				try {
-					if (row > 0) {
-						currencyData.setDate(updateDate);
-						currencyData.setCode(child.child(1).text());
-						currencyData.setBuy(child.child(4).text());
-						currencyData.setSell(child.child(5).text());
-						currencyData.setRatio(Integer.parseInt(child.child(2).text()));
-						currencyData.setSource(Sources.FIB.getID());
-						result.add(currencyData);
-					}
+            for (Element child : children) {
+                CurrencyData currencyData = new CurrencyData();
+                try {
+                    if (row > 0) {
+                        currencyData.setDate(updateDate);
+                        currencyData.setCode(child.child(1).text());
+                        currencyData.setBuy(child.child(4).text());
+                        currencyData.setSell(child.child(5).text());
+                        currencyData.setRatio(Integer.parseInt(child.child(2).text()));
+                        currencyData.setSource(Sources.FIB.getID());
+                        result.add(currencyData);
+                    }
 
-				} catch (IndexOutOfBoundsException e) {
-					log.warn("Failed on row='{}', Exception={}", row, e.getMessage());
-					getReporter().write(TAG_NAME, "Could not process currency on row='{}'!", row + "");
-				}
+                } catch (IndexOutOfBoundsException e) {
+                    log.warn("Failed on row='{}', Exception={}", row, e.getMessage());
+                    getReporter().write(TAG_NAME, "Could not process currency on row='{}'!", row + "");
+                }
 
-				row++;
-			}
+                row++;
+            }
 
-			return normalizeCurrencyData(result);
-		} catch (RuntimeException e) {
-			throw new IOException(e);
-		}
-	}
+            return normalizeCurrencyData(result);
+        } catch (RuntimeException e) {
+            throw new IOException(e);
+        }
+    }
 
-	@Override
-	public void getRates(final Callback callback) throws SourceException {
-		try {
-			doGet(URL_SOURCE, new HTTPCallback() {
+    @Override
+    public void getRates(final Callback callback) throws SourceException {
+        try {
+            doGet(URL_SOURCE, new HTTPCallback() {
 
-				@Override
-				public void onRequestFailed(Exception e) {
-					getReporter().write(TAG_NAME, "Connection failure= {}", ExceptionUtils.getStackTrace(e));
+                @Override
+                public void onRequestFailed(Exception e) {
+                    getReporter().write(TAG_NAME, "Connection failure= {}", ExceptionUtils.getStackTrace(e));
 
-					FIBSource.this.close();
-					callback.onFailed(e);
-				}
+                    FIBSource.this.close();
+                    callback.onFailed(e);
+                }
 
-				@Override
-				public void onRequestCompleted(HttpResponse response, boolean isCanceled) {
-					List<CurrencyData> result = Lists.newArrayList();
+                @Override
+                public void onRequestCompleted(HttpResponse response, boolean isCanceled) {
+                    List<CurrencyData> result = Lists.newArrayList();
 
-					if (!isCanceled) {
-						try {
-							result = getFIBRates(response.getEntity().getContent());
-						} catch (IOException | ParseException e) {
-							log.error("Could not parse source data!", e);
-							getReporter().write(TAG_NAME, "Parse failed= {}", ExceptionUtils.getStackTrace(e));
-						}
-					} else {
-						log.warn("Request was canceled! No currencies were downloaded.");
-						getReporter().write(TAG_NAME, "Request was canceled! No currencies were downloaded.");
-					}
+                    if (!isCanceled) {
+                        try {
+                            result = getFIBRates(response.getEntity().getContent());
+                        } catch (IOException | ParseException e) {
+                            log.error("Could not parse source data!", e);
+                            getReporter().write(TAG_NAME, "Parse failed= {}", ExceptionUtils.getStackTrace(e));
+                        }
+                    } else {
+                        log.warn("Request was canceled! No currencies were downloaded.");
+                        getReporter().write(TAG_NAME, "Request was canceled! No currencies were downloaded.");
+                    }
 
-					FIBSource.this.close();
-					callback.onCompleted(result);
+                    FIBSource.this.close();
+                    callback.onCompleted(result);
 
-				}
-			});
+                }
+            });
 
-		} catch (URISyntaxException e) {
-			throw new SourceException("Invalid source url - " + URL_SOURCE, e);
-		}
-	}
+        } catch (URISyntaxException e) {
+            throw new SourceException("Invalid source url - " + URL_SOURCE, e);
+        }
+    }
 
-	@Override
-	public String getName() {
-		return TAG_NAME;
-	}
+    @Override
+    public String getName() {
+        return TAG_NAME;
+    }
 
 }
