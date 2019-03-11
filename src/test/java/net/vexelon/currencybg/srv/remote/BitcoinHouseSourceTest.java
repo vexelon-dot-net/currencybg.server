@@ -11,6 +11,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class BitcoinHouseSourceTest {
+
     @Test
     public void test_BitcoinHouse01() {
 
@@ -44,7 +45,6 @@ public class BitcoinHouseSourceTest {
             e.printStackTrace();
             fail(e.getMessage());
         }
-
     }
 
 }

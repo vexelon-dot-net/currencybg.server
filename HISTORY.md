@@ -1,6 +1,9 @@
 Currency BG Server Changes
 ==========================
 
+## 1.6.0
+  * Added Altcoins currencies source [#108](../../issues/108)
+
 ## 1.5.0
 
   * Added CryptoBank currencies source [#97](../../issues/97)

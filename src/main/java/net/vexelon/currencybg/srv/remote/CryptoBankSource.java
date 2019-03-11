@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,11 @@ import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.reports.Reporter;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 
+/**
+ * Cryptobank.bg is now owned by Altcoins.bg
+ *
+ * @deprecated
+ */
 public class CryptoBankSource extends AbstractSource {
 
     private static final Logger log = LoggerFactory.getLogger(CryptoBankSource.class);
@@ -52,10 +58,7 @@ public class CryptoBankSource extends AbstractSource {
     /**
      * Transforms Crypto Bank HTML data into {@link CurrencyData} models.
      *
-     * @param input
-     * @return
-     * @throws IOException
-     * @throws ParseException
+     * @return Parsed currencies.
      */
     public List<CurrencyData> getCryptoBankRates(InputStream input) throws IOException, ParseException {
         List<CurrencyData> result = Lists.newArrayList();
@@ -97,56 +100,6 @@ public class CryptoBankSource extends AbstractSource {
                     }
                 }
             }
-
-//            // Parse table with currencies
-//            Element span = doc.select("div.jsn-modulecontent > table > tbody").get(0);
-//            Elements spanContent = span.children();
-//            int counter = 0;
-//
-//            for (Element element : spanContent) {
-//                CurrencyData currencyData = new CurrencyData();
-//
-//                if (counter > 0) {
-//                    String alt = element.child(0).select("td > a > img").attr("alt");
-//                    String currency = StringUtils.trimToEmpty(alt.replaceAll("\\P{Print}", ""));
-//                    // currency = element.child(0).select("td > a > img").attr("alt").split(" ")[0];
-//
-//                    switch (currency) {
-//                        case "bitcoin":
-//                            currencyData.setCode(Defs.CURRENCY_BITCOIN);
-//                            break;
-//                        case "ether":
-//                            currencyData.setCode(Defs.CURRENCY_ETHERIUM);
-//                            break;
-//                        case "litecoin":
-//                            currencyData.setCode(Defs.CURRENCY_LITECOIN);
-//                            break;
-//                        case "bitcoin cash":
-//                            currencyData.setCode(Defs.CURRENCY_BITCOIN_CASH);
-//                            break;
-//                        case "dash":
-//                            currencyData.setCode(Defs.CURRENCY_DASH);
-//                            break;
-//                        case "dogecoin":
-//                            currencyData.setCode(Defs.CURRENCY_DOGECOIN);
-//                            break;
-//                    }
-//                    // The Replace statement(.replace(",", "")) have been made
-//                    // for BTC to change the format from 6,959.60 to 6959.60
-//                    currencyData.setBuy(element.child(1).text().substring(0, element.child(1).text().indexOf(" "))
-//                            .replace(",", ""));
-//                    currencyData.setSell(element.child(2).text().substring(0, element.child(2).text().indexOf(" "))
-//                            .replace(",", ""));
-//                    currencyData.setRatio(1);
-//                    currencyData.setSource(Sources.CRYPTOBANK.getID());
-//                    currencyData.setDate(updateDate);
-//                    result.add(currencyData);
-//
-//                    currencyData = new CurrencyData();
-//                }
-//
-//                counter++;
-//            }
 
             return normalizeCurrencyData(result);
         } catch (RuntimeException e) {
@@ -235,11 +188,10 @@ public class CryptoBankSource extends AbstractSource {
 
                 @Override
                 public void onRequestCompleted(HttpResponse response, boolean isCanceled) {
-                    List<CurrencyData> result = Lists.newArrayList();
+                    List<CurrencyData> result = new ArrayList<>();
 
                     if (!isCanceled) {
                         try {
-
                             result = getCryptoBankRates(response.getEntity().getContent());
                         } catch (IOException | ParseException e) {
                             log.error("Could not parse source data!", e);

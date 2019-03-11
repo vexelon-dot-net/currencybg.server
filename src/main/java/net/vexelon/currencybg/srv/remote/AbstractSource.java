@@ -164,6 +164,8 @@ public abstract class AbstractSource implements Source {
                     buy = buy.replace("..", ".");
                     // Fixes "cannot parse Buy value=1,655"
                     buy = buy.replace(",", ".");
+                    // column max site is 10 chars
+                    buy = StringUtils.left(buy, 10);
 
                     currencyData.setBuy(buy);
 
@@ -187,6 +189,8 @@ public abstract class AbstractSource implements Source {
                     sell = sell.replace("..", ".");
                     // Fixes "cannot parse Sell value=1,655"
                     sell = sell.replace(",", ".");
+                    // column max site is 10 chars
+                    sell = StringUtils.left(sell, 10);
 
                     currencyData.setSell(sell);
 

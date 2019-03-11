@@ -18,7 +18,8 @@ public enum Sources {
     ALLIANZ(1000),
     CRYPTOBANK(1100),
     BITCOINSHOUSE(1200),
-    XCHANGE(1300);
+    XCHANGE(1300),
+    ALTCOINS(1400);
 
     private int id;
 
@@ -95,7 +96,7 @@ public enum Sources {
             case 1000:
                 return new AllianzSource(reporter);
 
-            // CryptoBank
+            // CryptoBank (Deprecated)
             case 1100:
                 return new CryptoBankSource(reporter);
 
@@ -106,6 +107,10 @@ public enum Sources {
             // xChangeBG
             case 1300:
                 return new XChangeBGSource(reporter);
+
+            // ALTCOINS
+            case 1400:
+                return new AltcoinsSource(reporter);
 
             // <unknown>
             default:

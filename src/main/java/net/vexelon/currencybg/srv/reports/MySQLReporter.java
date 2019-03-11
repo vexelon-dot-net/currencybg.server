@@ -11,27 +11,24 @@ import net.vexelon.currencybg.srv.db.MySQLDataSource;
 
 public class MySQLReporter extends AbstractReporter {
 
-	private static final Logger log = LoggerFactory.getLogger(MySQLReporter.class);
+    private static final Logger log = LoggerFactory.getLogger(MySQLReporter.class);
 
-	public MySQLReporter(String name) {
-		super(name);
-	}
+    public MySQLReporter(String name) {
+        super(name);
+    }
 
-	public MySQLReporter() {
-		this("MySQL");
-	}
+    public MySQLReporter() {
+        this("MySQL");
+    }
 
-	@Override
-	public void send() throws IOException {
-
-		// TODO - test block
-		try (final DataSource dataSource = new MySQLDataSource()) {
-			dataSource.connect();
-			dataSource.addReport(buffer.toString());
-		} catch (IOException | DataSourceException ex) {
-			log.error("Could not connect to database!", ex);
-		}
-
-	}
+    @Override
+    public void send() throws IOException {
+        try (final DataSource dataSource = new MySQLDataSource()) {
+            dataSource.connect();
+            dataSource.addReport(buffer.toString());
+        } catch (IOException | DataSourceException ex) {
+            log.error("Could not connect to database!", ex);
+        }
+    }
 
 }

@@ -10,6 +10,11 @@ import java.util.List;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+/**
+ * Cryptobank.bg is now owned by Altcoins.bg
+ *
+ * @deprecated
+ */
 public class CryptoBankSourceTest {
     @Test
     public void test_CryptoBank01() {
