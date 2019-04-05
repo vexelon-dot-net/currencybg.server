@@ -130,14 +130,27 @@ public abstract class AbstractSource implements Source {
                 }
                 String tag = "(" + i + ") " + currencyData.getCode();
 
-                if (currencyData.getCode().length() > 3) {
-                    log.warn("Invalid currency code for {}! Skipped entry: {}", tag, currencyData.toString());
-                    iterator.remove();
-                    continue;
-                }
-
                 if (currencyData.getSource() == 0) {
                     throw new SourceException(tag + " - source cannot be '0' for currency=" + currencyData.getCode());
+                }
+
+                switch (Sources.valueOf(currencyData.getSource())) {
+                    case BNB:
+                    case FIB:
+                    case TAVEX:
+                    case POLANA1:
+                    case FACTORIN:
+                    case UNICREDIT:
+                    case SGEB:
+                    case CHANGEPARTNER:
+                    case FOREXHOUSE:
+                    case ALLIANZ:
+                        if (currencyData.getCode().length() > 3) {
+                            log.warn("Invalid currency code for {}! Skipped entry: {}", tag, currencyData.toString());
+                            iterator.remove();
+                            continue;
+                        }
+                        break;
                 }
 
                 // Check for obsolete currency code
