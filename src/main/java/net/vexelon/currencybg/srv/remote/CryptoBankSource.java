@@ -1,8 +1,24 @@
 package net.vexelon.currencybg.srv.remote;
 
+import com.google.common.base.Charsets;
+import com.google.common.collect.Lists;
+import net.vexelon.currencybg.srv.Defs;
+import net.vexelon.currencybg.srv.db.models.CurrencyData;
+import net.vexelon.currencybg.srv.db.models.Sources;
+import net.vexelon.currencybg.srv.reports.Reporter;
+import net.vexelon.currencybg.srv.utils.DateTimeUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.http.HttpResponse;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigInteger;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.time.LocalDateTime;
@@ -11,32 +27,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.http.HttpResponse;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Charsets;
-import com.google.common.collect.Lists;
-
-import net.vexelon.currencybg.srv.Defs;
-import net.vexelon.currencybg.srv.db.models.CurrencyData;
-import net.vexelon.currencybg.srv.db.models.Sources;
-import net.vexelon.currencybg.srv.reports.Reporter;
-import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 
 /**
  * Cryptobank.bg is now owned by Altcoins.bg

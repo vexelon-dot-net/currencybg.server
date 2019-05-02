@@ -70,14 +70,19 @@ public class TavexSource extends AbstractSource {
                     try {
                         currencyData.setCode(spanChild.child(0).child(1).text());
                         currencyData.setRatio(NumberUtils.toInt(spanChild.child(1).text(), 1));
-                        currencyData.setBuy(spanChild.child(2).text());
-                        if ("-".equals(currencyData.getBuy())) {
-                            currencyData.setBuy("");
+
+                        Elements spans = spanChild.child(2).children();
+                        if (spans.size() > 1) {
+                            currencyData.setBuy(spans.get(0).text());
+                            if ("-".equals(currencyData.getBuy())) {
+                                currencyData.setBuy("");
+                            }
+                            currencyData.setSell(spans.get(1).text());
+                            if ("-".equals(currencyData.getSell())) {
+                                currencyData.setSell("");
+                            }
                         }
-                        currencyData.setSell(spanChild.child(3).text());
-                        if ("-".equals(currencyData.getSell())) {
-                            currencyData.setSell("");
-                        }
+
                         currencyData.setSource(Sources.TAVEX.getID());
                         currencyData.setDate(updateDate);
                         result.add(currencyData);
