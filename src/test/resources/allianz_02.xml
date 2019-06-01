@@ -1,0 +1,29 @@
+<COMMON>
+    <EXCHANGERATES branchid="001">
+        <EXCHANGERATE currid="CHF" dtstamp="31/05/2019" type="S" units="1" mid="1.7441" buy="1.7192" sell="1.7742"/>
+        <EXCHANGERATE currid="CHF" dtstamp="31/05/2019" type="N" units="1" mid="1.7441" buy="1.7192" sell="1.7742"/>
+        <EXCHANGERATE currid="CHF" dtstamp="31/05/2019" type="T" units="1" mid="1.74192" buy="1.74192" sell="1.74192"/>
+        <EXCHANGERATE currid="DKK" dtstamp="31/05/2019" type="N" units="10" mid="2.61895" buy="2.5895" sell="2.6485"/>
+        <EXCHANGERATE currid="DKK" dtstamp="31/05/2019" type="S" units="10" mid="2.61895" buy="2.5895" sell="2.6485"/>
+        <EXCHANGERATE currid="DKK" dtstamp="31/05/2019" type="T" units="10" mid="2.6187" buy="2.6187" sell="2.6187"/>
+        <EXCHANGERATE currid="EUR" dtstamp="21/02/2017" type="N" units="1" mid="1.95583" buy="1.95" sell="1.959"/>
+        <EXCHANGERATE currid="EUR" dtstamp="21/02/2017" type="S" units="1" mid="1.95583" buy="1.95" sell="1.959"/>
+        <EXCHANGERATE currid="EUR" dtstamp="21/02/2017" type="T" units="1" mid="1.95583" buy="1.95583" sell="1.95583"/>
+        <EXCHANGERATE currid="GBP" dtstamp="31/05/2019" type="S" units="1" mid="2.20517" buy="2.1877" sell="2.2467"/>
+        <EXCHANGERATE currid="GBP" dtstamp="31/05/2019" type="N" units="1" mid="2.20517" buy="2.1877" sell="2.2467"/>
+        <EXCHANGERATE currid="GBP" dtstamp="31/05/2019" type="T" units="1" mid="2.21805" buy="2.21805" sell="2.21805"/>
+        <EXCHANGERATE currid="JPY" dtstamp="31/05/2019" type="S" units="100" mid="1.61279" buy="1.5835" sell="1.6425"/>
+        <EXCHANGERATE currid="JPY" dtstamp="31/05/2019" type="N" units="100" mid="1.61279" buy="1.5835" sell="1.6425"/>
+        <EXCHANGERATE currid="JPY" dtstamp="31/05/2019" type="T" units="100" mid="1.60183" buy="1.60183"
+                      sell="1.60183"/>
+        <EXCHANGERATE currid="NOK" dtstamp="31/05/2019" type="S" units="10" mid="1.99748" buy="1.9715" sell="2.0305"/>
+        <EXCHANGERATE currid="NOK" dtstamp="31/05/2019" type="N" units="10" mid="1.99748" buy="1.9715" sell="2.0305"/>
+        <EXCHANGERATE currid="NOK" dtstamp="31/05/2019" type="T" units="10" mid="2.00314" buy="2.00314" sell="2.00314"/>
+        <EXCHANGERATE currid="SEK" dtstamp="31/05/2019" type="N" units="10" mid="1.83836" buy="1.8115" sell="1.8705"/>
+        <EXCHANGERATE currid="SEK" dtstamp="31/05/2019" type="S" units="10" mid="1.83836" buy="1.8115" sell="1.8705"/>
+        <EXCHANGERATE currid="SEK" dtstamp="31/05/2019" type="T" units="10" mid="1.83952" buy="1.83952" sell="1.83952"/>
+        <EXCHANGERATE currid="USD" dtstamp="31/05/2019" type="N" units="1" mid="1.75395" buy="1.7329" sell="1.7819"/>
+        <EXCHANGERATE currid="USD" dtstamp="31/05/2019" type="S" units="1" mid="1.75395" buy="1.7329" sell="1.7819"/>
+        <EXCHANGERATE currid="USD" dtstamp="31/05/2019" type="T" units="1" mid="1.75663" buy="1.75663" sell="1.75663"/>
+    </EXCHANGERATES>
+</COMMON>
