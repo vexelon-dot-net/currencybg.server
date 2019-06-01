@@ -1,5 +1,6 @@
 package net.vexelon.currencybg.srv.remote;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -13,10 +14,14 @@ import javax.net.ssl.TrustManager;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.concurrent.FutureCallback;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
@@ -81,6 +86,38 @@ public abstract class AbstractSource implements Source {
             client.start();
         }
         return client;
+    }
+
+    protected void doPost(URI uri, String entity, String contentType, final HTTPCallback httpCallback) {
+        HttpPost httpPost = new HttpPost(uri);
+        httpPost.setHeader(HttpHeaders.CONTENT_TYPE, contentType);
+        try {
+            httpPost.setEntity(new StringEntity(entity));
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+
+        getClient(uri.getScheme().startsWith("https")).execute(httpPost, new FutureCallback<HttpResponse>() {
+
+            @Override
+            public void failed(Exception e) {
+                httpCallback.onRequestFailed(e);
+            }
+
+            @Override
+            public void completed(HttpResponse response) {
+                httpCallback.onRequestCompleted(response, false);
+            }
+
+            @Override
+            public void cancelled() {
+                httpCallback.onRequestCompleted(null, false);
+            }
+        });
+    }
+
+    protected void doPost(String url, String entity, String contentType, final HTTPCallback responseCallback) throws URISyntaxException {
+        doPost(new URI(url), entity, contentType, responseCallback);
     }
 
     protected void doGet(URI uri, final HTTPCallback httpCallback) {
