@@ -88,7 +88,6 @@ public class AllianzSource extends AbstractSource {
                                 currencyData.setRatio(Integer.parseInt(parser.getAttributeValue("", XML_TAG_ATTR_RATIO)));
                                 currencyData.setDate(dateFormat.parse(parser.getAttributeValue("", XML_TAG_ATTR_DATETIME)));
                                 result.add(currencyData);
-                                System.out.println("TEST: " + currencyData.toString());
                             } catch (Throwable t) {
                                 log.warn("Could not parse Allianz currency!", t);
                                 getReporter().write(TAG_NAME, "Could not parse Allianz currency - '{}'! ({})",
