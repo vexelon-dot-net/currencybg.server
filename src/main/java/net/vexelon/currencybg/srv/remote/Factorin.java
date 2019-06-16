@@ -29,7 +29,7 @@ public class Factorin extends AbstractSource {
     private static final Logger log = LoggerFactory.getLogger(Factorin.class);
     private static final String TAG_NAME = Factorin.class.getSimpleName();
 
-    private static final String URL_SOURCE = "http://www.factorin.bg/bg/clients/currency/";
+    private static final String URL_SOURCE = "https://www.factorin.bg/bg/clients/currency/";
     private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
 
     public Factorin(Reporter reporter) {
