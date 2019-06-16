@@ -1,6 +1,9 @@
 package net.vexelon.currencybg.srv;
 
+import com.google.common.collect.Sets;
+
 import javax.ws.rs.core.MediaType;
+import java.util.Set;
 
 /**
  * Global constants
@@ -49,6 +52,18 @@ public final class Defs {
     public static final long REPORTER_UPDATE_FIRST_INTERVAL = 10;// seconds
     public static final long REPORTER_UPDATES_PERIODIC_INTERVAL = 60 * 60;// 1
     // hour
+
+    /*
+     * HTTP API specific
+     */
+    public static final String HEADER_APIKEY = "APIKey";
+    public static final String API_JSON_CONTENT_TYPE = MediaType.APPLICATION_JSON_TYPE + ";charset=utf-8";
+
+    public static final String DATE_FORMAT = "yyyy-MM-dd";
+    public static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    // public static final String DATETIME_FORMAT_ISO8601 =
+    // "yyyy-MM-dd'T'HH:mm:ssZ";
+
     /*
      * Currencies
      */
@@ -64,14 +79,77 @@ public final class Defs {
     public static final String CURRENCY_MONERO = "XMR";
     public static final String CURRENCY_STELLAR = "XLM";
 
-    /*
-     * HTTP API specific
+    /**
+     * Currency codes recognized by the mobile app
      */
-    public static final String HEADER_APIKEY = "APIKey";
-    public static final String API_JSON_CONTENT_TYPE = MediaType.APPLICATION_JSON_TYPE + ";charset=utf-8";
-
-    public static final String DATE_FORMAT = "yyyy-MM-dd";
-    public static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    // public static final String DATETIME_FORMAT_ISO8601 =
-    // "yyyy-MM-dd'T'HH:mm:ssZ";
+    public static final Set<String> CURRENCY_CODES_APP = Sets.newHashSet("AED",
+            "ALL",
+            "ARS",
+            "AUD",
+            "AZN",
+            "BAM",
+            "BCH",
+            "BGN",
+            "BRL",
+            "BTC",
+            "BYN",
+            "BYR",
+            "CAD",
+            "CHF",
+            "CNH",
+            "CNY",
+            "CZK",
+            "DASH",
+            "DKK",
+            "DOGE",
+            "DOP",
+            "EEK",
+            "EGP",
+            "ETC",
+            "ETH",
+            "EUR",
+            "GEL",
+            "GBP",
+            "HKD",
+            "HRK",
+            "HUF",
+            "IDR",
+            "INR",
+            "ILS",
+            "ISK",
+            "JOD",
+            "JPY",
+            "KES",
+            "KRW",
+            "LTC",
+            "LTL",
+            "LVL",
+            "MDL",
+            "MKD",
+            "MUR",
+            "MXN",
+            "MYR",
+            "NOK",
+            "NZD",
+            "PHP",
+            "PLN",
+            "QAR",
+            "RON",
+            "RSD",
+            "RUB",
+            "SAR",
+            "SEK",
+            "SGD",
+            "THB",
+            "TND",
+            "TRY",
+            "TWD",
+            "UAH",
+            "USD",
+            "VND",
+            "XLM",
+            "XMR",
+            "XRP",
+            "ZAR",
+            "ZEC");
 }

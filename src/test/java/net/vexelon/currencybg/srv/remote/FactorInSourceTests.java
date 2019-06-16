@@ -14,42 +14,53 @@ import net.vexelon.currencybg.srv.tests.TestUtils;
 
 public class FactorInSourceTests {
 
-	@Test
-	public void test_FactorIn01() {
-		try {
-			List<CurrencyData> rates = new Factorin(new NullReporter())
-			        .getFactorinRates(TestUtils.getTestResource("/factorin.html"));
+    @Test
+    public void test_FactorIn01() {
+        try {
+            List<CurrencyData> rates = new Factorin(new NullReporter())
+                    .getFactorinRates(TestUtils.getTestResource("/factorin_06.2019.html"));
 
-			int last = rates.size() - 1;
-			Date lastUpdate = TestUtils.newDate(2017, 2, 04, 17, 00); // 04.02.2017,
-			                                                          // 17:00
+            int last = rates.size() - 1;
+            Date lastUpdate = TestUtils.newDate(2019, 6, 15, 13, 9);
 
-			assertTrue(rates.get(0).getCode().equals("EUR"));
-			assertTrue(rates.get(0).getRatio() == 1);
-			assertTrue(rates.get(0).getBuy().equals("1.955500"));
-			assertTrue(rates.get(0).getSell().equals("1.956000"));
-			assertTrue(rates.get(0).getDate().equals(lastUpdate));
+            assertTrue(rates.get(0).getCode().equals("EUR"));
+            assertTrue(rates.get(0).getRatio() == 1);
+            assertTrue(rates.get(0).getBuy().equals("1.953"));
+            assertTrue(rates.get(0).getSell().equals("1.959"));
+            assertTrue(rates.get(0).getDate().equals(lastUpdate));
 
-			assertTrue(rates.get(last).getCode().equals("DOP"));
-			assertTrue(rates.get(last).getRatio() == 1);
-			assertTrue(rates.get(last).getBuy().equals("0.037500"));
-			assertTrue(rates.get(last).getSell().equals("0.037900"));
-			assertTrue(rates.get(last).getDate().equals(lastUpdate));
+            assertTrue(rates.get(6).getCode().equals("TRY"));
+            assertTrue(rates.get(6).getRatio() == 1);
+            assertTrue(rates.get(6).getBuy().equals("0.3"));
+            assertTrue(rates.get(6).getSell().equals("0.309"));
+            assertTrue(rates.get(6).getDate().equals(lastUpdate));
 
-			assertTrue(rates.get(last - 18).getCode().equals("THB"));
-			assertTrue(rates.get(last - 18).getRatio() == 1);
-			assertTrue(rates.get(last - 18).getBuy().equals("0.053300"));
-			assertTrue(rates.get(last - 18).getSell().equals("0.053600"));
-			assertTrue(rates.get(last - 18).getDate().equals(lastUpdate));
+            assertTrue(rates.get(last).getCode().equals("PHP"));
+            assertTrue(rates.get(last).getRatio() == 1);
+            assertTrue(rates.get(last).getBuy().equals("0.034"));
+            assertTrue(rates.get(last).getSell().equals("0.035"));
+            assertTrue(rates.get(last).getDate().equals(lastUpdate));
 
-			assertTrue(rates.get(last - 19).getCode().equals("CNY"));
-			assertTrue(rates.get(last - 19).getRatio() == 1);
-			assertTrue(rates.get(last - 19).getBuy().equals("0.267000"));
-			assertTrue(rates.get(last - 19).getSell().equals("0.268000"));
-			assertTrue(rates.get(last - 19).getDate().equals(lastUpdate));
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-	}
+            assertTrue(rates.get(last - 10).getCode().equals("TWD"));
+            assertTrue(rates.get(last - 10).getRatio() == 1);
+            assertTrue(rates.get(last - 10).getBuy().equals("0.052"));
+            assertTrue(rates.get(last - 10).getSell().equals("0.057"));
+            assertTrue(rates.get(last - 10).getDate().equals(lastUpdate));
+
+            assertTrue(rates.get(last - 16).getCode().equals("KRW"));
+            assertTrue(rates.get(last - 16).getRatio() == 1);
+            assertTrue(rates.get(last - 16).getBuy().equals("0.00146"));
+            assertTrue(rates.get(last - 16).getSell().equals("0.00152"));
+            assertTrue(rates.get(last - 16).getDate().equals(lastUpdate));
+
+            assertTrue(rates.get(last - 24).getCode().equals("BAM"));
+            assertTrue(rates.get(last - 24).getRatio() == 1);
+            assertTrue(rates.get(last - 24).getBuy().equals("1"));
+            assertTrue(rates.get(last - 24).getSell().equals("1.04"));
+            assertTrue(rates.get(last - 24).getDate().equals(lastUpdate));
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        }
+    }
 }

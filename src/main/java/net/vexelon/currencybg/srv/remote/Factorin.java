@@ -1,15 +1,13 @@
 package net.vexelon.currencybg.srv.remote;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
-import com.google.common.collect.Sets;
+import com.google.common.base.Charsets;
+import com.google.common.collect.Lists;
+import net.vexelon.currencybg.srv.Defs;
+import net.vexelon.currencybg.srv.db.models.CurrencyData;
+import net.vexelon.currencybg.srv.db.models.Sources;
+import net.vexelon.currencybg.srv.reports.Reporter;
+import net.vexelon.currencybg.srv.utils.DateTimeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.HttpResponse;
 import org.jsoup.Jsoup;
@@ -19,13 +17,12 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Charsets;
-import com.google.common.collect.Lists;
-
-import net.vexelon.currencybg.srv.db.models.CurrencyData;
-import net.vexelon.currencybg.srv.db.models.Sources;
-import net.vexelon.currencybg.srv.reports.Reporter;
-import net.vexelon.currencybg.srv.utils.DateTimeUtils;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
 
 public class Factorin extends AbstractSource {
 
@@ -33,12 +30,7 @@ public class Factorin extends AbstractSource {
     private static final String TAG_NAME = Factorin.class.getSimpleName();
 
     private static final String URL_SOURCE = "http://www.factorin.bg/bg/clients/currency/";
-
     private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
-    private static final Set<String> CURRENCY_CODES = Sets.newHashSet("AED", "ALL", "AUD", "BAM", "BRL", "CAD", "CHF",
-            "CNY", "CZK", "DKK", "DOP", "EEK", "EGP", "EUR", "GBP", "HKD", "HRK", "HUF", "IDR", "ILS", "JPY", "KES",
-            "KRW", "LTL", "LVL", "MKD", "MUR", "MXN", "MYR", "NOK", "NZD", "PLN", "RON", "RSD", "RUB", "SBP", "SEK",
-            "SGD", "THB", "TRY", "UAH", "USD", "ZAR");
 
     public Factorin(Reporter reporter) {
         super(reporter);
@@ -50,28 +42,33 @@ public class Factorin extends AbstractSource {
         Document doc = Jsoup.parse(input, Charsets.UTF_8.name(), URL_SOURCE);
 
         try {
-            Elements contentBox = doc.select("div.public_list");
-
             // parse update date and time
-            String getDate = contentBox.select("div.public_list > table > tbody > tr > td").text().substring(23);
+            // e.g. Последно обновяване на цените: 15.06.2019 13:09
+            Elements dateContent = doc.select("#currency-calc > div > div.info > p");
+            String getDate = StringUtils.substringAfter(dateContent.text(), ":").trim();
             Date updateDate = DateTimeUtils.parseDate(getDate, DATE_FORMAT);
 
             // Parse table with currencies
-            Elements contentBoxChildren = contentBox.select("div.currency_list.search").get(0).children();
+            Elements contentBoxChildren = doc.select(
+                    "div.currencies-table.currencies > table:nth-child(2) > tbody").get(0).children();
 
             int row = 0;
 
             for (Element child : contentBoxChildren) {
                 try {
-                    if (CURRENCY_CODES.contains(child.child(1).text())) {
-                        CurrencyData currencyData = new CurrencyData();
-                        currencyData.setDate(updateDate);
-                        currencyData.setCode(child.child(1).text());
-                        currencyData.setBuy(child.child(3).text());
-                        currencyData.setSell(child.child(4).text());
-                        currencyData.setRatio(1);
-                        currencyData.setSource(Sources.FACTORIN.getID());
-                        result.add(currencyData);
+                    final Elements td = child.getElementsByClass("name");
+                    if (!td.isEmpty()) {
+                        final Element element = td.get(0);
+                        if (Defs.CURRENCY_CODES_APP.contains(element.attr("data-code"))) {
+                            CurrencyData currencyData = new CurrencyData();
+                            currencyData.setSource(Sources.FACTORIN.getID());
+                            currencyData.setDate(updateDate);
+                            currencyData.setRatio(1);
+                            currencyData.setCode(element.attr("data-code"));
+                            currencyData.setBuy(element.attr("data-price-buy"));
+                            currencyData.setSell(element.attr("data-price-sell"));
+                            result.add(currencyData);
+                        }
                     }
                 } catch (IndexOutOfBoundsException e) {
                     log.warn("Failed on row='{}', Exception={}", row, e.getMessage());
