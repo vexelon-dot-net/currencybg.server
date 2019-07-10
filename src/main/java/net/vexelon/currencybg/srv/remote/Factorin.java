@@ -45,8 +45,12 @@ public class Factorin extends AbstractSource {
             // parse update date and time
             // e.g. Последно обновяване на цените: 15.06.2019 13:09
             Elements dateContent = doc.select("#currency-calc > div > div.info > p");
-            String getDate = StringUtils.substringAfter(dateContent.text(), ":").trim();
-            Date updateDate = DateTimeUtils.parseDate(getDate, DATE_FORMAT);
+            String datePart = StringUtils.substringAfter(dateContent.text(), ":").trim();
+            if (datePart.isEmpty()) {
+                log.warn("Could not find date in contents - '{}'! Parsing skipped.", dateContent.text());
+                return result;
+            }
+            Date updateDate = DateTimeUtils.parseDate(datePart, DATE_FORMAT);
 
             // Parse table with currencies
             Elements contentBoxChildren = doc.select(
