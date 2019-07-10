@@ -1,6 +1,7 @@
 package net.vexelon.currencybg.srv.remote;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.util.List;
@@ -19,10 +20,10 @@ public class CryptoBGSourceTest {
             final List<CurrencyData> rates = new CryptoBGSource(new NullReporter())
                     .getCryptoRates(TestUtils.getTestResource("/crypto_bg_source_header.html"));
 
-            assertTrue(rates.get(0).getCode().equals("BTC"));
-            assertTrue(rates.get(0).getRatio() == 1);
-            assertTrue(rates.get(0).getBuy().equals("4792.00"));
-            assertTrue(rates.get(0).getSell().equals("4992.31"));
+            assertEquals("code is BTC", rates.get(0).getCode(), "BTC");
+            assertEquals("BTC rate", rates.get(0).getRatio(), 1);
+            assertEquals("BTC buy", rates.get(0).getBuy(), "20371.73");
+            assertEquals("BTC sell", rates.get(0).getSell(), "21410.27");
 
             final List<CurrencyData> ratesNoData = new CryptoBGSource(new NullReporter())
                     .getCryptoRates(TestUtils.getTestResource("/crypto_bg_source_header_no_data.html"));

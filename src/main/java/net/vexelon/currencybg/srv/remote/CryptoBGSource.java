@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.HttpResponse;
 import org.jsoup.Jsoup;
@@ -69,8 +70,8 @@ public class CryptoBGSource extends AbstractSource {
                 if (span.children().size() > 0) {
                     CurrencyData currencyData = new CurrencyData();
                     currencyData.setCode(Defs.CURRENCY_BITCOIN);
-                    currencyData.setBuy(span.child(1).text());
-                    currencyData.setSell(span.child(2).text());
+                    currencyData.setBuy(StringUtils.remove(span.child(1).text(), ","));
+                    currencyData.setSell(StringUtils.remove(span.child(2).text(), ","));
                     currencyData.setRatio(1);
                     currencyData.setSource(Sources.CRYPTO.getID());
                     currencyData.setDate(updateDate);
