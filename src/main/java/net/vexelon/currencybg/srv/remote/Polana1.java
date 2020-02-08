@@ -53,7 +53,7 @@ public class Polana1 extends AbstractSource {
             String currentTimeSofia = LocalTime.now(ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA))
                     .format(DateTimeFormatter.ofPattern("HH:mm")).toString();
 
-            String currentDateTime = contentChildren.select("h1").first().text().substring(26).trim() + " "
+            String currentDateTime = contentChildren.select("h1").first().text().substring(26, 37).trim() + " "
                     + currentTimeSofia;
             Date updateDate = DateTimeUtils.parseDate(currentDateTime, DATE_FORMAT);
 
