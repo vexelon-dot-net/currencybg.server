@@ -38,9 +38,10 @@ public class AltcoinsSource extends AbstractSource {
     private static final String URL_SOURCE = "https://www.altcoins.bg/order/rates";
     private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
 
-    private static final Set<String> currencies =
+    public static final Set<String> CURRENCIES =
             Sets.newHashSet(Defs.CURRENCY_BITCOIN, Defs.CURRENCY_ETHERIUM, Defs.CURRENCY_LITECOIN,
-                    Defs.CURRENCY_RIPPLE, Defs.CURRENCY_BITCOIN_CASH, Defs.CURRENCY_DASH, Defs.CURRENCY_MONERO, Defs.CURRENCY_ZCASH, Defs.CURRENCY_STELLAR);
+                    Defs.CURRENCY_RIPPLE, Defs.CURRENCY_BITCOIN_CASH, Defs.CURRENCY_DASH, Defs.CURRENCY_MONERO,
+                    Defs.CURRENCY_ZCASH, Defs.CURRENCY_STELLAR, Defs.CURRENCY_EOS);
 
     public AltcoinsSource(Reporter reporter) {
         super(reporter);
@@ -70,10 +71,9 @@ public class AltcoinsSource extends AbstractSource {
             // {"BTC":[15273.172992,14557.243008],"ETH":[1347.9194792,1289.8877208],"LTC":[345.0662124,323.0193876],"XRP":[1.498323568,1.328702032],"DASH":[954.4866212,898.8854588],"XMR":[445.329248,411.073152],"ETC":[57.4290192,50.9276208],"ZEC":[634.818912,585.986688],"XLM":[0.5588930984,0.4956221816]}
             // {"BTC":[15231.025152,14517.070848],"ETH":[1344.894768,1286.993232],"LTC":[343.68943,321.73057],"XRP":[1.49815736,1.32855464],"DASH":[952.6273064,897.1344536],"XMR":[445.18656,410.94144],"ETC":[57.2025608,50.7267992],"ZEC":[635.043136,586.193664],"XLM":[0.5588494688,0.4955834912]}
 
-            CurrencyData currencyData;
             for (Map.Entry<String, List<String>> next : pairs.entrySet()) {
-                if (currencies.contains(next.getKey()) && next.getValue().size() > 1) {
-                    currencyData = new CurrencyData();
+                if (CURRENCIES.contains(next.getKey()) && next.getValue().size() > 1) {
+                    CurrencyData currencyData = new CurrencyData();
                     currencyData.setCode(next.getKey());
                     currencyData.setBuy(next.getValue().get(0));
                     currencyData.setSell(next.getValue().get(1));

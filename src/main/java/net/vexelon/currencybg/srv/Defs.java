@@ -70,7 +70,8 @@ public final class Defs {
     public static final String CURRENCY_BITCOIN = "BTC";
     public static final String CURRENCY_BITCOIN_CASH = "BCH";
     public static final String CURRENCY_ETHERIUM = "ETH";
-    public static final String CURRENCY_ETHERIUM_CLASSIC = "ETC";
+    public static final String CURRENCY_EOS = "EOS";
+//    public static final String CURRENCY_ETHERIUM_CLASSIC = "ETC";
     public static final String CURRENCY_LITECOIN = "LTC";
     public static final String CURRENCY_DASH = "DASH";
     public static final String CURRENCY_DOGECOIN = "DOGE";
