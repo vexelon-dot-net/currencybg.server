@@ -29,7 +29,7 @@ public class FIBSource extends AbstractSource {
     private static final Logger log = LoggerFactory.getLogger(FIBSource.class);
     private static final String TAG_NAME = FIBSource.class.getSimpleName();
 
-    private static final String URL_SOURCE = "https://www.fibank.bg/bg/page/461";
+    private static final String URL_SOURCE = "https://www.fibank.bg/bg/valutni-kursove";
     private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
 
     public FIBSource(Reporter reporter) {
@@ -42,37 +42,33 @@ public class FIBSource extends AbstractSource {
         Document doc = Jsoup.parse(input, Charsets.UTF_8.name(), URL_SOURCE);
 
         try {
-            Element contentBox = doc.select("#column-right > section.content-box > div.text").get(1);
+            Element contentBox = doc.select(
+                    "body > div.site > main > section:nth-child(3) > div > div.text > p > small").first();
 
             // parse update date and time
-            String getDate = contentBox.textNodes().get(0).text().substring(20).trim();
-            Date updateDate = DateTimeUtils.parseDate(getDate, DATE_FORMAT);
+            String rawDate = contentBox.textNodes().get(0).text().substring(3).trim();
+            Date updateDate = DateTimeUtils.parseDate(rawDate, DATE_FORMAT);
 
             // parse table with currencies
-            Elements contentBoxChildren = contentBox.children();
-            Element tbody = contentBoxChildren.select("table > tbody").first();
+            Element tbody = doc.select("table > tbody").first();
             Elements children = tbody.children();
 
-            int row = 0;
+            int row = 1;
 
             for (Element child : children) {
-                CurrencyData currencyData = new CurrencyData();
                 try {
-                    if (row > 0) {
-                        currencyData.setDate(updateDate);
-                        currencyData.setCode(child.child(1).text());
-                        currencyData.setBuy(child.child(4).text());
-                        currencyData.setSell(child.child(5).text());
-                        currencyData.setRatio(Integer.parseInt(child.child(2).text()));
-                        currencyData.setSource(Sources.FIB.getID());
-                        result.add(currencyData);
-                    }
-
+                    CurrencyData currencyData = new CurrencyData();
+                    currencyData.setDate(updateDate);
+                    currencyData.setCode(child.child(1).text());
+                    currencyData.setBuy(child.child(4).text());
+                    currencyData.setSell(child.child(5).text());
+                    currencyData.setRatio(Integer.parseInt(child.child(2).text()));
+                    currencyData.setSource(Sources.FIB.getID());
+                    result.add(currencyData);
                 } catch (IndexOutOfBoundsException e) {
                     log.warn("Failed on row='{}', Exception={}", row, e.getMessage());
                     getReporter().write(TAG_NAME, "Could not process currency on row='{}'!", row + "");
                 }
-
                 row++;
             }
 

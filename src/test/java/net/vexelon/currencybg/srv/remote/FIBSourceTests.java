@@ -1,8 +1,5 @@
 package net.vexelon.currencybg.srv.remote;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import java.util.Date;
 import java.util.List;
 
@@ -12,45 +9,49 @@ import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.reports.NullReporter;
 import net.vexelon.currencybg.srv.tests.TestUtils;
 
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+
 public class FIBSourceTests {
 
-	@Test
-	public void test_FIB01() {
-		try {
-			List<CurrencyData> rates = new FIBSource(new NullReporter())
-			        .getFIBRates(TestUtils.getTestResource("/fib01.html"));
+    @Test
+    public void test_FIB01() {
+        try {
+            List<CurrencyData> rates = new FIBSource(new NullReporter())
+                    .getFIBRates(TestUtils.getTestResource("/fib.html"));
 
-			int last = rates.size() - 1;
-			Date lastUpdate = TestUtils.newDate(2017, 2, 2, 22, 10); // 02.02.2017,
-			                                                         // 22:10
+            int last = rates.size() - 1;
+            Date lastUpdate = TestUtils.newDate(2020, 2, 7, 18, 03);
 
-			assertTrue(rates.get(0).getCode().equals("AUD"));
-			assertTrue(rates.get(0).getRatio() == 1);
-			assertTrue(rates.get(0).getBuy().equals("1.35700"));
-			assertTrue(rates.get(0).getSell().equals("1.42490"));
-			assertTrue(rates.get(0).getDate().equals(lastUpdate));
+            assertEquals("CAD", rates.get(0).getCode());
+            assertEquals(1, rates.get(0).getRatio());
+            assertEquals("1.31600", rates.get(0).getBuy());
+            assertEquals("1.36730", rates.get(0).getSell());
+            assertEquals(lastUpdate, rates.get(0).getDate());
 
-			assertTrue(rates.get(last).getCode().equals("RUB"));
-			assertTrue(rates.get(last).getRatio() == 100);
-			assertTrue(rates.get(last).getBuy().equals("2.68090"));
-			assertTrue(rates.get(last).getSell().equals("3.45090"));
-			assertTrue(rates.get(last).getDate().equals(lastUpdate));
+            assertEquals("NOK", rates.get(last).getCode());
+            assertEquals(10, rates.get(last).getRatio());
+            assertEquals("1.88590", rates.get(last).getBuy());
+            assertEquals("1.95920", rates.get(last).getSell());
+            assertEquals(lastUpdate, rates.get(last).getDate());
 
-			assertTrue(rates.get(last - 1).getCode().equals("SEK"));
-			assertTrue(rates.get(last - 1).getRatio() == 10);
-			assertTrue(rates.get(last - 1).getBuy().equals("2.02850"));
-			assertTrue(rates.get(last - 1).getSell().equals("2.12940"));
-			assertTrue(rates.get(last - 1).getDate().equals(lastUpdate));
+            assertEquals("AUD", rates.get(last - 1).getCode());
+            assertEquals(1, rates.get(last - 1).getRatio());
+            assertEquals("1.16940", rates.get(last - 1).getBuy());
+            assertEquals("1.21480", rates.get(last - 1).getSell());
+            assertEquals(lastUpdate, rates.get(last - 1).getDate());
 
-			assertTrue(rates.get(last - 4).getCode().equals("JPY"));
-			assertTrue(rates.get(last - 4).getRatio() == 100);
-			assertTrue(rates.get(last - 4).getBuy().equals("1.57210"));
-			assertTrue(rates.get(last - 4).getSell().equals("1.65250"));
-			assertTrue(rates.get(last - 4).getDate().equals(lastUpdate));
+            assertEquals("JPY", rates.get(last - 2).getCode());
+            assertEquals(100, rates.get(last - 2).getRatio());
+            assertEquals("1.59630", rates.get(last - 2).getBuy());
+            assertEquals("1.65850", rates.get(last - 2).getSell());
+            assertEquals(lastUpdate, rates.get(last - 2).getDate());
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-	}
+            assertEquals("Expected/Actual", 13, rates.size());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        }
+    }
 }
