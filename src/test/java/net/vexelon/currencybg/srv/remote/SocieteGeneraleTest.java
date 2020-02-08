@@ -1,8 +1,5 @@
 package net.vexelon.currencybg.srv.remote;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import java.util.List;
 
 import org.junit.Test;
@@ -11,30 +8,33 @@ import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.reports.NullReporter;
 import net.vexelon.currencybg.srv.tests.TestUtils;
 
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+
 public class SocieteGeneraleTest {
 
     @Test
     public void test_Societe01() {
         try {
             List<CurrencyData> rates = new SocieteGenerale(new NullReporter())
-                    .getSocieteGeneraleRates(TestUtils.getTestResource("/societe_generale_new.html"));
+                    .getSocieteGeneraleRates(TestUtils.getTestResource("/societe_generale.html"));
 
             int last = rates.size() - 1;
 
-            assertTrue(rates.get(0).getCode().equals("EUR"));
-            assertTrue(rates.get(0).getRatio() == 1);
-            assertTrue(rates.get(0).getBuy().equals("1.951000"));
-            assertTrue(rates.get(0).getSell().equals("1.959000"));
+            assertEquals("EUR", rates.get(0).getCode());
+            assertEquals(1, rates.get(0).getRatio());
+            assertEquals("1.951000", rates.get(0).getBuy());
+            assertEquals("1.960000", rates.get(0).getSell());
 
-            assertTrue(rates.get(last).getCode().equals("AUD"));
-            assertTrue(rates.get(last).getRatio() == 1);
-            assertTrue(rates.get(last).getBuy().equals("1.205000"));
-            assertTrue(rates.get(last).getSell().equals("1.255000"));
+            assertEquals("AUD", rates.get(last).getCode());
+            assertEquals(1, rates.get(last).getRatio());
+            assertEquals("1.164800", rates.get(last).getBuy());
+            assertEquals("1.214800", rates.get(last).getSell());
 
-            assertTrue(rates.get(last - 3).getCode().equals("RON"));
-            assertTrue(rates.get(last - 3).getRatio() == 1);
-            assertTrue(rates.get(last - 3).getBuy().equals("0.406000"));
-            assertTrue(rates.get(last - 3).getSell().equals("0.416000"));
+            assertEquals("RON", rates.get(last - 3).getCode());
+            assertEquals(1, rates.get(last - 3).getRatio());
+            assertEquals("0.406900", rates.get(last - 3).getBuy());
+            assertEquals("0.414400", rates.get(last - 3).getSell());
 
         } catch (Exception e) {
             e.printStackTrace();
