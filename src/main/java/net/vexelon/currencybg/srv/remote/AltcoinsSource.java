@@ -40,7 +40,7 @@ public class AltcoinsSource extends AbstractSource {
 
     private static final Set<String> currencies =
             Sets.newHashSet(Defs.CURRENCY_BITCOIN, Defs.CURRENCY_ETHERIUM, Defs.CURRENCY_LITECOIN,
-                    Defs.CURRENCY_RIPPLE, Defs.CURRENCY_BITCOIN_CASH, Defs.CURRENCY_DASH, Defs.CURRENCY_MONERO, Defs.CURRENCY_ETHERIUM_CLASSIC, Defs.CURRENCY_ZCASH, Defs.CURRENCY_STELLAR);
+                    Defs.CURRENCY_RIPPLE, Defs.CURRENCY_BITCOIN_CASH, Defs.CURRENCY_DASH, Defs.CURRENCY_MONERO, Defs.CURRENCY_ZCASH, Defs.CURRENCY_STELLAR);
 
     public AltcoinsSource(Reporter reporter) {
         super(reporter);
@@ -72,7 +72,7 @@ public class AltcoinsSource extends AbstractSource {
 
             CurrencyData currencyData;
             for (Map.Entry<String, List<String>> next : pairs.entrySet()) {
-                if (currencies.contains(next.getKey()) && next.getValue().size() == 2) {
+                if (currencies.contains(next.getKey()) && next.getValue().size() > 1) {
                     currencyData = new CurrencyData();
                     currencyData.setCode(next.getKey());
                     currencyData.setBuy(next.getValue().get(0));
