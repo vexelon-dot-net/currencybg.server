@@ -3,14 +3,14 @@ Currency BG Server
 
 [![CircleCI](https://circleci.com/gh/vexelon-dot-net/currencybg.server/tree/master.svg?style=svg&circle-token=dbb483218ea63d7fa3551c6cc3c3b3fd95f99e1e)](https://circleci.com/gh/vexelon-dot-net/currencybg.server/tree/master)
 
-Currency BG RESTful web service
+Currency BG HTTP API
 
 HTTP [API documentation](docs/API.md)
 
 # Requirements
 
   * JDK `1.8`
-  * MySQL `5.5`
+  * MySQL `5.5+` or MariaDB `10.0`
   * Tomcat `8` or Jetty `9`
 
 # Development
