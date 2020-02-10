@@ -9,21 +9,21 @@ jobs:
 
     docker:
       - image: circleci/openjdk:8-jdk
-      
+
     working_directory: ~/repo
 
     environment:
       JVM_OPTS: -Xmx3200m
       TERM: dumb
-    
+
     steps:
       - checkout
 
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "build.gradle" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+            - v1-dependencies-{{ checksum "build.gradle" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
 
       - run: ./gradlew dependencies
 
@@ -36,11 +36,13 @@ jobs:
       - store_artifacts:
           path: build/reports/tests
           destination: reports
-        
+
       - run: ./gradlew build
 
       - store_artifacts:
           path: build/libs
           destination: artifacts
 
+      - store_test_results:
+          path: build/test-results
 
