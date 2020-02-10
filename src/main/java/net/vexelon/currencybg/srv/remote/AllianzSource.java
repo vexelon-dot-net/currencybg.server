@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -86,7 +87,20 @@ public class AllianzSource extends AbstractSource {
                                 currencyData.setBuy(parser.getAttributeValue("", XML_TAG_ATTR_BUY));
                                 currencyData.setSell(parser.getAttributeValue("", XML_TAG_ATTR_SELL));
                                 currencyData.setRatio(Integer.parseInt(parser.getAttributeValue("", XML_TAG_ATTR_RATIO)));
-                                currencyData.setDate(dateFormat.parse(parser.getAttributeValue("", XML_TAG_ATTR_DATETIME)));
+
+                                // XML data does not contain timestamp, only date values.
+                                Date parsed = dateFormat.parse(parser.getAttributeValue("", XML_TAG_ATTR_DATETIME));
+                                Date now = new Date();
+                                if (now.getYear() != parsed.getYear()) {
+                                    log.warn("Skipped '{}'. Currency date too old - {}", currencyData.getCode(), parsed.toString());
+                                    break;
+                                }
+
+                                now.setYear(parsed.getYear());
+                                now.setMonth(parsed.getMonth());
+                                now.setSeconds(parsed.getSeconds());
+                                currencyData.setDate(now);
+
                                 result.add(currencyData);
                             } catch (Throwable t) {
                                 log.warn("Could not parse Allianz currency!", t);
