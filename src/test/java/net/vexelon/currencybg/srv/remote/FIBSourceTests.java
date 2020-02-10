@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 public class FIBSourceTests {
 
     @Test
-    public void test_FIB01() {
+    public void test_FIB() {
         try {
             List<CurrencyData> rates = new FIBSource(new NullReporter())
                     .getFIBRates(TestUtils.getTestResource("/fib.html"));

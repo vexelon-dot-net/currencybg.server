@@ -1,9 +1,5 @@
 package net.vexelon.currencybg.srv.remote;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
@@ -12,77 +8,38 @@ import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.reports.NullReporter;
 import net.vexelon.currencybg.srv.tests.TestUtils;
 
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+
 public class TavexSourceTests {
 
-//    @Test
-//    public void test_Tavex02() {
-//        try {
-//            List<CurrencyData> rates = new TavexSource(new NullReporter())
-//                    .getTavexRates(TestUtils.getTestResource("/tavex02.html"));
-//
-//            int last = rates.size() - 1;
-//
-//            assertTrue(rates.get(0).getCode().equals("EUR"));
-//            assertTrue(rates.get(0).getRatio() == 1);
-//            assertTrue(rates.get(0).getBuy().equals("1.950"));
-//            assertTrue(rates.get(0).getSell().equals("1.958"));
-//            // assertTrue(rates.get(0).getDate().equals(lastUpdate));
-//
-//            assertTrue(rates.get(last).getCode().equals("AZN"));
-//            assertTrue(rates.get(last).getRatio() == 1);
-//            assertTrue(rates.get(last).getBuy().equals("0.984"));
-//            assertTrue(rates.get(last).getSell().equals("1.101"));
-//            // assertTrue(rates.get(last).getDate().equals(lastUpdate));
-//
-//            assertTrue(rates.get(last - 3).getCode().equals("VND"));
-//            assertTrue(rates.get(last - 3).getRatio() == 1);
-//            assertTrue(rates.get(last - 3).getBuy().equals("0.0000690"));
-//            assertTrue(rates.get(last - 3).getSell().equals("0.0000860"));
-//            // assertTrue(rates.get(last - 18).getDate().equals(lastUpdate));
-//
-//            assertTrue(rates.get(24).getCode().equals("EEK"));
-//            assertTrue(rates.get(24).getRatio() == 1);
-//            assertTrue(rates.get(24).getBuy().equals("0.119"));
-//            assertTrue(rates.get(24).getSell().isEmpty());
-//            // assertTrue(rates.get(last - 19).getDate().equals(lastUpdate));
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            fail(e.getMessage());
-//        }
-//    }
-
     @Test
-    public void test_Tavex03() {
+    public void test_tavex_1() {
         try {
             List<CurrencyData> rates = new TavexSource(new NullReporter())
-                    .getTavexRates(TestUtils.getTestResource("/tavex03.html"));
+                    .getTavexRates(TestUtils.getTestResource("/tavex.html"));
 
             int last = rates.size() - 1;
 
-            assertTrue(rates.get(0).getCode().equals("EUR"));
-            assertTrue(rates.get(0).getRatio() == 1);
-            assertTrue(rates.get(0).getBuy().equals("1.9500"));
-            assertTrue(rates.get(0).getSell().equals("1.9560"));
-            // assertTrue(rates.get(0).getDate().equals(lastUpdate));
+            assertEquals("EUR", rates.get(0).getCode());
+            assertEquals(1, rates.get(0).getRatio());
+            assertEquals("1.9500", rates.get(0).getBuy());
+            assertEquals("1.9560", rates.get(0).getSell());
 
-            assertTrue(rates.get(last).getCode().equals("AZN"));
-            assertTrue(rates.get(last).getRatio() == 1);
-            assertTrue(rates.get(last).getBuy().equals("0.957"));
-            assertTrue(rates.get(last).getSell().equals("1.158"));
-            // assertTrue(rates.get(last).getDate().equals(lastUpdate));
+            assertEquals("AZN", rates.get(last).getCode());
+            assertEquals(1, rates.get(last).getRatio());
+            assertEquals("0.957", rates.get(last).getBuy());
+            assertEquals("1.158", rates.get(last).getSell());
 
-            assertTrue(rates.get(last - 3).getCode().equals("VND"));
-            assertTrue(rates.get(last - 3).getRatio() == 1);
-            assertTrue(rates.get(last - 3).getBuy().equals("0.0000690"));
-            assertTrue(rates.get(last - 3).getSell().equals("0.0000880"));
-            // assertTrue(rates.get(last - 18).getDate().equals(lastUpdate));
+            assertEquals("VND", rates.get(last - 3).getCode());
+            assertEquals(1, rates.get(last - 3).getRatio());
+            assertEquals("0.0000690", rates.get(last - 3).getBuy());
+            assertEquals("0.0000880", rates.get(last - 3).getSell());
 
-            assertTrue(rates.get(24).getCode().equals("EEK"));
-            assertTrue(rates.get(24).getRatio() == 1);
-            assertTrue(rates.get(24).getBuy().equals("0.118"));
-            assertTrue(rates.get(24).getSell().isEmpty());
-            // assertTrue(rates.get(last - 19).getDate().equals(lastUpdate));
+            assertEquals("EEK", rates.get(24).getCode());
+            assertEquals(1, rates.get(24).getRatio());
+            assertEquals("0.118", rates.get(24).getBuy());
+            assertEquals("", rates.get(24).getSell());
 
         } catch (Exception e) {
             e.printStackTrace();

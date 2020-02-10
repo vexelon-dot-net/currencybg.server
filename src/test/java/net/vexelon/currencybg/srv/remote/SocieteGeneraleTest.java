@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 public class SocieteGeneraleTest {
 
     @Test
-    public void test_Societe01() {
+    public void test_sg_1() {
         try {
             List<CurrencyData> rates = new SocieteGenerale(new NullReporter())
                     .getSocieteGeneraleRates(TestUtils.getTestResource("/societe_generale.html"));

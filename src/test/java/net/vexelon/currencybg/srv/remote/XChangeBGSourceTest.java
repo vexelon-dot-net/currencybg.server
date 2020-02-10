@@ -7,21 +7,20 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class XChangeBGSourceTest {
     @Test
-    public void test_XChangeBG01() {
+    public void test_xchangebg_1() {
 
         try {
             List<CurrencyData> rates = new XChangeBGSource(new NullReporter())
                     .getXChangeRates(TestUtils.getTestResource("/xbg_01.html"));
 
-            assertTrue(rates.get(0).getCode().equals("BTC"));
-            assertTrue(rates.get(0).getRatio() == 1);
-            assertTrue(rates.get(0).getBuy().equals("24198.67"));
-            assertTrue(rates.get(0).getSell().equals("22797.00"));
+            assertEquals("BTC", rates.get(0).getCode());
+            assertEquals(1, rates.get(0).getRatio());
+            assertEquals("24198.67", rates.get(0).getBuy());
+            assertEquals("22797.00", rates.get(0).getSell());
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -15,15 +15,13 @@ import static org.junit.Assert.assertEquals;
 public class UnicreditSourceTests {
 
     @Test
-    public void test_Unicredit01() {
+    public void test_inicredit_1() {
         try {
             List<CurrencyData> rates = new UnicreditSource(new NullReporter())
                     .getUnicreditRates(TestUtils.getTestResource("/unicredit.html"));
 
             int last = rates.size() - 1;
             Date lastUpdate = TestUtils.newDate(2020, 02, 8, 21, 38); //
-            // 10.05.2017,
-            // 21:02
 
             assertEquals("EUR", rates.get(0).getCode());
             assertEquals(1, rates.get(0).getRatio());

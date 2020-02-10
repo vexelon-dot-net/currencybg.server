@@ -20,10 +20,10 @@ public class CryptoBGSourceTest {
             final List<CurrencyData> rates = new CryptoBGSource(new NullReporter())
                     .getCryptoRates(TestUtils.getTestResource("/crypto_bg_source_header.html"));
 
-            assertEquals("code is BTC", rates.get(0).getCode(), "BTC");
-            assertEquals("BTC rate", rates.get(0).getRatio(), 1);
-            assertEquals("BTC buy", rates.get(0).getBuy(), "20371.73");
-            assertEquals("BTC sell", rates.get(0).getSell(), "21410.27");
+            assertEquals("code is BTC", "BTC", rates.get(0).getCode());
+            assertEquals("BTC rate", 1, rates.get(0).getRatio());
+            assertEquals("BTC buy", "20371.73", rates.get(0).getBuy());
+            assertEquals("BTC sell", "21410.27", rates.get(0).getSell());
 
             final List<CurrencyData> ratesNoData = new CryptoBGSource(new NullReporter())
                     .getCryptoRates(TestUtils.getTestResource("/crypto_bg_source_header_no_data.html"));

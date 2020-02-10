@@ -7,39 +7,39 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class BitcoinHouseSourceTest {
 
     @Test
-    public void test_BitcoinHouse01() {
+    public void test_bitcoinhouse_1() {
 
         try {
             List<CurrencyData> rates = new BitcoinsHouseSource(new NullReporter())
                     .getBitcoinsHouseRates(TestUtils.getTestResource("/bitcoinhouse_01.json"));
 
-            assertTrue(rates.size() == 4);
+            assertEquals(4, rates.size());
 
-            assertTrue(rates.get(0).getCode().equals("BTC"));
-            assertTrue(rates.get(0).getRatio() == 1);
-            assertTrue(rates.get(0).getBuy().equals("23889.5"));
-            assertTrue(rates.get(0).getSell().equals("25189.45"));
+            assertEquals("BTC", rates.get(0).getCode());
+            assertEquals(1, rates.get(0).getRatio());
+            assertEquals("23889.5", rates.get(0).getBuy());
+            assertEquals("25189.45", rates.get(0).getSell());
 
-            assertTrue(rates.get(1).getCode().equals("ETH"));
-            assertTrue(rates.get(1).getRatio() == 1);
-            assertTrue(rates.get(1).getBuy().equals("694.75"));
-            assertTrue(rates.get(1).getSell().equals("744.75"));
+            assertEquals("ETH", rates.get(1).getCode());
+            assertEquals(1, rates.get(1).getRatio());
+            assertEquals("694.75", rates.get(1).getBuy());
+            assertEquals("744.75", rates.get(1).getSell());
 
-            assertTrue(rates.get(2).getCode().equals("LTC"));
-            assertTrue(rates.get(2).getRatio() == 1);
-            assertTrue(rates.get(2).getBuy().equals("207.94"));
-            assertTrue(rates.get(2).getSell().equals("247.94"));
+            assertEquals("LTC", rates.get(2).getCode());
+            assertEquals(1, rates.get(2).getRatio());
+            assertEquals("207.94", rates.get(2).getBuy());
+            assertEquals("247.94", rates.get(2).getSell());
 
-            assertTrue(rates.get(3).getCode().equals("ZEC"));
-            assertTrue(rates.get(3).getRatio() == 1);
-            assertTrue(rates.get(3).getBuy().equals("467.08"));
-            assertTrue(rates.get(3).getSell().equals("517.08"));
+            assertEquals("ZEC", rates.get(3).getCode());
+            assertEquals(1, rates.get(3).getRatio());
+            assertEquals("467.08", rates.get(3).getBuy());
+            assertEquals("517.08", rates.get(3).getSell());
 
         } catch (Exception e) {
             e.printStackTrace();

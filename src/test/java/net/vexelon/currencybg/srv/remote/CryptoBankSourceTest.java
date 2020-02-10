@@ -12,12 +12,11 @@ import static org.junit.Assert.fail;
 
 /**
  * Cryptobank.bg is now owned by Altcoins.bg
- *
- * @deprecated
  */
+@Deprecated
 public class CryptoBankSourceTest {
     @Test
-    public void test_CryptoBank01() {
+    public void test_cryptobank_1() {
 
         try {
             List<CurrencyData> rates = new CryptoBankSource(new NullReporter())

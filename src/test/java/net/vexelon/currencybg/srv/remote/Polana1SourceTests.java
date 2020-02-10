@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 public class Polana1SourceTests {
 
     @Test
-    public void test_Polana1_01() {
+    public void test_polana1_1() {
         try {
             List<CurrencyData> rates = new Polana1(new NullReporter())
                     .getPolana1(TestUtils.getTestResource("/polana1.html"));

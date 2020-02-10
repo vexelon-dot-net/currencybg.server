@@ -15,7 +15,7 @@ import net.vexelon.currencybg.srv.tests.TestUtils;
 public class FactorInSourceTests {
 
     @Test
-    public void test_FactorIn01() {
+    public void test_factorin_1() {
         try {
             List<CurrencyData> rates = new Factorin(new NullReporter())
                     .getFactorinRates(TestUtils.getTestResource("/factorin_06.2019.html"));

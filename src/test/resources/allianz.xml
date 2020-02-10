@@ -1,0 +1,29 @@
+<COMMON>
+    <EXCHANGERATES branchid="001">
+        <EXCHANGERATE currid="CHF" dtstamp="07/02/2020" type="T" units="1" mid="1.82532" buy="1.82532" sell="1.82532"/>
+        <EXCHANGERATE currid="CHF" dtstamp="10/02/2020" type="N" units="1" mid="1.82702" buy="1.7994" sell="1.8544"/>
+        <EXCHANGERATE currid="CHF" dtstamp="10/02/2020" type="S" units="1" mid="1.82702" buy="1.7994" sell="1.8544"/>
+        <EXCHANGERATE currid="DKK" dtstamp="07/02/2020" type="N" units="10" mid="2.61741" buy="2.5875" sell="2.6465"/>
+        <EXCHANGERATE currid="DKK" dtstamp="07/02/2020" type="S" units="10" mid="2.61741" buy="2.5875" sell="2.6465"/>
+        <EXCHANGERATE currid="DKK" dtstamp="07/02/2020" type="T" units="10" mid="2.61737" buy="2.61737" sell="2.61737"/>
+        <EXCHANGERATE currid="EUR" dtstamp="21/02/2017" type="N" units="1" mid="1.95583" buy="1.95" sell="1.959"/>
+        <EXCHANGERATE currid="EUR" dtstamp="21/02/2017" type="S" units="1" mid="1.95583" buy="1.95" sell="1.959"/>
+        <EXCHANGERATE currid="EUR" dtstamp="21/02/2017" type="T" units="1" mid="1.95583" buy="1.95583" sell="1.95583"/>
+        <EXCHANGERATE currid="GBP" dtstamp="07/02/2020" type="T" units="1" mid="2.30545" buy="2.30545" sell="2.30545"/>
+        <EXCHANGERATE currid="GBP" dtstamp="10/02/2020" type="N" units="1" mid="2.30858" buy="2.2742" sell="2.3332"/>
+        <EXCHANGERATE currid="GBP" dtstamp="10/02/2020" type="S" units="1" mid="2.30858" buy="2.2742" sell="2.3332"/>
+        <EXCHANGERATE currid="JPY" dtstamp="07/02/2020" type="T" units="100" mid="1.61813" buy="1.61813"
+                      sell="1.61813"/>
+        <EXCHANGERATE currid="JPY" dtstamp="10/02/2020" type="N" units="100" mid="1.62296" buy="1.5965" sell="1.6555"/>
+        <EXCHANGERATE currid="JPY" dtstamp="10/02/2020" type="S" units="100" mid="1.62296" buy="1.5965" sell="1.6555"/>
+        <EXCHANGERATE currid="NOK" dtstamp="07/02/2020" type="T" units="10" mid="1.93096" buy="1.93096" sell="1.93096"/>
+        <EXCHANGERATE currid="NOK" dtstamp="10/02/2020" type="N" units="10" mid="1.92365" buy="1.8935" sell="1.9525"/>
+        <EXCHANGERATE currid="NOK" dtstamp="10/02/2020" type="S" units="10" mid="1.92365" buy="1.8935" sell="1.9525"/>
+        <EXCHANGERATE currid="SEK" dtstamp="07/02/2020" type="T" units="10" mid="1.85299" buy="1.85299" sell="1.85299"/>
+        <EXCHANGERATE currid="SEK" dtstamp="10/02/2020" type="N" units="10" mid="1.85466" buy="1.8205" sell="1.8795"/>
+        <EXCHANGERATE currid="SEK" dtstamp="10/02/2020" type="S" units="10" mid="1.85466" buy="1.8205" sell="1.8795"/>
+        <EXCHANGERATE currid="USD" dtstamp="07/02/2020" type="T" units="1" mid="1.77754" buy="1.77754" sell="1.77754"/>
+        <EXCHANGERATE currid="USD" dtstamp="10/02/2020" type="N" units="1" mid="1.78305" buy="1.761" sell="1.81"/>
+        <EXCHANGERATE currid="USD" dtstamp="10/02/2020" type="S" units="1" mid="1.78305" buy="1.761" sell="1.81"/>
+    </EXCHANGERATES>
+</COMMON>
