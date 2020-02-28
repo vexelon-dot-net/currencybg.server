@@ -35,7 +35,7 @@ public class Bootstrap {
         testEncoding();
         testSQLDriver();
 
-        log.info("Loading configuratons ...");
+        log.info("Loading configurations ...");
         if (StringUtils.isEmpty(Defs.CONFIG_PATH)) {
             throw new RuntimeException("Fatal error. Global configuration env variable 'CBG_CFG_PATH' not defined!");
         }
