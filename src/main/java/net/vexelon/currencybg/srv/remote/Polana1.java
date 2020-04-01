@@ -74,6 +74,9 @@ public class Polana1 extends AbstractSource {
                     currencyData.setRatio(Integer.parseInt(child.child(2).text().replace("\u00a0", "")));
                     currencyData.setSource(Sources.POLANA1.getID());
 
+                    currencyData.setBuy(currencyData.getBuy().replace("-", ""));
+                    currencyData.setSell(currencyData.getSell().replace("-", ""));
+
                     result.add(currencyData);
                 } catch (IndexOutOfBoundsException e) {
                     log.warn("Failed on row='{}', Exception={}", row, e.getMessage());

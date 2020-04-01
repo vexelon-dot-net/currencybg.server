@@ -51,6 +51,12 @@ public class Polana1SourceTests {
             assertEquals("2.89", rates.get(last - 6).getSell());
             assertEquals(lastUpdate, rates.get(last - 6).getDate());
 
+            assertEquals("ILS", rates.get(last - 3).getCode());
+            assertEquals(1, rates.get(last - 3).getRatio());
+            assertEquals("", rates.get(last - 3).getBuy());
+            assertEquals("0.53", rates.get(last - 3).getSell());
+            assertEquals(lastUpdate, rates.get(last - 3).getDate());
+
         } catch (Exception e) {
             e.printStackTrace();
             fail(e.getMessage());
