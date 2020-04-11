@@ -12,21 +12,35 @@ import static org.junit.Assert.*;
 public class XChangeBGSourceTest {
     @Test
     public void test_xchangebg_1() {
+        List<CurrencyData> rates;
+        CurrencyData first;
 
         try {
-            List<CurrencyData> rates = new XChangeBGSource(new NullReporter())
-                    .getXChangeRates(TestUtils.getTestResource("/xbg_01.html"));
+            rates = new XChangeBGSource(new NullReporter())
+                    .getXChangeRates(TestUtils.getTestResource("/xbg_btc_buy.json"),
+                            TestUtils.getTestResource("/xbg_btc_sell.json"), "BTC-BGN");
 
-            assertEquals("BTC", rates.get(0).getCode());
-            assertEquals(1, rates.get(0).getRatio());
-            assertEquals("24198.67", rates.get(0).getBuy());
-            assertEquals("22797.00", rates.get(0).getSell());
+            assertEquals("BTC size=1", 1, rates.size());
+            first = rates.iterator().next();
+            assertEquals("BTC", first.getCode());
+            assertEquals(1, first.getRatio());
+            assertEquals("12722.80", first.getBuy());
+            assertEquals("11974.84", first.getSell());
 
+            rates = new XChangeBGSource(new NullReporter())
+                    .getXChangeRates(TestUtils.getTestResource("/xbg_eth_buy.json"),
+                            TestUtils.getTestResource("/xbg_eth_sell.json"), "ETH-BGN");
+
+            assertEquals("ETH size=1", 1, rates.size());
+            first = rates.iterator().next();
+            assertEquals("ETH", first.getCode());
+            assertEquals(1, first.getRatio());
+            assertEquals("292.98", first.getBuy());
+            assertEquals("276.30", first.getSell());
         } catch (Exception e) {
             e.printStackTrace();
             fail(e.getMessage());
         }
-
     }
 
 }
