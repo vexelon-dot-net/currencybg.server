@@ -69,7 +69,7 @@ public class BitcoinsHouseSource extends AbstractSource {
 
         try {
             String currentDateTimeSofia = LocalDateTime.now(ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA))
-                    .format(DateTimeFormatter.ofPattern(DATE_FORMAT)).toString();
+                    .format(DateTimeFormatter.ofPattern(DATE_FORMAT));
 
             Date updateDate = DateTimeUtils.parseDate(currentDateTimeSofia, DATE_FORMAT);
             String inputString = IOUtils.toString(input, StandardCharsets.UTF_8);

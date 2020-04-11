@@ -135,7 +135,6 @@ public class ForexHouseSource extends AbstractSource {
 
                     if (!isCanceled) {
                         try {
-
                             result = getForexHouseRates(response.getEntity().getContent());
                         } catch (IOException | ParseException e) {
                             log.error("Could not parse source data!", e);
