@@ -2,13 +2,11 @@ package net.vexelon.currencybg.srv.remote;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import net.vexelon.currencybg.srv.Defs;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.Sources;
-import net.vexelon.currencybg.srv.reports.ConsoleReporter;
 import net.vexelon.currencybg.srv.reports.Reporter;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 import org.apache.commons.io.IOUtils;
@@ -44,11 +42,11 @@ public class BitcoinsHouseSource extends AbstractSource {
     private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
 
     @SuppressWarnings("unchecked")
-    private static final List<Pair<String, String>> pairType = Lists.newArrayList(Pair.of("buy", "sell"),
+    private static final List<Pair<String, String>> PAIRS = Lists.newArrayList(Pair.of("buy", "sell"),
             Pair.of("buyEthereum", "sellEthereum"), Pair.of("buyLitecoin", "sellLitecoin"),
             Pair.of("buyRipple", "sellRipple"), Pair.of("buyZcash", "sellZcash"));
 
-    private static final Map<String, String> keymap = ImmutableMap.of("buy", Defs.CURRENCY_BITCOIN, "buyEthereum",
+    private static final Map<String, String> MAPPINGS = ImmutableMap.of("buy", Defs.CURRENCY_BITCOIN, "buyEthereum",
             Defs.CURRENCY_ETHERIUM, "buyLitecoin", Defs.CURRENCY_LITECOIN, "buyRipple", Defs.CURRENCY_RIPPLE,
             "buyZcash", Defs.CURRENCY_ZCASH);
 
@@ -80,11 +78,11 @@ public class BitcoinsHouseSource extends AbstractSource {
             }.getType();
             Map<String, String> inputMap = new GsonBuilder().create().fromJson(inputString, type);
 
-            for (Pair<String, String> pair : pairType) {
+            for (Pair<String, String> pair : PAIRS) {
                 // If some of the values buy or sell is 0, then we skip this currency
                 if (!inputMap.get(pair.getLeft()).equals("0") && !inputMap.get(pair.getRight()).equals("0")) {
                     CurrencyData currencyData = new CurrencyData();
-                    currencyData.setCode(keymap.get(pair.getLeft()));
+                    currencyData.setCode(MAPPINGS.get(pair.getLeft()));
                     currencyData.setBuy(inputMap.get(pair.getLeft()));
                     currencyData.setSell(inputMap.get(pair.getRight()));
                     currencyData.setRatio(1);
