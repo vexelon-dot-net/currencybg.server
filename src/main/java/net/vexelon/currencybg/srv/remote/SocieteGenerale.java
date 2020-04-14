@@ -124,7 +124,6 @@ public class SocieteGenerale extends AbstractSource {
         } catch (URISyntaxException e) {
             throw new SourceException("Invalid source url - " + URL_SOURCE, e);
         }
-
     }
 
     @Override
