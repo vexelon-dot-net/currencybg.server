@@ -14,11 +14,16 @@ public class XChangeBGSourceTest {
     public void test_xchangebg_1() {
         List<CurrencyData> rates;
         CurrencyData first;
+        XChangeBGSource source = new XChangeBGSource(new NullReporter());
 
         try {
-            rates = new XChangeBGSource(new NullReporter())
-                    .getXChangeRates(TestUtils.getTestResource("/xbg_btc_buy.json"),
-                            TestUtils.getTestResource("/xbg_btc_sell.json"), "BTC-BGN");
+            List<String> csrf = source.getXChangeCSRF(TestUtils.getTestResource("/xbg.html"));
+            assertEquals("csrf tokens", 2, csrf.size());
+            assertEquals("csrf tokens", "csrf5e95a069ae58a", csrf.get(0));
+            assertEquals("csrf tokens", "1657dc947156d0b7b3e0d8eb84bc3196", csrf.get(1));
+
+            rates = source.getXChangeRates(TestUtils.getTestResource("/xbg_btc_buy.json"),
+                    TestUtils.getTestResource("/xbg_btc_sell.json"), "BTC-BGN");
 
             assertEquals("BTC size=1", 1, rates.size());
             first = rates.iterator().next();
