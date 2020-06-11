@@ -158,6 +158,7 @@ public abstract class AbstractSource implements Source {
 
         int i = 0;
         Iterator<CurrencyData> iterator = result.iterator();
+
         while (iterator.hasNext()) {
             CurrencyData currencyData = iterator.next();
 
@@ -263,15 +264,16 @@ public abstract class AbstractSource implements Source {
                     }
                 }
 
-                if (currencyData.getBuy().isEmpty() && currencyData.getSell().isEmpty()) {
-                    throw new SourceException(tag + " - both sell and buy values are empty for currency=" + currencyData.getCode());
+                if (StringUtils.isBlank(currencyData.getBuy()) && StringUtils.isBlank(currencyData.getSell())) {
+                    log.warn("{} - both sell and buy values are empty for currency={}. Skipped.", tag, currencyData.getCode());
+                    iterator.remove();
+//                    throw new SourceException(tag + " - both sell and buy values are empty for currency=" + currencyData.getCode());
                 }
             } catch (SourceException e) {
                 log.warn("Currency entry normalization error!", e.getMessage());
                 getReporter().write(getName(), e.getMessage());
                 getReporter().write(getName(),
                         "Removing currency data entry for - " + StringUtils.defaultString(currencyData.getCode()));
-
                 iterator.remove();
             }
 
