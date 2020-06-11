@@ -35,7 +35,7 @@ public class AltcoinsSource extends AbstractSource {
     private static final Logger log = LoggerFactory.getLogger(AltcoinsSource.class);
     private static final String TAG_NAME = AltcoinsSource.class.getSimpleName();
 
-    private static final String URL_SOURCE = "https://www.altcoins.bg/order/rates";
+    private static final String URL_SOURCE = "https://altcoins.bg/currencies/rates";
     private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
 
     public static final Set<String> CURRENCIES =
