@@ -50,9 +50,9 @@ public class SocieteGenerale extends AbstractSource {
             String currentTimeSofia = LocalTime.now(ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA))
                     .format(DateTimeFormatter.ofPattern("HH:mm")).toString();
 
-            Element dateArrtibute = doc
+            Element dateAttribute = doc
                     .select("div.layout-3-4.text-resize > div.layout-2-4.last.text-resize > h2.heading-normal").first();
-            String currentDateTime = dateArrtibute.text().substring(dateArrtibute.text().length() - 10).replace("-",
+            String currentDateTime = dateAttribute.text().substring(dateAttribute.text().length() - 10).replace("-",
                     ".") + " " + currentTimeSofia;
             Date updateDate = DateTimeUtils.parseDate(currentDateTime, DATE_FORMAT);
 

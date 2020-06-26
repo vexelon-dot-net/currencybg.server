@@ -53,21 +53,6 @@ public class XChangeBGSource extends AbstractSource {
         super(reporter);
     }
 
-    public static void main(String[] args) throws Exception {
-        XChangeBGSource src = new XChangeBGSource(new ConsoleReporter());
-        src.getRates(new Callback() {
-            @Override public void onCompleted(List<CurrencyData> currencyDataList) {
-                for (CurrencyData cd : currencyDataList) {
-                    System.out.println(cd.toString());
-                }
-            }
-
-            @Override public void onFailed(Exception exception) {
-                exception.printStackTrace();
-            }
-        });
-    }
-
     /**
      * Transforms xChange BG JSON data streams into {@link CurrencyData} model.
      */
