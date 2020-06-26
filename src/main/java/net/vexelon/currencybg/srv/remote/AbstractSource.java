@@ -120,8 +120,13 @@ public abstract class AbstractSource implements Source {
         doPost(new URI(url), entity, contentType, responseCallback);
     }
 
-    protected void doGet(URI uri, final HTTPCallback httpCallback) {
+    protected void doGet(URI uri, String userAgent, final HTTPCallback httpCallback) {
         HttpGet httpGet = new HttpGet(uri);
+
+        if (!StringUtils.isEmpty(userAgent)) {
+            httpGet.setHeader("User-Agent", userAgent);
+        }
+
         getClient(uri.getScheme().startsWith("https")).execute(httpGet, new FutureCallback<HttpResponse>() {
 
             @Override
@@ -139,6 +144,10 @@ public abstract class AbstractSource implements Source {
                 httpCallback.onRequestCompleted(null, false);
             }
         });
+    }
+
+    protected void doGet(URI uri, final HTTPCallback httpCallback) {
+        doGet(uri, null, httpCallback);
     }
 
     protected void doGet(String url, final HTTPCallback responseCallback) throws URISyntaxException {

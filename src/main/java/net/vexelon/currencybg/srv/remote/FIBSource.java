@@ -2,11 +2,18 @@ package net.vexelon.currencybg.srv.remote;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
+import net.vexelon.currencybg.srv.Defs;
+import net.vexelon.currencybg.srv.reports.ConsoleReporter;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.HttpResponse;
 import org.jsoup.Jsoup;
@@ -29,6 +36,7 @@ public class FIBSource extends AbstractSource {
     private static final Logger log = LoggerFactory.getLogger(FIBSource.class);
     private static final String TAG_NAME = FIBSource.class.getSimpleName();
 
+    private static final String FAKE_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36";
     private static final String URL_SOURCE = "https://www.fibank.bg/bg/valutni-kursove";
     private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
 
@@ -42,15 +50,17 @@ public class FIBSource extends AbstractSource {
         Document doc = Jsoup.parse(input, Charsets.UTF_8.name(), URL_SOURCE);
 
         try {
-            Element contentBox = doc.select(
-                    "body > div.site > main > section:nth-child(3) > div > div.text > p > small").first();
+            Element contentBox = doc.select("div.text > p > small").first();
 
             // parse update date and time
-            String rawDate = contentBox.textNodes().get(0).text().substring(3).trim();
-            Date updateDate = DateTimeUtils.parseDate(rawDate, DATE_FORMAT);
+            Date updateDate = new Date();
+            String rawDate = contentBox.text();
+            if (!StringUtils.isBlank(rawDate)) {
+                updateDate = DateTimeUtils.parseDate(rawDate.substring(3).trim(), DATE_FORMAT);
+            }
 
             // parse table with currencies
-            Element tbody = doc.select("table > tbody").first();
+            Element tbody = doc.select(".scrollable-content > table > tbody").first();
             Elements children = tbody.children();
 
             int row = 1;
@@ -81,7 +91,7 @@ public class FIBSource extends AbstractSource {
     @Override
     public void getRates(final Callback callback) throws SourceException {
         try {
-            doGet(URL_SOURCE, new HTTPCallback() {
+            doGet(new URI(URL_SOURCE), FAKE_USER_AGENT, new HTTPCallback() {
 
                 @Override
                 public void onRequestFailed(Exception e) {
