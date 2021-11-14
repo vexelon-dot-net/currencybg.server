@@ -72,6 +72,11 @@ public class FIBSource extends AbstractSource {
                     currencyData.setCode(child.child(1).text());
                     currencyData.setBuy(child.child(4).text());
                     currencyData.setSell(child.child(5).text());
+                    // fix XAU formatting for FIBank
+                    if ("XAU".equalsIgnoreCase(currencyData.getCode())) {
+                        currencyData.setBuy(currencyData.getBuy().replace(",", ""));
+                        currencyData.setSell(currencyData.getSell().replace(",", ""));
+                    }
                     currencyData.setRatio(Integer.parseInt(child.child(2).text()));
                     currencyData.setSource(Sources.FIB.getID());
                     result.add(currencyData);
