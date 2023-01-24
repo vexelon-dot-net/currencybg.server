@@ -8,29 +8,35 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.bmuschko:gradle-tomcat-plugin:2.3'
+//        classpath 'com.bmuschko:gradle-tomcat-plugin:2.3'
+        classpath 'com.google.cloud.tools:appengine-gradle-plugin:2.4.5'
     }
 }
 
-apply plugin: 'eclipse'
-apply plugin: 'eclipse-wtp'
+//apply plugin: 'eclipse'
+//apply plugin: 'eclipse-wtp'
 apply plugin: 'java'
 apply plugin: 'war'
-apply plugin: 'com.bmuschko.tomcat'
+apply plugin: 'com.google.cloud.tools.appengine'
+//apply plugin: 'com.bmuschko.tomcat'
 
-def appVersion = '1.6.17'
-def tomcatVersion = '8.0.42'
+def appVersion = '2.0.0'
+//def tomcatVersion = '8.0.42'
 sourceCompatibility = JavaVersion.VERSION_1_8
-
+targetCompatibility = JavaVersion.VERSION_1_8
 //compileTestJava.options.encoding = 'UTF-8'
 
 repositories {
+    maven {
+        url 'https://maven-central.storage.googleapis.com'
+    }
     jcenter()
     mavenCentral()
 }
 
 dependencies {
-    compile 'commons-io:commons-io:2.6',
+    implementation 'com.google.appengine:appengine-api-1.0-sdk:2.0.10',
+            'commons-io:commons-io:2.6',
             'commons-beanutils:commons-beanutils:1.9.4',
             'org.apache.commons:commons-lang3:3.9',
             'org.apache.commons:commons-configuration2:2.6',
@@ -46,14 +52,27 @@ dependencies {
             'com.github.pengrad:java-telegram-bot-api:2.1.1',
             'org.ogce:xpp3:1.1.6',
             'com.sparkpost:sparkpost-lib:0.22'
-    providedCompile 'javax.servlet:javax.servlet-api:3.0.1',
+    providedCompile 'javax.servlet:javax.servlet-api:3.1.0',
             'javax.servlet.jsp:jsp-api:2.2'
 
-    testCompile 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12',
+            'com.google.appengine:appengine-testing:+',
+            'com.google.appengine:appengine-api-stubs:+',
+            'com.google.appengine:appengine-tools-sdk:+'
 
-    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
-            "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
-            "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
+//    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
+//            "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
+//            "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
+}
+
+//appengineDeploy.dependsOn test
+//appengineStage.dependsOn test
+
+appengine {
+    deploy {
+        version = 'v1'
+        projectId = System.getenv('GOOGLE_CLOUD_PROJECT')
+    }
 }
 
 war {
@@ -75,28 +94,36 @@ tasks.withType(Zip) { task ->
     }
 }
 
-eclipse {
-    project {
-        natures 'org.eclipse.buildship.core.gradleprojectnature',
-                'org.eclipse.jdt.core.javanature',
-                'org.eclipse.wst.common.modulecore.ModuleCoreNature',
-                'org.eclipse.wst.common.project.facet.core.nature',
-                'org.eclipse.jem.workbench.JavaEMFNature',
-                'org.eclipse.wst.jsdt.core.jsNature'
-    }
-    project.referencedProjects.each { evaluationDependsOn it }
-    jdt {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    //classpath.plusConfigurations += [ configurations.compile, configurations.testCompile ]
-    classpath {
-        downloadJavadoc = true
-    }
-}
+//eclipse {
+//    project {
+//        natures 'org.eclipse.buildship.core.gradleprojectnature',
+//                'org.eclipse.jdt.core.javanature',
+//                'org.eclipse.wst.common.modulecore.ModuleCoreNature',
+//                'org.eclipse.wst.common.project.facet.core.nature',
+//                'org.eclipse.jem.workbench.JavaEMFNature',
+//                'org.eclipse.wst.jsdt.core.jsNature'
+//    }
+//    project.referencedProjects.each { evaluationDependsOn it }
+//    jdt {
+//        sourceCompatibility = JavaVersion.VERSION_1_8
+//        targetCompatibility = JavaVersion.VERSION_1_8
+//    }
+//    //classpath.plusConfigurations += [ configurations.compile, configurations.testCompile ]
+//    classpath {
+//        downloadJavadoc = true
+//    }
+//}
 
-tomcat {
-    httpPort = 8090
-    enableSSL = false
-    contextPath = '/'
+//tomcat {
+//    httpPort = 8090
+//    enableSSL = false
+//    contextPath = '/'
+//}
+
+appengine {
+    run {
+        port = 8090
+        jvmFlags = ['-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005']
+        automaticRestart = true // enable hot reload
+    }
 }
