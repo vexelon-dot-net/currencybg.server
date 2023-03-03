@@ -7,11 +7,10 @@ import net.vexelon.currencybg.srv.apix.ApiVerticle;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ScheduledExecutorService;
 
 public class Main {
-
-	private static final int MAX_THREADS = 3;
 
 	private static ScheduledExecutorService executor = null;
 
@@ -19,7 +18,8 @@ public class Main {
 		System.out.println("*** CurrencyBG server start ***");
 
 		try {
-			executor = Executors.newScheduledThreadPool(MAX_THREADS);
+			// setup a background tasks executor with a minimum of 2 parallel threads
+			executor = Executors.newScheduledThreadPool(Math.max(2, ForkJoinPool.getCommonPoolParallelism()));
 
 			// init application and boot background services
 			var bootstrap = new Bootstrap();
