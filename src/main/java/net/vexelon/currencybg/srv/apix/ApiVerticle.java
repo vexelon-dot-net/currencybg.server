@@ -14,11 +14,9 @@ public class ApiVerticle extends AbstractVerticle {
 	@Override
 	public void start() throws Exception {
 		var router = Router.router(vertx);
-
-		//		router.route().handler(this::handleDefault);
+		router.route("/").handler(new ApiJunctions()::handle);
 
 		int port = Integer.parseInt(System.getenv().getOrDefault("PORT", "8080"));
-
 		vertx.createHttpServer().requestHandler(router).listen(port);
 	}
 

@@ -43,8 +43,6 @@ dependencies {
             'com.github.pengrad:java-telegram-bot-api:_',
             'org.ogce:xpp3:_',
             'com.sparkpost:sparkpost-lib:_'
-    providedCompile 'javax.servlet:javax.servlet-api:_',
-            'javax.servlet.jsp:jsp-api:_'
 
     testImplementation Testing.junit4,
             'com.google.appengine:appengine-testing:+',
@@ -59,17 +57,17 @@ dependencies {
 //appengineDeploy.dependsOn test
 //appengineStage.dependsOn test
 
-appengine {
-    deploy {
-        version = 'v1'
-        projectId = System.getenv('GOOGLE_CLOUD_PROJECT')
-    }
-}
-
-appengine {
-    run {
-        port = 8090
-        jvmFlags = ['-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005']
-        automaticRestart = true // enable hot reload
-    }
-}
+//appengine {
+//    deploy {
+//        version = 'v1'
+//        projectId = System.getenv('GOOGLE_CLOUD_PROJECT')
+//    }
+//}
+//
+//appengine {
+//    run {
+//        port = 8090
+//        jvmFlags = ['-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005']
+//        automaticRestart = true // enable hot reload
+//    }
+//}
