@@ -2,6 +2,9 @@ package net.vexelon.currencybg.srv.apix;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.ext.web.Router;
+import net.vexelon.currencybg.srv.Defs;
+import net.vexelon.currencybg.srv.apix.junctions.Currencies;
+import net.vexelon.currencybg.srv.apix.junctions.Root;
 
 public class ApiVerticle extends AbstractVerticle {
 
@@ -14,10 +17,12 @@ public class ApiVerticle extends AbstractVerticle {
 	@Override
 	public void start() throws Exception {
 		var router = Router.router(vertx);
-		router.route("/").handler(new ApiJunctions()::handle);
 
-		int port = Integer.parseInt(System.getenv().getOrDefault("PORT", "8080"));
-		vertx.createHttpServer().requestHandler(router).listen(port);
+		// the attach order matters!
+		new Currencies().attach(router);
+		new Root().attach(router);
+
+		vertx.createHttpServer().requestHandler(router).listen(Integer.parseInt(Defs.CONFIG_PORT));
 	}
 
 	@Override
