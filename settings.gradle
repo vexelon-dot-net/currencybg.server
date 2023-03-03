@@ -1,1 +1,17 @@
+import de.fayard.refreshVersions.core.StabilityLevel
+
+plugins {
+    id("de.fayard.refreshVersions") version "0.40.2"
+}
+
+refreshVersions {
+    featureFlags {
+        enable 'LIBS'
+        disable 'GRADLE_UPDATES'
+    }
+    rejectVersionIf {
+        candidate.stabilityLevel != StabilityLevel.Stable
+    }
+}
+
 rootProject.name = 'currencybg.server'

@@ -1,30 +1,19 @@
-/**
- * CurrencyBG Server Build Script
- *
- */
 buildscript {
     repositories {
-        jcenter()
         mavenCentral()
+        jcenter()
     }
     dependencies {
-//        classpath 'com.bmuschko:gradle-tomcat-plugin:2.3'
-        classpath 'com.google.cloud.tools:appengine-gradle-plugin:2.4.5'
+        classpath 'com.google.cloud.tools:appengine-gradle-plugin:_'
     }
 }
 
-//apply plugin: 'eclipse'
-//apply plugin: 'eclipse-wtp'
 apply plugin: 'java'
-apply plugin: 'war'
 apply plugin: 'com.google.cloud.tools.appengine'
-//apply plugin: 'com.bmuschko.tomcat'
 
 def appVersion = '2.0.0'
-//def tomcatVersion = '8.0.42'
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
-//compileTestJava.options.encoding = 'UTF-8'
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 repositories {
     maven {
@@ -35,34 +24,36 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.google.appengine:appengine-api-1.0-sdk:2.0.10',
-            'commons-io:commons-io:2.6',
-            'commons-beanutils:commons-beanutils:1.9.4',
-            'org.apache.commons:commons-lang3:3.9',
-            'org.apache.commons:commons-configuration2:2.6',
-            'org.apache.httpcomponents:httpasyncclient:4.1.2',
-            'org.slf4j:slf4j-log4j12:1.7.30',
-            'com.google.guava:guava:28.2-jre',
-            'com.google.code.gson:gson:2.8.2',
-            'com.sun.jersey:jersey-core:1.19',
-            'com.sun.jersey:jersey-servlet:1.19',
-            'com.sun.jersey:jersey-server:1.19',
-            'mysql:mysql-connector-java:5.1.40',
-            'org.jsoup:jsoup:1.12.2',
-            'com.github.pengrad:java-telegram-bot-api:2.1.1',
-            'org.ogce:xpp3:1.1.6',
-            'com.sparkpost:sparkpost-lib:0.22'
-    providedCompile 'javax.servlet:javax.servlet-api:3.1.0',
-            'javax.servlet.jsp:jsp-api:2.2'
+    implementation "io.vertx:vertx-web:_",
+            "io.vertx:vertx-web-client:_",
+            'com.google.appengine:appengine-api-1.0-sdk:_',
+            'commons-io:commons-io:_',
+            'commons-beanutils:commons-beanutils:_',
+            'org.apache.commons:commons-lang3:_',
+            'org.apache.commons:commons-configuration2:_',
+            'org.apache.httpcomponents:httpasyncclient:_',
+            'org.slf4j:slf4j-log4j12:_',
+            'com.google.guava:guava:_',
+            'com.google.code.gson:gson:_',
+            'com.sun.jersey:jersey-core:_',
+            'com.sun.jersey:jersey-servlet:_',
+            'com.sun.jersey:jersey-server:_',
+            'mysql:mysql-connector-java:_',
+            'org.jsoup:jsoup:_',
+            'com.github.pengrad:java-telegram-bot-api:_',
+            'org.ogce:xpp3:_',
+            'com.sparkpost:sparkpost-lib:_'
+    providedCompile 'javax.servlet:javax.servlet-api:_',
+            'javax.servlet.jsp:jsp-api:_'
 
-    testImplementation 'junit:junit:4.12',
+    testImplementation Testing.junit4,
             'com.google.appengine:appengine-testing:+',
             'com.google.appengine:appengine-api-stubs:+',
             'com.google.appengine:appengine-tools-sdk:+'
 
-//    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
-//            "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
-//            "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
+//    tomcat "org.apache.tomcat.embed:tomcat-embed-core:_",
+//            "org.apache.tomcat.embed:tomcat-embed-logging-juli:_",
+//            "org.apache.tomcat.embed:tomcat-embed-jasper:_"
 }
 
 //appengineDeploy.dependsOn test
@@ -74,51 +65,6 @@ appengine {
         projectId = System.getenv('GOOGLE_CLOUD_PROJECT')
     }
 }
-
-war {
-    manifest {
-        def manifestClasspath = configurations.compile.collect { it.getName() }.join(',')
-        attributes(
-                "Class-Path": manifestClasspath,
-                "Implementation-Vendor": 'Vexelon Microservices',
-                "Implementation-Title": 'CurrencyBG Server',
-                "Implementation-Version": appVersion
-        )
-    }
-    exclude('src/main/webapp/META-INF/**')
-}
-
-tasks.withType(Zip) { task ->
-    task.doLast {
-        ant.checksum file: it.archivePath
-    }
-}
-
-//eclipse {
-//    project {
-//        natures 'org.eclipse.buildship.core.gradleprojectnature',
-//                'org.eclipse.jdt.core.javanature',
-//                'org.eclipse.wst.common.modulecore.ModuleCoreNature',
-//                'org.eclipse.wst.common.project.facet.core.nature',
-//                'org.eclipse.jem.workbench.JavaEMFNature',
-//                'org.eclipse.wst.jsdt.core.jsNature'
-//    }
-//    project.referencedProjects.each { evaluationDependsOn it }
-//    jdt {
-//        sourceCompatibility = JavaVersion.VERSION_1_8
-//        targetCompatibility = JavaVersion.VERSION_1_8
-//    }
-//    //classpath.plusConfigurations += [ configurations.compile, configurations.testCompile ]
-//    classpath {
-//        downloadJavadoc = true
-//    }
-//}
-
-//tomcat {
-//    httpPort = 8090
-//    enableSSL = false
-//    contextPath = '/'
-//}
 
 appengine {
     run {

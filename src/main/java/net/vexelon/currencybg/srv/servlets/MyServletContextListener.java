@@ -1,22 +1,21 @@
 package net.vexelon.currencybg.srv.servlets;
 
+import com.mysql.jdbc.AbandonedConnectionCleanupThread;
+import net.vexelon.currencybg.srv.Bootstrap;
+
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.util.Enumeration;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-
-import com.mysql.jdbc.AbandonedConnectionCleanupThread;
-
-import net.vexelon.currencybg.srv.Bootstrap;
-
+@Deprecated
 public class MyServletContextListener implements ServletContextListener {
 
 	private static final String THREAD_POOL_ALIAS = "_cbgthpool";
-	private static final int MAX_THREADS = 3;
+	private static final int    MAX_THREADS       = 3;
 
 	private Bootstrap bootstrap = new Bootstrap();
 
@@ -37,11 +36,11 @@ public class MyServletContextListener implements ServletContextListener {
 	public void contextDestroyed(ServletContextEvent sce) {
 		System.out.println("*** CurrencyBG server shutdown ***");
 
-		bootstrap.stop();
+		//		bootstrap.stop();
 
 		// release threads
 		final ScheduledExecutorService executor = (ScheduledExecutorService) sce.getServletContext()
-		        .getAttribute(THREAD_POOL_ALIAS);
+				.getAttribute(THREAD_POOL_ALIAS);
 		if (executor != null) {
 			System.out.println("*** Shutting down threads ***");
 			executor.shutdown();
