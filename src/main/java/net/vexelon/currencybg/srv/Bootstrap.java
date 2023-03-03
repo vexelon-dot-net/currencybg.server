@@ -24,7 +24,6 @@ public class Bootstrap {
 	private static final Logger log = LoggerFactory.getLogger(Bootstrap.class);
 
 	/**
-	 * @param executor
 	 * @throws RuntimeException On configuration loading errors.
 	 */
 	public void start(ScheduledExecutorService executor) {
@@ -53,7 +52,7 @@ public class Bootstrap {
 		// apply log non-production log level, if needed
 		if (GlobalConfig.INSTANCE.isLogDebugEnabled()) {
 			LogManager.getLogger(Defs.LOGGER_NAME).setLevel(Level.TRACE);
-			LogManager.getRootLogger().setLevel(Level.TRACE);
+			//			LogManager.getRootLogger().setLevel(Level.TRACE);
 			log.trace("**Non-production** TRACE logging mode enabled.");
 		}
 

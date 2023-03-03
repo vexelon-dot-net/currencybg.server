@@ -8,8 +8,10 @@ buildscript {
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'com.google.cloud.tools.appengine'
+plugins {
+    id 'java'
+//    id 'com.google.cloud.tools.appengine'
+}
 
 def appVersion = '2.0.0'
 sourceCompatibility = JavaVersion.VERSION_17
@@ -24,9 +26,9 @@ repositories {
 }
 
 dependencies {
-    implementation "io.vertx:vertx-web:_",
-            "io.vertx:vertx-web-client:_",
-            'com.google.appengine:appengine-api-1.0-sdk:_',
+    implementation 'com.google.appengine:appengine-api-1.0-sdk:_',
+            'io.vertx:vertx-web:_',
+            'io.vertx:vertx-web-client:_',
             'commons-io:commons-io:_',
             'commons-beanutils:commons-beanutils:_',
             'org.apache.commons:commons-lang3:_',
@@ -48,10 +50,6 @@ dependencies {
             'com.google.appengine:appengine-testing:+',
             'com.google.appengine:appengine-api-stubs:+',
             'com.google.appengine:appengine-tools-sdk:+'
-
-//    tomcat "org.apache.tomcat.embed:tomcat-embed-core:_",
-//            "org.apache.tomcat.embed:tomcat-embed-logging-juli:_",
-//            "org.apache.tomcat.embed:tomcat-embed-jasper:_"
 }
 
 //appengineDeploy.dependsOn test
