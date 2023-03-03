@@ -1,6 +1,5 @@
 package net.vexelon.currencybg.srv;
 
-import com.mysql.jdbc.AbandonedConnectionCleanupThread;
 import io.vertx.core.Vertx;
 import net.vexelon.currencybg.srv.apix.ApiVerticle;
 
@@ -42,14 +41,6 @@ public class Main {
 		if (executor != null) {
 			System.out.println("*** Shutting down threads ***");
 			executor.shutdown();
-		}
-
-		// release database driver(s)
-		// @see http://stackoverflow.com/a/16467695
-		try {
-			AbandonedConnectionCleanupThread.shutdown();
-		} catch (Throwable e) {
-			// do nothing
 		}
 
 		var drivers = DriverManager.getDrivers();
