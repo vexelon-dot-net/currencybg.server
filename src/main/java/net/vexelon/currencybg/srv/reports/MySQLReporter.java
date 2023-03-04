@@ -23,7 +23,7 @@ public class MySQLReporter extends AbstractReporter {
 	public void send() throws IOException {
 		try (final var dataSource = DataSource.newDataSource()) {
 			dataSource.connect();
-			dataSource.addReport(buffer.toString());
+			dataSource.addReportMessage(buffer.toString());
 		} catch (IOException | DataSourceException ex) {
 			log.error("Could not connect to database!", ex);
 		}

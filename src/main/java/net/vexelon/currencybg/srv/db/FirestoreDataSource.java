@@ -1,11 +1,11 @@
 package net.vexelon.currencybg.srv.db;
 
-import com.google.firebase.FirebaseApp;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.CurrencySource;
 import net.vexelon.currencybg.srv.db.models.ReportData;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +17,7 @@ public final class FirestoreDataSource implements DataSource {
 
 	@Override
 	public void connect() throws DataSourceException {
+
 	}
 
 	@Override
@@ -25,7 +26,7 @@ public final class FirestoreDataSource implements DataSource {
 	}
 
 	@Override
-	public String getAllCurrentRatesAfter(Integer sourceId, Date timeFrom) throws DataSourceException {
+	public String getAllCurrentRatesAfter(int sourceId, Date timeFrom) throws DataSourceException {
 		return null;
 	}
 
@@ -35,18 +36,13 @@ public final class FirestoreDataSource implements DataSource {
 	}
 
 	@Override
-	public String getAllRates(Integer sourceId, Date dateFrom) throws DataSourceException {
+	public String getAllRates(int sourceId, Date dateFrom) throws DataSourceException {
 		return null;
 	}
 
 	@Override
-	public CurrencySource getSourceById(int id) throws DataSourceException {
+	public Collection<CurrencySource> getAllSources(boolean isActiveOnly) throws DataSourceException {
 		return null;
-	}
-
-	@Override
-	public List<CurrencySource> getAllSources(boolean isActiveOnly) throws DataSourceException {
-		 FirebaseApp.getInstance().g
 	}
 
 	@Override
@@ -60,7 +56,7 @@ public final class FirestoreDataSource implements DataSource {
 	}
 
 	@Override
-	public void addRates(List<CurrencyData> rates) throws DataSourceException {
+	public void addRates(Collection<CurrencyData> rates) throws DataSourceException {
 
 	}
 
@@ -70,17 +66,17 @@ public final class FirestoreDataSource implements DataSource {
 	}
 
 	@Override
-	public void addReport(String message) throws DataSourceException {
+	public void addReportMessage(String message) throws DataSourceException {
 
 	}
 
 	@Override
-	public List<ReportData> getReports() throws DataSourceException {
+	public Collection<ReportData> getReports() throws DataSourceException {
 		return null;
 	}
 
 	@Override
-	public void deleteReports(List<ReportData> reporters) throws DataSourceException {
+	public void deleteReports(Collection<ReportData> reports) throws DataSourceException {
 
 	}
 

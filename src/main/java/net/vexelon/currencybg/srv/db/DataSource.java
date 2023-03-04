@@ -29,6 +29,7 @@ import net.vexelon.currencybg.srv.db.models.CurrencySource;
 import net.vexelon.currencybg.srv.db.models.ReportData;
 
 import java.io.Closeable;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -61,15 +62,11 @@ public interface DataSource extends Closeable {
 	String getAllCurrentRatesAfter(Date timeFrom) throws DataSourceException;
 
 	/**
-	 * Fetches a list of currencies for the current date which are after
-	 * DateTime by sourceId
+	 * Fetches a list of currencies for the current date which are after DateTime for a {@code source}
 	 *
-	 * @param sourceId
 	 * @param timeFrom
-	 * @return
-	 * @throws DataSourceException
 	 */
-	String getAllCurrentRatesAfter(Integer sourceId, Date timeFrom) throws DataSourceException;
+	String getAllCurrentRatesAfter(int sourceId, Date timeFrom) throws DataSourceException;
 
 	/**
 	 * Fetches a list of currencies by date
@@ -88,31 +85,18 @@ public interface DataSource extends Closeable {
 	 * @return
 	 * @throws DataSourceException
 	 */
-	String getAllRates(Integer sourceId, Date dateFrom) throws DataSourceException;
+	String getAllRates(int sourceId, Date dateFrom) throws DataSourceException;
 
 	/**
-	 * Fetches a list of sources in DB by id
+	 * Fetches a list of sources
 	 *
-	 * @param id
-	 * @return
-	 * @throws DataSourceException
+	 * @param isActiveOnly If {@code true}, only actives sources will be fetched.
 	 */
-	CurrencySource getSourceById(int id) throws DataSourceException;
-
-	/**
-	 * Fetches a list of sources in DB
-	 *
-	 * @return
-	 * @throws DataSourceException
-	 */
-
-	List<CurrencySource> getAllSources(boolean isActiveOnly) throws DataSourceException;
+	Collection<CurrencySource> getAllSources(boolean isActiveOnly) throws DataSourceException;
 
 	/**
 	 * Check whether the authentication is valid
 	 *
-	 * @param headerName
-	 * @param headerValue
 	 * @return
 	 * @throws DataSourceException
 	 */
@@ -128,13 +112,12 @@ public interface DataSource extends Closeable {
 	void addRates(Map<Integer, List<CurrencyData>> rates) throws DataSourceException;
 
 	/**
-	 * Add rates from by one source
+	 * Adds rates from a source
 	 *
-	 * @param sourceId
-	 * @param rates
+	 * @param rates A list of {@link CurrencyData} fetched rates.
 	 * @throws DataSourceException
 	 */
-	void addRates(List<CurrencyData> rates) throws DataSourceException;
+	void addRates(Collection<CurrencyData> rates) throws DataSourceException;
 
 	/**
 	 * Update some or all fields in cbg_sources table
@@ -146,27 +129,20 @@ public interface DataSource extends Closeable {
 	void updateSource(int sourceId, CurrencySource source) throws DataSourceException;
 
 	/**
-	 * Write an error message in DB
+	 * Writes an error message report in the database
 	 *
-	 * @param source  throws an error
-	 * @param message
-	 * @throws DataSourceException
+	 * @param message Formatted message.
 	 */
-	void addReport(String message) throws DataSourceException;
+	void addReportMessage(String message) throws DataSourceException;
 
 	/**
-	 * Return information for all reports in DB
-	 *
-	 * @return
-	 * @throws DataSourceException
+	 * @return A list of all reports waiting to be sent.
 	 */
-	List<ReportData> getReports() throws DataSourceException;
+	Collection<ReportData> getReports() throws DataSourceException;
 
 	/**
-	 * Clear all information for the reports in DB
-	 *
-	 * @throws DataSourceException
+	 * Remove all reports specified
 	 */
-	void deleteReports(List<ReportData> reporters) throws DataSourceException;
+	void deleteReports(Collection<ReportData> reports) throws DataSourceException;
 
 }

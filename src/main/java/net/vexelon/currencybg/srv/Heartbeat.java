@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.time.*;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -110,7 +111,7 @@ public class Heartbeat implements Runnable {
 				 * Fetch all (active) sources from database
 				 */
 				dataSource.connect();
-				List<CurrencySource> allSources = dataSource.getAllSources(true);
+				Collection<CurrencySource> allSources = dataSource.getAllSources(true);
 
 				/*
 				 * Fetch currencies for every active source
