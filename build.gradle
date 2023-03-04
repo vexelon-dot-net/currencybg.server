@@ -27,6 +27,7 @@ repositories {
 
 dependencies {
     implementation 'com.google.appengine:appengine-api-1.0-sdk:_',
+            'com.google.firebase:firebase-admin:_',
             'io.vertx:vertx-web:_',
             'io.vertx:vertx-web-client:_',
             'commons-io:commons-io:_',
