@@ -1,18 +1,18 @@
 /*
  * The MIT License
- * 
+ *
  * Copyright (c) 2015 Petar Petrov
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,7 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package net.vexelon.currencybg.srv.db;
+
+import net.vexelon.currencybg.srv.db.models.CurrencyData;
+import net.vexelon.currencybg.srv.db.models.CurrencySource;
+import net.vexelon.currencybg.srv.db.models.ReportData;
 
 import java.io.Closeable;
 import java.sql.Connection;
@@ -29,29 +34,27 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import net.vexelon.currencybg.srv.db.models.CurrencyData;
-import net.vexelon.currencybg.srv.db.models.CurrencySource;
-import net.vexelon.currencybg.srv.db.models.ReportData;
-
 /**
  * Encapsulates the available read-write operations to and from an underlying
  * data source implementation.
  */
 public interface DataSource extends Closeable {
 
+	static DataSource newDataSource() {
+		return new MySQLDataSource();
+	}
+
 	/**
 	 * Establishes connection to data source.
-	 * 
-	 * @param context
-	 * @throws DataSourceException
-	 *             If an SQL error is thrown.
+	 *
+	 * @throws DataSourceException If an SQL error is thrown.
 	 */
 	Connection connect() throws DataSourceException;
 
 	/**
 	 * Fetches a list of currencies for the current date which are after
 	 * DateTime
-	 * 
+	 *
 	 * @param timeFrom
 	 * @return
 	 * @throws DataSourceException
@@ -61,7 +64,7 @@ public interface DataSource extends Closeable {
 	/**
 	 * Fetches a list of currencies for the current date which are after
 	 * DateTime by sourceId
-	 * 
+	 *
 	 * @param sourceId
 	 * @param timeFrom
 	 * @return
@@ -71,7 +74,7 @@ public interface DataSource extends Closeable {
 
 	/**
 	 * Fetches a list of currencies by date
-	 * 
+	 *
 	 * @param dateFrom
 	 * @return
 	 * @throws DataSourceException
@@ -80,7 +83,7 @@ public interface DataSource extends Closeable {
 
 	/**
 	 * Fetches a list of currencies by sourceId and date
-	 * 
+	 *
 	 * @param sourceId
 	 * @param dateFrom
 	 * @return
@@ -90,7 +93,7 @@ public interface DataSource extends Closeable {
 
 	/**
 	 * Fetches a list of sources in DB by id
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 * @throws DataSourceException
@@ -99,7 +102,7 @@ public interface DataSource extends Closeable {
 
 	/**
 	 * Fetches a list of sources in DB
-	 * 
+	 *
 	 * @return
 	 * @throws DataSourceException
 	 */
@@ -108,7 +111,7 @@ public interface DataSource extends Closeable {
 
 	/**
 	 * Check whether the authentication is valid
-	 * 
+	 *
 	 * @param headerName
 	 * @param headerValue
 	 * @return
@@ -118,17 +121,16 @@ public interface DataSource extends Closeable {
 
 	/**
 	 * Adds Map of exchange rates in DB.
-	 * 
-	 * @param rates
-	 *            A {@link Map} of language and {@link CurrencyData} list
-	 *            values.
+	 *
+	 * @param rates A {@link Map} of language and {@link CurrencyData} list
+	 *              values.
 	 * @throws DataSourceException
 	 */
 	void addRates(Map<Integer, List<CurrencyData>> rates) throws DataSourceException;
 
 	/**
 	 * Add rates from by one source
-	 * 
+	 *
 	 * @param sourceId
 	 * @param rates
 	 * @throws DataSourceException
@@ -137,7 +139,7 @@ public interface DataSource extends Closeable {
 
 	/**
 	 * Update some or all fields in cbg_sources table
-	 * 
+	 *
 	 * @param sourceId
 	 * @param source
 	 * @throws DataSourceException
@@ -146,9 +148,8 @@ public interface DataSource extends Closeable {
 
 	/**
 	 * Write an error message in DB
-	 * 
-	 * @param source
-	 *            throws an error
+	 *
+	 * @param source  throws an error
 	 * @param message
 	 * @throws DataSourceException
 	 */
@@ -156,7 +157,7 @@ public interface DataSource extends Closeable {
 
 	/**
 	 * Return information for all reports in DB
-	 * 
+	 *
 	 * @return
 	 * @throws DataSourceException
 	 */
@@ -164,7 +165,7 @@ public interface DataSource extends Closeable {
 
 	/**
 	 * Clear all information for the reports in DB
-	 * 
+	 *
 	 * @throws DataSourceException
 	 */
 	void deleteReports(List<ReportData> reporters) throws DataSourceException;

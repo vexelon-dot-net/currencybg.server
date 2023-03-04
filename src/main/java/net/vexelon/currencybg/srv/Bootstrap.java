@@ -1,6 +1,9 @@
 package net.vexelon.currencybg.srv;
 
+import com.google.auth.oauth2.GoogleCredentials;
 import com.google.common.base.Charsets;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import net.vexelon.currencybg.srv.reports.ReporterHeartbeat;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Level;
@@ -13,6 +16,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Enumeration;
+import java.util.Objects;
 import java.util.TimeZone;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -95,6 +99,15 @@ public class Bootstrap {
 			}
 		} catch (Exception t) {
 			System.err.println("Could not find application version! Error: " + t.getMessage());
+		}
+
+		log.info("Initialize Firebase ...");
+		try (var serviceAccount = Bootstrap.class.getResourceAsStream("/currencybg-app-firebase-adminsdk.json")) {
+			FirebaseApp.initializeApp(FirebaseOptions.builder()
+					.setCredentials(GoogleCredentials.fromStream(Objects.requireNonNull(serviceAccount)))
+					.setDatabaseUrl("https://currencybg-app.firebaseio.com").build());
+		} catch (IOException e) {
+			throw new RuntimeException("Failed initializing Firebase!", e);
 		}
 
 		log.info("Booting threads ...");

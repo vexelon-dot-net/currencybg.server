@@ -1,26 +1,22 @@
 package net.vexelon.currencybg.srv.api;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.Map;
+import com.google.common.collect.Maps;
+import net.vexelon.currencybg.srv.Defs;
+import net.vexelon.currencybg.srv.db.DataSource;
+import net.vexelon.currencybg.srv.db.DataSourceException;
+import net.vexelon.currencybg.srv.utils.DateTimeUtils;
+import net.vexelon.currencybg.srv.utils.DateTimeUtilsNew;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.Maps;
-
-import net.vexelon.currencybg.srv.Defs;
-import net.vexelon.currencybg.srv.db.mysql.MySQLDataSource;
-import net.vexelon.currencybg.srv.db.DataSourceException;
-import net.vexelon.currencybg.srv.db.DataSource;
-import net.vexelon.currencybg.srv.utils.DateTimeUtils;
-import net.vexelon.currencybg.srv.utils.DateTimeUtilsNew;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.Map;
 
 @Path(Currencies.JUNCTION_NAME)
 public class Currencies extends AbstractJunction {
@@ -31,7 +27,7 @@ public class Currencies extends AbstractJunction {
 
 	/**
 	 * Fetches a key/value set of all available junctions.
-	 * 
+	 *
 	 * @return
 	 */
 	public static Map<String, String> getJunctionsList() {
@@ -46,9 +42,9 @@ public class Currencies extends AbstractJunction {
 	@GET
 	@Path("/{dateFrom}")
 	public Response getAllRatesByDate(@PathParam("dateFrom") String dateFrom,
-	        @HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
+			@HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
 
-		try (DataSource source = new MySQLDataSource()) {
+		try (final var source = DataSource.newDataSource()) {
 			verifyAccess();
 
 			source.connect();
@@ -69,9 +65,9 @@ public class Currencies extends AbstractJunction {
 	@GET
 	@Path("/{dateFrom}/{sourceId}")
 	public Response getAllRates(@PathParam("dateFrom") String dateFrom, @PathParam("sourceId") Integer sourceId,
-	        @HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
+			@HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
 
-		try (DataSource source = new MySQLDataSource()) {
+		try (final var source = DataSource.newDataSource()) {
 			verifyAccess();
 
 			source.connect();
@@ -93,9 +89,9 @@ public class Currencies extends AbstractJunction {
 	@GET
 	@Path("/today/{timeFrom}/{sourceId}")
 	public Response getAllCurrentRatesAfter(@PathParam("timeFrom") String timeFrom,
-	        @PathParam("sourceId") Integer sourceId, @HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
+			@PathParam("sourceId") Integer sourceId, @HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
 
-		try (DataSource source = new MySQLDataSource()) {
+		try (final var source = DataSource.newDataSource()) {
 			verifyAccess();
 
 			source.connect();
@@ -113,7 +109,7 @@ public class Currencies extends AbstractJunction {
 			String localTimeFromNoTz = DateTimeUtilsNew.removeTimeZone(timeFrom, Defs.DATETIME_FORMAT);
 
 			return getJsonResponse(source.getAllCurrentRatesAfter(sourceId,
-			        DateTimeUtils.parseDate(localTimeFromNoTz, Defs.DATETIME_FORMAT)));
+					DateTimeUtils.parseDate(localTimeFromNoTz, Defs.DATETIME_FORMAT)));
 		} catch (IOException | DataSourceException | ParseException e) {
 			log.error("", e);
 			return getErrorResponse();
@@ -126,9 +122,9 @@ public class Currencies extends AbstractJunction {
 	@GET
 	@Path("/today/{timeFrom}")
 	public Response getAllCurrentRatesAfter(@PathParam("timeFrom") String timeFrom,
-	        @HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
+			@HeaderParam(Defs.HEADER_APIKEY) String apiKey) throws Exception {
 
-		try (DataSource source = new MySQLDataSource()) {
+		try (final var source = DataSource.newDataSource()) {
 			verifyAccess();
 
 			source.connect();
@@ -145,7 +141,7 @@ public class Currencies extends AbstractJunction {
 			String localTimeFromNoTz = DateTimeUtilsNew.removeTimeZone(timeFrom, Defs.DATETIME_FORMAT);
 
 			return getJsonResponse(
-			        source.getAllCurrentRatesAfter(DateTimeUtils.parseDate(localTimeFromNoTz, Defs.DATETIME_FORMAT)));
+					source.getAllCurrentRatesAfter(DateTimeUtils.parseDate(localTimeFromNoTz, Defs.DATETIME_FORMAT)));
 		} catch (IOException | DataSourceException | ParseException e) {
 			log.error("", e);
 			return getErrorResponse();

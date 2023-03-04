@@ -1,28 +1,10 @@
-package net.vexelon.currencybg.srv.db.mysql;
-
-import java.lang.reflect.Type;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import net.vexelon.currencybg.srv.db.DataSource;
-import net.vexelon.currencybg.srv.db.DataSourceException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package net.vexelon.currencybg.srv.db;
 
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
-
 import net.vexelon.currencybg.srv.Defs;
 import net.vexelon.currencybg.srv.GlobalConfig;
 import net.vexelon.currencybg.srv.api.Currencies;
@@ -32,13 +14,25 @@ import net.vexelon.currencybg.srv.db.models.ReportData;
 import net.vexelon.currencybg.srv.db.models.SourceUpdateRestrictions;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 import net.vexelon.currencybg.srv.utils.GsonDateTimeSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class MySQLDataSource implements DataSource {
+import java.lang.reflect.Type;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+public final class MySQLDataSource implements DataSource {
 
 	private static final Logger log = LoggerFactory.getLogger(Currencies.class);
 
 	private Connection dbConnection = null;
-	private boolean isLogSql = false;
+	private boolean    isLogSql     = false;
+
+	MySQLDataSource() {
+	}
 
 	@Override
 	public Connection connect() throws DataSourceException {
@@ -243,10 +237,9 @@ public class MySQLDataSource implements DataSource {
 		currencies = getCurrentRatesAfter(null, timeFrom);
 
 		Gson gson = new GsonBuilder().setDateFormat(Defs.DATEFORMAT_ISO_8601)
-		        .registerTypeHierarchyAdapter(Date.class, new GsonDateTimeSerializer(Defs.DATETIME_TIMEZONE_SOFIA))
-		        .create();
-		Type type = new TypeToken<List<CurrencyData>>() {
-		}.getType();
+				.registerTypeHierarchyAdapter(Date.class, new GsonDateTimeSerializer(Defs.DATETIME_TIMEZONE_SOFIA))
+				.create();
+		Type type = new TypeToken<List<CurrencyData>>() {}.getType();
 
 		return gson.toJson(currencies, type);
 	}
@@ -258,10 +251,9 @@ public class MySQLDataSource implements DataSource {
 		currencies = getCurrentRatesAfter(sourceId, timeFrom);
 
 		Gson gson = new GsonBuilder().setDateFormat(Defs.DATEFORMAT_ISO_8601)
-		        .registerTypeHierarchyAdapter(Date.class, new GsonDateTimeSerializer(Defs.DATETIME_TIMEZONE_SOFIA))
-		        .create();
-		Type type = new TypeToken<List<CurrencyData>>() {
-		}.getType();
+				.registerTypeHierarchyAdapter(Date.class, new GsonDateTimeSerializer(Defs.DATETIME_TIMEZONE_SOFIA))
+				.create();
+		Type type = new TypeToken<List<CurrencyData>>() {}.getType();
 
 		return gson.toJson(currencies, type);
 	}
@@ -297,7 +289,7 @@ public class MySQLDataSource implements DataSource {
 
 			while (rs.next()) {
 				currencies.add(new CurrencyData(rs.getString(1), rs.getInt(2), rs.getString(3), rs.getString(4),
-				        rs.getTimestamp(5), rs.getInt(6)));
+						rs.getTimestamp(5), rs.getInt(6)));
 			}
 
 			return currencies;
@@ -320,7 +312,7 @@ public class MySQLDataSource implements DataSource {
 					preparedStatement.close();
 				} catch (SQLException e) {
 					log.error("Problem with close of PreparedStatement(for selectSQL) in method getCurrentRatesAfter!",
-					        e);
+							e);
 				}
 			}
 		}
@@ -334,7 +326,7 @@ public class MySQLDataSource implements DataSource {
 		ResultSet rs = null;
 
 		String sql = " SELECT code, " + " ratio, " + " buy, " + " sell, " + "	date, " + "	source "
-		        + "   FROM cbg_currencies" + " WHERE DATE(date) = ? " + " AND source = ? ORDER BY date asc";
+				+ "   FROM cbg_currencies" + " WHERE DATE(date) = ? " + " AND source = ? ORDER BY date asc";
 
 		if (log.isTraceEnabled() && isLogSql) {
 			log.trace("[SQL] {}", sql);
@@ -350,13 +342,12 @@ public class MySQLDataSource implements DataSource {
 			while (rs.next()) {
 
 				currencies.add(new CurrencyData(rs.getString(1), rs.getInt(2), rs.getString(3), rs.getString(4),
-				        rs.getTimestamp(5), rs.getInt(6)));
+						rs.getTimestamp(5), rs.getInt(6)));
 
 			}
 
 			Gson gson = new GsonBuilder().setDateFormat(Defs.DATEFORMAT_ISO_8601).create();
-			Type type = new TypeToken<List<CurrencyData>>() {
-			}.getType();
+			Type type = new TypeToken<List<CurrencyData>>() {}.getType();
 			String json = gson.toJson(currencies, type);
 
 			// List<CurrencyData> fromJson = gson.fromJson(json, type);
@@ -400,7 +391,7 @@ public class MySQLDataSource implements DataSource {
 		ResultSet rs = null;
 
 		String sql = " SELECT code, " + " ratio, " + " buy, " + " sell, " + "	date, " + "	source "
-		        + "   FROM cbg_currencies" + " WHERE DATE(date) = ?  ORDER BY date asc";
+				+ "   FROM cbg_currencies" + " WHERE DATE(date) = ?  ORDER BY date asc";
 
 		if (log.isTraceEnabled() && isLogSql) {
 			log.trace("[SQL] {}", sql);
@@ -414,7 +405,7 @@ public class MySQLDataSource implements DataSource {
 
 			while (rs.next()) {
 				currencies.add(new CurrencyData(rs.getString(1), rs.getInt(2), rs.getString(3), rs.getString(4),
-				        rs.getTimestamp(5), rs.getInt(6)));
+						rs.getTimestamp(5), rs.getInt(6)));
 			}
 
 			// Gson gson = new
@@ -422,8 +413,7 @@ public class MySQLDataSource implements DataSource {
 			// Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd
 			// hh:mm:ss").create();
 			Gson gson = new GsonBuilder().setDateFormat(Defs.DATEFORMAT_ISO_8601).create();
-			Type type = new TypeToken<List<CurrencyData>>() {
-			}.getType();
+			Type type = new TypeToken<List<CurrencyData>>() {}.getType();
 			String json = gson.toJson(currencies, type);
 
 			// List<CurrencyData> fromJson = gson.fromJson(json, type);
@@ -467,7 +457,7 @@ public class MySQLDataSource implements DataSource {
 		ResultSet rs = null;
 
 		String sql = "SELECT source_id, status, update_period, last_update, update_restrictions FROM cbg_sources "
-		        + " WHERE source_id = ? and status = 0 ";
+				+ " WHERE source_id = ? and status = 0 ";
 
 		if (log.isTraceEnabled() && isLogSql) {
 			log.trace("[SQL] {}", sql);
@@ -485,8 +475,7 @@ public class MySQLDataSource implements DataSource {
 				source.setLastUpdate(rs.getTimestamp(4));
 				if (rs.getString(5) != null) {
 					SourceUpdateRestrictions updateInfo = new Gson().fromJson(rs.getString(5),
-					        new TypeToken<SourceUpdateRestrictions>() {
-					        }.getType());
+							new TypeToken<SourceUpdateRestrictions>() {}.getType());
 					source.setUpdateRestrictions(updateInfo);
 				} else {
 					source.setUpdateRestrictions(SourceUpdateRestrictions.empty());
@@ -549,8 +538,7 @@ public class MySQLDataSource implements DataSource {
 				try {
 					if (rs.getString(5) != null) {
 						SourceUpdateRestrictions updateInfo = new Gson().fromJson(rs.getString(5),
-						        new TypeToken<SourceUpdateRestrictions>() {
-						        }.getType());
+								new TypeToken<SourceUpdateRestrictions>() {}.getType());
 						source.setUpdateRestrictions(updateInfo);
 					} else {
 						source.setUpdateRestrictions(SourceUpdateRestrictions.empty());
@@ -559,7 +547,7 @@ public class MySQLDataSource implements DataSource {
 					listSource.add(source);
 				} catch (JsonParseException e) {
 					throw new DataSourceException(
-					        source.getSourceId() + " - could not parse update info JSON data for currency!", e);
+							source.getSourceId() + " - could not parse update info JSON data for currency!", e);
 				}
 
 				source = new CurrencySource();
@@ -662,8 +650,8 @@ public class MySQLDataSource implements DataSource {
 	public void deleteReports(List<ReportData> reporters) throws DataSourceException {
 
 		for (ReportData report : reporters) {
-			try (PreparedStatement preparedStatement = dbConnection
-			        .prepareStatement("DELETE FROM cbg_reports WHERE id = " + report.getId())) {
+			try (PreparedStatement preparedStatement = dbConnection.prepareStatement(
+					"DELETE FROM cbg_reports WHERE id = " + report.getId())) {
 
 				if (log.isTraceEnabled() && isLogSql) {
 					log.trace("[SQL] {}", "DELETE FROM cbg_reports WHERE id = " + report.getId());

@@ -1,34 +1,32 @@
 package net.vexelon.currencybg.srv.reports;
 
-import java.io.IOException;
-
+import net.vexelon.currencybg.srv.db.DataSource;
+import net.vexelon.currencybg.srv.db.DataSourceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.vexelon.currencybg.srv.db.DataSource;
-import net.vexelon.currencybg.srv.db.DataSourceException;
-import net.vexelon.currencybg.srv.db.mysql.MySQLDataSource;
+import java.io.IOException;
 
 public class MySQLReporter extends AbstractReporter {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQLReporter.class);
+	private static final Logger log = LoggerFactory.getLogger(MySQLReporter.class);
 
-    public MySQLReporter(String name) {
-        super(name);
-    }
+	public MySQLReporter(String name) {
+		super(name);
+	}
 
-    public MySQLReporter() {
-        this("MySQL");
-    }
+	public MySQLReporter() {
+		this("MySQL");
+	}
 
-    @Override
-    public void send() throws IOException {
-        try (final DataSource dataSource = new MySQLDataSource()) {
-            dataSource.connect();
-            dataSource.addReport(buffer.toString());
-        } catch (IOException | DataSourceException ex) {
-            log.error("Could not connect to database!", ex);
-        }
-    }
+	@Override
+	public void send() throws IOException {
+		try (final var dataSource = DataSource.newDataSource()) {
+			dataSource.connect();
+			dataSource.addReport(buffer.toString());
+		} catch (IOException | DataSourceException ex) {
+			log.error("Could not connect to database!", ex);
+		}
+	}
 
 }
