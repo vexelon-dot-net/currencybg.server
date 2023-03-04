@@ -35,11 +35,11 @@ public final class MySQLDataSource implements DataSource {
 	}
 
 	@Override
-	public Connection connect() throws DataSourceException {
+	public void connect() throws DataSourceException {
 		isLogSql = GlobalConfig.INSTANCE.isLogSqlEnabled();
 
 		try {
-			return dbConnection = DriverManager.getConnection(Defs.DB_CONNECTION, Defs.DB_USER, Defs.DB_PASSWORD);
+			dbConnection = DriverManager.getConnection(Defs.DB_CONNECTION, Defs.DB_USER, Defs.DB_PASSWORD);
 		} catch (SQLException e) {
 			throw new DataSourceException("Could not open database connection!", e);
 		}

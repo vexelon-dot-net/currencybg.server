@@ -29,7 +29,6 @@ import net.vexelon.currencybg.srv.db.models.CurrencySource;
 import net.vexelon.currencybg.srv.db.models.ReportData;
 
 import java.io.Closeable;
-import java.sql.Connection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +48,7 @@ public interface DataSource extends Closeable {
 	 *
 	 * @throws DataSourceException If an SQL error is thrown.
 	 */
-	Connection connect() throws DataSourceException;
+	void connect() throws DataSourceException;
 
 	/**
 	 * Fetches a list of currencies for the current date which are after
