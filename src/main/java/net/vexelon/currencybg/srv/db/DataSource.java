@@ -28,6 +28,7 @@ import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.CurrencySource;
 import net.vexelon.currencybg.srv.db.models.ReportData;
 
+import javax.annotation.Nonnull;
 import java.io.Closeable;
 import java.util.Collection;
 import java.util.Date;
@@ -40,8 +41,9 @@ import java.util.Map;
  */
 public interface DataSource extends Closeable {
 
+	@Nonnull
 	static DataSource newDataSource() {
-		return new MySQLDataSource();
+		return new FirestoreDataSource();
 	}
 
 	/**
@@ -92,6 +94,7 @@ public interface DataSource extends Closeable {
 	 *
 	 * @param isActiveOnly If {@code true}, only actives sources will be fetched.
 	 */
+	@Nonnull
 	Collection<CurrencySource> getAllSources(boolean isActiveOnly) throws DataSourceException;
 
 	/**
@@ -138,11 +141,12 @@ public interface DataSource extends Closeable {
 	/**
 	 * @return A list of all reports waiting to be sent.
 	 */
+	@Nonnull
 	Collection<ReportData> getReports() throws DataSourceException;
 
 	/**
 	 * Remove all reports specified
 	 */
-	void deleteReports(Collection<ReportData> reports) throws DataSourceException;
+	void deleteReports(@Nonnull Collection<ReportData> reports) throws DataSourceException;
 
 }

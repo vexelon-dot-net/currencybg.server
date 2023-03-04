@@ -8,7 +8,7 @@ import net.vexelon.currencybg.srv.db.models.SourceUpdateRestrictions;
 import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.remote.Source;
 import net.vexelon.currencybg.srv.remote.SourceException;
-import net.vexelon.currencybg.srv.reports.MySQLReporter;
+import net.vexelon.currencybg.srv.reports.DataSourceReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -139,7 +139,7 @@ public class Heartbeat implements Runnable {
 					final Sources sourceType = Sources.valueOf(currencySource.getSourceId());
 					if (sourceType != null) {
 						try {
-							final MySQLReporter reporter = new MySQLReporter();
+							final DataSourceReporter reporter = new DataSourceReporter();
 							final Source source = sourceType.newInstance(reporter);
 
 							// set update datetime flag
