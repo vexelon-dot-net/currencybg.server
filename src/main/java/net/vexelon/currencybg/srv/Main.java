@@ -18,7 +18,9 @@ public class Main {
 
 		try {
 			// setup a background tasks executor with a minimum of 2 parallel threads
-			executor = Executors.newScheduledThreadPool(Math.max(2, ForkJoinPool.getCommonPoolParallelism()));
+			int parallelThreads = Math.max(2, ForkJoinPool.getCommonPoolParallelism());
+			System.out.println("Max threads = " + parallelThreads);
+			executor = Executors.newScheduledThreadPool(parallelThreads);
 
 			// init application and boot background services
 			var bootstrap = new Bootstrap();
