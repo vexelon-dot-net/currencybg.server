@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.Maps;
 
 import net.vexelon.currencybg.srv.Defs;
-import net.vexelon.currencybg.srv.db.MySQLDataSource;
+import net.vexelon.currencybg.srv.db.mysql.MySQLDataSource;
 import net.vexelon.currencybg.srv.db.DataSourceException;
 import net.vexelon.currencybg.srv.db.DataSource;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;

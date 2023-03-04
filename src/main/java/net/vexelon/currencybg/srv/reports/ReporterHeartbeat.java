@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import net.vexelon.currencybg.srv.GlobalConfig;
 import net.vexelon.currencybg.srv.db.DataSource;
 import net.vexelon.currencybg.srv.db.DataSourceException;
-import net.vexelon.currencybg.srv.db.MySQLDataSource;
+import net.vexelon.currencybg.srv.db.mysql.MySQLDataSource;
 import net.vexelon.currencybg.srv.db.models.ReportData;
 
 public class ReporterHeartbeat implements Runnable {
