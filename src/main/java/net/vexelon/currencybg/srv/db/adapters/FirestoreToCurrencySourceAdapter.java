@@ -8,13 +8,13 @@ import net.vexelon.currencybg.srv.db.models.SourceUpdateRestrictions;
 
 import javax.annotation.Nonnull;
 
-public class FirestoreCurrencySourceAdapter implements DataSourceAdapter<QueryDocumentSnapshot, CurrencySource> {
+public class FirestoreToCurrencySourceAdapter implements DataSourceAdapter<QueryDocumentSnapshot, CurrencySource> {
 
 	private final Gson gson = new Gson();
 
 	@Nonnull
 	@Override
-	public CurrencySource fromSourceEntity(QueryDocumentSnapshot entity) {
+	public CurrencySource fromEntity(QueryDocumentSnapshot entity) {
 		var source = new CurrencySource();
 		source.setSourceId(entity.getLong("source_id").intValue());
 		source.setStatus(entity.getLong("status").intValue());

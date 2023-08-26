@@ -1,18 +1,15 @@
 package net.vexelon.currencybg.srv.db.adapters;
 
 import com.google.cloud.firestore.QueryDocumentSnapshot;
-import com.google.gson.Gson;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 
 import javax.annotation.Nonnull;
 
-public class FirestoreCurrencyDataAdapter implements DataSourceAdapter<QueryDocumentSnapshot, CurrencyData> {
-
-	private final Gson gson = new Gson();
+public class FirestoreToCurrencyDataAdapter implements DataSourceAdapter<QueryDocumentSnapshot, CurrencyData> {
 
 	@Nonnull
 	@Override
-	public CurrencyData fromSourceEntity(QueryDocumentSnapshot entity) {
+	public CurrencyData fromEntity(QueryDocumentSnapshot entity) {
 		var currency = new CurrencyData();
 		currency.setCode(entity.getString("code"));
 		currency.setRatio(entity.getLong("ratio").intValue());
@@ -22,4 +19,6 @@ public class FirestoreCurrencyDataAdapter implements DataSourceAdapter<QueryDocu
 		currency.setSource(entity.getLong("source_id").intValue());
 		return currency;
 	}
+
+
 }
