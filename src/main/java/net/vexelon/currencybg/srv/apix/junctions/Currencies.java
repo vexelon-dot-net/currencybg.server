@@ -7,12 +7,14 @@ import io.vertx.core.json.Json;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import net.vexelon.currencybg.srv.Defs;
+import net.vexelon.currencybg.srv.api.ApiAccessException;
 import net.vexelon.currencybg.srv.db.DataSource;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.core.Response;
 import java.util.Map;
 
 public class Currencies {
@@ -43,26 +45,36 @@ public class Currencies {
 		ctx.response().end(Json.encode(junctions));
 	}
 
-	private void fromDate(RoutingContext ctx) {
-		// TODO
-		//			if (!source.isCheckAuthentication(apiKey)) {
-		//				throw new ApiAccessException(Response.Status.UNAUTHORIZED);
-		//			}
-		//		return getCustomResponse(e.getStatus());
+	private void sendError(RoutingContext ctx, Throwable t) {
+		if (t instanceof ApiAccessException ex) {
+			ctx.response().setStatusCode(ex.getStatus().getStatusCode());
+			ctx.response().end();
+			log.debug("Unauthorized request from {}", ctx.request().remoteAddress().hostAddress());
+		} else {
+			ctx.response().setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code());
+			ctx.response().end();
+			log.error("Failed fetching all rates from specified date!", t);
+		}
+	}
 
+	private void sendJson(RoutingContext ctx, String jsonString) {
+		ctx.response().putHeader(HttpHeaders.CONTENT_TYPE, Defs.API_JSON_CONTENT_TYPE);
+		ctx.response().end(jsonString);
+	}
+
+	private void fromDate(RoutingContext ctx) {
 		ctx.vertx().executeBlocking((Promise<String> promise) -> {
 			try (final var source = DataSource.newDataSource()) {
 				source.connect();
+
+				if (!source.isCheckAuthentication(ctx.request().getHeader(Defs.HEADER_APIKEY))) {
+					throw new ApiAccessException(Response.Status.UNAUTHORIZED);
+				}
+
 				promise.complete(source.getAllRates(DateTimeUtils.parseDate(ctx.pathParam("date"), Defs.DATE_FORMAT)));
 			} catch (Exception e) {
 				promise.fail(e);
 			}
-		}).onSuccess(json -> {
-			ctx.response().putHeader(HttpHeaders.CONTENT_TYPE, Defs.API_JSON_CONTENT_TYPE);
-			ctx.response().end(json);
-		}).onFailure(t -> {
-			log.error("Failed fetching all rates from specified date!", t);
-			ctx.response().setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code());
-		});
+		}).onSuccess(json -> sendJson(ctx, json)).onFailure(t -> sendError(ctx, t));
 	}
 }
