@@ -41,5 +41,4 @@ public abstract class AbstractJunction {
 		//			throw new ApiAccessException(Status.SERVICE_UNAVAILABLE, "Server maintenance enabled!");
 		//		}
 	}
-
 }
