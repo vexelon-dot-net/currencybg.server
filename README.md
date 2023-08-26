@@ -9,8 +9,8 @@ Read the [HTTP API documentation](docs/API.md) for details.
 
 # Requirements
 
-* JDK `17`
-* MySQL `5.5+` or MariaDB `10.0`
+* Java `17`
+* Google Cloud Firestore
 
 # Development
 
@@ -22,18 +22,17 @@ To update dependencies run:
 
     ./gradlew refreshVersions
 
-# Deployment
+# Configuration & Deployment
 
-Create a MySQL database and use the DDL in `schemas` to create all required tables.
+One needs to go to the Cloud Firestore and add all the supported sources manually. Copy the Firebase `adminsdk.json`
+file
+to `resources/`.
 
-In order to deploy a local test version the following Java properties need to be setup, i.e.,
+To configure the server use the environment vars:
 
+    CBG_HOST=<listen address> // default ::1
+    CBG_PORT=<listen port> // default 8080
     CBG_CFG_PATH=<directory path> // path to where server configurations will be saved
-    DB_HOST=<mysql hostname>
-    DB_PORT=<mysql port>
-    DB_NAME=<mysql database>
-    DB_USERNAME=<mysql user>
-    DB_PASSWORD=<mysql password>
 
 To access the API open:
 
