@@ -25,6 +25,7 @@ public class Currencies {
 	public void attach(Router router) {
 		router.route(JUNCTION_BASE).handler(this::getJunctions);
 		router.route(JUNCTION_BASE + "/:date").handler(this::fromDate);
+		router.route(JUNCTION_BASE + "/:date/:source_id").handler(this::fromDateAndSource);
 	}
 
 	private void getJunctions(RoutingContext ctx) {
@@ -50,10 +51,14 @@ public class Currencies {
 			ctx.response().setStatusCode(ex.getStatus().getStatusCode());
 			ctx.response().end();
 			log.debug("Unauthorized request from {}", ctx.request().remoteAddress().hostAddress());
+		} else if (t instanceof NumberFormatException) {
+			ctx.response().setStatusCode(HttpResponseStatus.BAD_REQUEST.code());
+			ctx.response().end();
+			log.error("Failed reading input parameter!", t);
 		} else {
 			ctx.response().setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code());
 			ctx.response().end();
-			log.error("Failed fetching all rates from specified date!", t);
+			log.error("Unexpected API error!", t);
 		}
 	}
 
@@ -72,6 +77,23 @@ public class Currencies {
 				}
 
 				promise.complete(source.getAllRates(DateTimeUtils.parseDate(ctx.pathParam("date"), Defs.DATE_FORMAT)));
+			} catch (Exception e) {
+				promise.fail(e);
+			}
+		}).onSuccess(json -> sendJson(ctx, json)).onFailure(t -> sendError(ctx, t));
+	}
+
+	private void fromDateAndSource(RoutingContext ctx) {
+		ctx.vertx().executeBlocking((Promise<String> promise) -> {
+			try (final var source = DataSource.newDataSource()) {
+				source.connect();
+
+				if (!source.isCheckAuthentication(ctx.request().getHeader(Defs.HEADER_APIKEY))) {
+					throw new ApiAccessException(Response.Status.UNAUTHORIZED);
+				}
+
+				promise.complete(source.getAllRates(Integer.parseInt(ctx.pathParam("source_id")),
+						DateTimeUtils.parseDate(ctx.pathParam("date"), Defs.DATE_FORMAT)));
 			} catch (Exception e) {
 				promise.fail(e);
 			}
