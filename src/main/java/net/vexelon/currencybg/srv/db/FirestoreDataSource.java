@@ -5,14 +5,18 @@ import com.google.cloud.firestore.FieldPath;
 import com.google.cloud.firestore.FieldValue;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.FirestoreOptions;
-import net.vexelon.currencybg.srv.db.adapters.FirestoreCurrencySourceAdapter;
-import net.vexelon.currencybg.srv.db.adapters.FirestoreReportDataAdapter;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import net.vexelon.currencybg.srv.Defs;
+import net.vexelon.currencybg.srv.db.adapters.*;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.CurrencySource;
 import net.vexelon.currencybg.srv.db.models.ReportData;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -49,12 +53,39 @@ public final class FirestoreDataSource implements DataSource {
 
 	@Override
 	public String getAllRates(Date dateFrom) throws DataSourceException {
-		return null;
+		try {
+			var currencies = db.collection("currencies");
+			var snapshot = currencies.whereGreaterThan("date", dateFrom).get();
+
+			var adapter = new FirestoreToCurrencyDataAdapter();
+			var result = snapshot.get().getDocuments().stream().map(adapter::fromEntity).toList();
+
+			// TODO: use an adapter
+			Gson gson = new GsonBuilder().setDateFormat(Defs.DATEFORMAT_ISO_8601).create();
+			Type type = new TypeToken<List<CurrencyData>>() {}.getType();
+			return gson.toJson(result, type);
+		} catch (Exception e) {
+			throw new DataSourceException("Error fetching currencies from Firestore!", e);
+		}
 	}
 
 	@Override
 	public String getAllRates(int sourceId, Date dateFrom) throws DataSourceException {
-		return null;
+		try {
+			var currencies = db.collection("currencies");
+			var snapshot = currencies.whereEqualTo("source_id", sourceId).whereGreaterThan("date", dateFrom).get();
+
+			var adapter = new FirestoreToCurrencyDataAdapter();
+			var result = snapshot.get().getDocuments().stream().map(adapter::fromEntity).toList();
+
+			// TODO: use an adapter
+			Gson gson = new GsonBuilder().setDateFormat(Defs.DATEFORMAT_ISO_8601).create();
+			Type type = new TypeToken<List<CurrencyData>>() {}.getType();
+			return gson.toJson(result, type);
+		} catch (Exception e) {
+			throw new DataSourceException("Error fetching currencies from Firestore! (sourceId=%d)".formatted(sourceId),
+					e);
+		}
 	}
 
 	@Nonnull
@@ -66,8 +97,8 @@ public final class FirestoreDataSource implements DataSource {
 					sources.whereEqualTo("status", CurrencySource.STATUS_ENABLED).get() :
 					sources.get();
 
-			var adapter = new FirestoreCurrencySourceAdapter();
-			return snapshot.get().getDocuments().stream().map(adapter::fromSourceEntity).toList();
+			var adapter = new FirestoreToCurrencySourceAdapter();
+			return snapshot.get().getDocuments().stream().map(adapter::fromEntity).toList();
 		} catch (Exception e) {
 			throw new DataSourceException(
 					"Error fetching sources from Firestore! activeOnly = %b".formatted(isActiveOnly), e);
@@ -87,24 +118,40 @@ public final class FirestoreDataSource implements DataSource {
 
 	@Override
 	public void addRates(Map<Integer, List<CurrencyData>> rates) throws DataSourceException {
-
+		throw new UnsupportedOperationException("Not implemented");
 	}
 
 	@Override
 	public void addRates(Collection<CurrencyData> rates) throws DataSourceException {
-
+		try {
+			var currencies = db.collection("currencies");
+			var adapter = new CurrencyDataToFirestoreAdapter();
+			for (var currencyData : rates) {
+				currencies.add(adapter.fromEntity(currencyData));
+			}
+		} catch (Exception e) {
+			throw new DataSourceException("Error adding currency data to Firestore!", e);
+		}
 	}
 
 	@Override
 	public void updateSource(int sourceId, CurrencySource source) throws DataSourceException {
+		try {
+			var sources = db.collection("sources");
+			var querySnapshot = sources.whereEqualTo("source_id", sourceId).get().get();
+			var queryDoc = querySnapshot.getDocuments().iterator().next();
 
+			sources.document(queryDoc.getId()).update(new CurrencySourceToFirestoreAdapter().fromEntity(source)).get();
+		} catch (Exception e) {
+			throw new DataSourceException("Error updating source (%d) in Firestore!".formatted(source), e);
+		}
 	}
 
 	@Override
 	public void addReportMessage(String message) throws DataSourceException {
 		try {
-			//			var adapter = new FirestoreReportDataAdapter();
-			db.collection("reports").add(Map.of("message", message, "created_on", FieldValue.serverTimestamp()));
+			var reports = db.collection("reports");
+			reports.add(Map.of("message", message, "created_on", FieldValue.serverTimestamp()));
 		} catch (Exception e) {
 			throw new DataSourceException("Error adding report to Firestore!", e);
 		}
@@ -115,8 +162,8 @@ public final class FirestoreDataSource implements DataSource {
 	public Collection<ReportData> getReports() throws DataSourceException {
 		try {
 			var reports = db.collection("reports").get();
-			var adapter = new FirestoreReportDataAdapter();
-			return reports.get().getDocuments().stream().map(adapter::fromSourceEntity).toList();
+			var adapter = new FirestoreToReportDataAdapter();
+			return reports.get().getDocuments().stream().map(adapter::fromEntity).toList();
 		} catch (Exception e) {
 			throw new DataSourceException("Error fetching reports from Firestore!", e);
 		}
