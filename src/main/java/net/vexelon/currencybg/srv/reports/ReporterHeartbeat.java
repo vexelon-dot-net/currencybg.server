@@ -38,11 +38,9 @@ public class ReporterHeartbeat implements Runnable {
 					// Delete send errors
 					dataSource.deleteReports(reports);
 				}
-
 			}
 		} catch (IOException | DataSourceException e) {
 			log.error("Could not connect to database!", e);
 		}
 	}
-
 }
