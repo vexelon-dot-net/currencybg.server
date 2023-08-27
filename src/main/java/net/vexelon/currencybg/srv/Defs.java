@@ -18,6 +18,7 @@ public final class Defs {
 	public static final String DATETIME_TIMEZONE_SOFIA   = "Europe/Sofia";
 	public static final String DATETIME_DEFAULT_TIMEZONE = DATETIME_TIMEZONE_SOFIA;
 	public static final String DATETIME_RESTR_FORMAT     = "HH:mm";
+	public static final String DATEFORMAT_ISO_8601       = "yyyy-MM-dd'T'HH:mmZ";
 
 	/*
 	 * Global configuration
@@ -27,20 +28,6 @@ public final class Defs {
 	public static final long   CONFIG_RELOAD_INTERVAL = 10; // 10 seconds
 	public static final String CONFIG_HOST            = System.getenv().getOrDefault("HOST", "::1");
 	public static final String CONFIG_PORT            = System.getenv().getOrDefault("PORT", "8080");
-
-	/*
-	 * Database parameters
-	 */
-	public static final String DB_DRIVER     = "com.mysql.jdbc.Driver";
-	public static final String DB_NAME       = System.getenv("DB_NAME");
-	public static final String DB_HOST       = System.getenv("DB_HOST");
-	public static final String DB_PORT       = System.getenv("DB_PORT");
-	public static final String DB_CONNECTION = String.format("jdbc:mysql://%s:%s/%s?useSSL=false", DB_HOST, DB_PORT,
-			DB_NAME);
-	public static final String DB_USER       = System.getenv("DB_USERNAME");
-	public static final String DB_PASSWORD   = System.getenv("DB_PASSWORD");
-
-	public static final String DATEFORMAT_ISO_8601 = "yyyy-MM-dd'T'HH:mmZ";
 
 	/*
 	 * Currency update parameters

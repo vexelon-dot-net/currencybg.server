@@ -42,7 +42,6 @@ dependencies {
             'com.sun.jersey:jersey-core:_',
             'com.sun.jersey:jersey-servlet:_',
             'com.sun.jersey:jersey-server:_',
-            'mysql:mysql-connector-java:_',
             'org.jsoup:jsoup:_',
             'com.github.pengrad:java-telegram-bot-api:_',
             'org.ogce:xpp3:_',

@@ -2,10 +2,6 @@ package net.vexelon.currencybg.srv.api;
 
 import javax.ws.rs.core.Response;
 
-/**
- *  
- *
- */
 public class ApiAccessException extends Exception {
 
 	private static final long serialVersionUID = -4304582711729622152L;
