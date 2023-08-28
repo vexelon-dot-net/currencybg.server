@@ -16,27 +16,31 @@ Read the [HTTP API documentation](docs/API.md) for details.
 
 To build the project run:
 
-	./gradlew build
+	./gradlew clean assemble
 
 To update dependencies run:
 
     ./gradlew refreshVersions
 
-# Configuration & Deployment
+To deploy locally one must first configure one or more of the following env vars:
 
-One needs to go to the Cloud Firestore and add all the supported sources manually. Copy the Firebase `adminsdk.json`
-file
-to `resources/`.
-
-To configure the server use the environment vars:
-
-    CBG_HOST=<listen address> // default ::1
-    CBG_PORT=<listen port> // default 8080
     CBG_CFG_PATH=<directory path> // path to where server configurations will be saved
+    CBG_HOST=<listen address> // optional, default ::1
+    CBG_PORT=<listen port> // optional, default 8080
 
-To access the API open:
+# Deployment
 
-    http://localhost:8080/api
+Create a new Firebase project. Add a Firestore database and add all supported `sources` to manually.
+
+Copy the Firebase authentication `adminsdk.json` file to `resources/`.
+
+Create a new Google Cloud project and set its name to the `GCP_PROJECT_ID` property in `gradle.properties`.
+
+Create a new configuration file at `etc-prod/cbg.properties`.
+
+Finally, to deploy to GCP run:
+
+    ./gradlew appengineDeploy
 
 # License
 
