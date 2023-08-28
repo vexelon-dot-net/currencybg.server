@@ -26,9 +26,14 @@ public class ApiVerticle extends AbstractVerticle {
 		new Currencies().attach(router);
 		new Root().attach(router);
 
-		log.info("Starting server on {}:{}", Defs.CONFIG_HOST, Defs.CONFIG_PORT);
-
-		vertx.createHttpServer().requestHandler(router).listen(Integer.parseInt(Defs.CONFIG_PORT), Defs.CONFIG_HOST);
+		if ("0".equals(Defs.CONFIG_HOST)) {
+			log.info("Starting server on AE on port {}", Defs.CONFIG_PORT);
+			vertx.createHttpServer().requestHandler(router).listen(Integer.parseInt(Defs.CONFIG_PORT));
+		} else {
+			log.info("Starting server on {}:{}", Defs.CONFIG_HOST, Defs.CONFIG_PORT);
+			vertx.createHttpServer().requestHandler(router)
+					.listen(Integer.parseInt(Defs.CONFIG_PORT), Defs.CONFIG_HOST);
+		}
 	}
 
 	@Override
