@@ -10,7 +10,8 @@ Read the [HTTP API documentation](docs/API.md) for details.
 # Requirements
 
 * Java `17`
-* Google Cloud Firestore
+* GCP project
+* Firestore on Firebase
 
 # Development
 
@@ -18,29 +19,33 @@ To build the project run:
 
 	./gradlew clean assemble
 
-To update dependencies run:
-
-    ./gradlew refreshVersions
-
 To deploy locally one must first configure one or more of the following env vars:
 
     CBG_CFG_PATH=<directory path> // path to where server configurations will be saved
     CBG_HOST=<listen address> // optional, default ::1
     CBG_PORT=<listen port> // optional, default 8080
 
+To run locally execute:
+
+    ./gradlew run
+
 # Deployment
 
-Create a new Firebase project. Add a Firestore database and add all supported `sources` to manually.
+Create a new Firebase project. Add a Firestore database and add all supported `sources` manually.
 
 Copy the Firebase authentication `adminsdk.json` file to `resources/`.
 
 Create a new Google Cloud project and set its name to the `GCP_PROJECT_ID` property in `gradle.properties`.
 
-Create a new configuration file at `etc-prod/cbg.properties`.
+Create a production configuration file at `src/main/resources/cbg.properties`.
 
-Finally, to deploy to GCP run:
+To deploy to GCP run:
 
     ./gradlew appengineDeploy
+
+To monitor the app on AE run:
+
+    gcloud app logs tail -s default
 
 # License
 
