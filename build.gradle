@@ -9,20 +9,23 @@ buildscript {
 }
 
 plugins {
+    id 'com.github.johnrengelman.shadow'
+    id 'application'
     id 'java'
-//    id 'com.google.cloud.tools.appengine'
 }
+apply plugin: 'com.google.cloud.tools.appengine'
 
 def appVersion = '2.0.0'
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
+mainClassName = 'net.vexelon.currencybg.srv.Main'
 
 repositories {
     maven {
         url 'https://maven-central.storage.googleapis.com'
     }
-    jcenter()
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
@@ -53,20 +56,21 @@ dependencies {
             'com.google.appengine:appengine-tools-sdk:+'
 }
 
-//appengineDeploy.dependsOn test
-//appengineStage.dependsOn test
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    doLast {
+        shadowJar
+    }
+}
 
-//appengine {
-//    deploy {
-//        version = 'v1'
-//        projectId = System.getenv('GOOGLE_CLOUD_PROJECT')
-//    }
-//}
-//
-//appengine {
-//    run {
-//        port = 8090
-//        jvmFlags = ['-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005']
-//        automaticRestart = true // enable hot reload
-//    }
-//}
+shadowJar {
+    mergeServiceFiles()
+}
+
+appengine {
+    stage.artifact = "${buildDir}/libs/${project.name}-all.jar"
+    deploy {
+        projectId = GCP_PROJECT_ID
+        version = "v1"
+    }
+}
