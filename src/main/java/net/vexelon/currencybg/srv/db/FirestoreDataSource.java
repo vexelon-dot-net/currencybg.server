@@ -5,6 +5,7 @@ import com.google.cloud.firestore.FieldPath;
 import com.google.cloud.firestore.FieldValue;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.FirestoreOptions;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import net.vexelon.currencybg.srv.Defs;
@@ -23,25 +24,32 @@ import java.util.Map;
 
 public final class FirestoreDataSource implements DataSource {
 
-	private static final String    PROJECT_ID = "currencybg-app";
-	private              Firestore db         = null;
+	// TODO: use env or config about this
+	private static final String            PROJECT_ID  = "currencybg-app";
+	private static       GoogleCredentials credentials = null;
+	private              Firestore         db          = null;
+	private              Gson              gson        = null;
 
 	FirestoreDataSource() {
 	}
 
+	public static void setCredentials(@Nonnull GoogleCredentials credentials) {
+		FirestoreDataSource.credentials = credentials;
+	}
+
 	private String toJson(Collection<CurrencyData> currencies) {
-		var gson = new GsonBuilder().setDateFormat(Defs.DATEFORMAT_ISO_8601).create();
-		var type = new TypeToken<Collection<CurrencyData>>() {}.getType();
-		return gson.toJson(currencies, type);
+		if (gson == null) {
+			gson = new GsonBuilder().setDateFormat(Defs.DATEFORMAT_ISO_8601).create();
+		}
+		return gson.toJson(currencies, new TypeToken<Collection<CurrencyData>>() {}.getType());
 	}
 
 	@Override
 	public void connect() throws DataSourceException {
 		try {
-			var firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder().setProjectId(PROJECT_ID)
-					.setCredentials(GoogleCredentials.getApplicationDefault()).build();
-			this.db = firestoreOptions.getService();
-		} catch (IOException e) {
+			this.db = FirestoreOptions.getDefaultInstance().toBuilder().setProjectId(PROJECT_ID)
+					.setCredentials(credentials).build().getService();
+		} catch (Exception e) {
 			throw new DataSourceException("Could not open Firestore client channels!", e);
 		}
 	}

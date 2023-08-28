@@ -4,7 +4,10 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.common.base.Charsets;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import net.vexelon.currencybg.srv.db.FirestoreDataSource;
 import net.vexelon.currencybg.srv.reports.ReporterHeartbeat;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
@@ -12,8 +15,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.Objects;
@@ -31,20 +36,35 @@ public class Bootstrap {
 	 * @throws RuntimeException On configuration loading errors.
 	 */
 	public void start(ScheduledExecutorService executor) {
-		log.trace("Running sanity tests ...");
+		logConsole("Running sanity tests ...");
 		testEncoding();
 
-		log.info("Loading configurations ...");
-		if (StringUtils.isEmpty(Defs.CONFIG_PATH)) {
-			throw new RuntimeException("Fatal error. Global configuration env variable 'CBG_CFG_PATH' not defined!");
+		logConsole("Loading configurations ...");
+
+		File configFile;
+
+		if (StringUtils.isBlank(Defs.CONFIG_PATH)) {
+			logConsole(
+					"Global configuration env variable 'CBG_CFG_PATH' not defined. Trying to load 'cbg.properties' from resources...");
+			String prefix = "cbg_%s_properties".formatted(RandomStringUtils.randomAlphanumeric(7));
+			try {
+				configFile = Files.createTempFile(prefix, null).toFile();
+				try (var input = Bootstrap.class.getResourceAsStream("/cbg.properties");
+						var output = new FileOutputStream(configFile)) {
+					IOUtils.copy(Objects.requireNonNull(input, "resources cbg.properties is <null>"), output);
+				}
+			} catch (IOException e) {
+				throw new RuntimeException("Fatal error: Failed to create/load from temp: %s".formatted(prefix), e);
+			}
+		} else {
+			configFile = Paths.get(Defs.CONFIG_PATH, Defs.CONFIG_FILENAME).toFile();
 		}
 
-		File configFile = Paths.get(Defs.CONFIG_PATH, Defs.CONFIG_FILENAME).toFile();
 		if (!configFile.exists()) {
 			try {
 				configFile.createNewFile();
 			} catch (IOException e) {
-				throw new RuntimeException(e);
+				throw new RuntimeException("Fatal error: Cannot open configuration file: %s".formatted(configFile), e);
 			}
 
 			GlobalConfig.INSTANCE.createDefault(configFile, executor);
@@ -55,7 +75,6 @@ public class Bootstrap {
 		// apply log non-production log level, if needed
 		if (GlobalConfig.INSTANCE.isLogDebugEnabled()) {
 			LogManager.getLogger(Defs.LOGGER_NAME).setLevel(Level.TRACE);
-			//			LogManager.getRootLogger().setLevel(Level.TRACE);
 			log.trace("**Non-production** TRACE logging mode enabled.");
 		}
 
@@ -100,11 +119,14 @@ public class Bootstrap {
 			System.err.println("Could not find application version! Error: " + t.getMessage());
 		}
 
-		log.info("Initialize Firebase ...");
+		log.info("Initializing Firebase ...");
 		try (var serviceAccount = Bootstrap.class.getResourceAsStream("/currencybg-app-firebase-adminsdk.json")) {
-			FirebaseApp.initializeApp(FirebaseOptions.builder()
-					.setCredentials(GoogleCredentials.fromStream(Objects.requireNonNull(serviceAccount)))
+			var credentials = GoogleCredentials.fromStream(Objects.requireNonNull(serviceAccount));
+
+			FirebaseApp.initializeApp(FirebaseOptions.builder().setCredentials(credentials)
 					.setDatabaseUrl("https://currencybg-app.firebaseio.com").build());
+
+			FirestoreDataSource.setCredentials(credentials);
 		} catch (IOException e) {
 			throw new RuntimeException("Failed initializing Firebase!", e);
 		}
@@ -112,8 +134,13 @@ public class Bootstrap {
 		log.info("Booting threads ...");
 		executor.scheduleWithFixedDelay(new ReporterHeartbeat(), Defs.REPORTER_UPDATE_FIRST_INTERVAL,
 				Defs.REPORTER_UPDATES_PERIODIC_INTERVAL, TimeUnit.SECONDS);
-		executor.scheduleWithFixedDelay(new Heartbeat(), Defs.UPDATE_FIRST_INTERVAL, Defs.UPDATES_PERIODIC_INTERVAL,
-				TimeUnit.SECONDS);
+
+		//		executor.scheduleWithFixedDelay(new Heartbeat(), 2, //Defs.UPDATE_FIRST_INTERVAL,
+		//				Defs.UPDATES_PERIODIC_INTERVAL, TimeUnit.SECONDS);
+	}
+
+	private void logConsole(String message) {
+		System.out.println(message);
 	}
 
 	private void testEncoding() {
