@@ -37,7 +37,7 @@ jobs:
           path: build/reports/tests
           destination: reports
 
-      - run: ./gradlew build
+      - run: ./gradlew build -PGCP_PROJECT_ID=dummy_project_id
 
       - store_artifacts:
           path: build/libs
