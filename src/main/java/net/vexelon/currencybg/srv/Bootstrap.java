@@ -121,8 +121,9 @@ public class Bootstrap {
 
 		log.info("Initializing Firebase ...");
 
-		try (var serviceAccount = Bootstrap.class.getResourceAsStream("/currencybg-app-firebase-adminsdk.json")) {
-			var credentials = GoogleCredentials.fromStream(Objects.requireNonNull(serviceAccount));
+		try (var serviceAccount = Bootstrap.class.getResourceAsStream("/currencybg-app-ad0dcf2da0f3.json")) {
+			var credentials = GoogleCredentials.fromStream(
+					Objects.requireNonNull(serviceAccount, "serviceAccount is <null>"));
 
 			FirebaseApp.initializeApp(FirebaseOptions.builder().setCredentials(credentials)
 					.setDatabaseUrl("https://currencybg-app.firebaseio.com").build());

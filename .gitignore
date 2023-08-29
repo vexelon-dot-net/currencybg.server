@@ -6,7 +6,7 @@ etc/
 etc-prod/
 
 # Configurations
-**/resources/currencybg-app-firebase-adminsdk.json
+**/resources/currencybg*.json
 **/resources/cbg.properties
 
 # Mobile Tools for Java (J2ME)
