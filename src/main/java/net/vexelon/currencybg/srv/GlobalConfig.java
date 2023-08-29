@@ -3,7 +3,6 @@ package net.vexelon.currencybg.srv;
 import com.google.common.base.Charsets;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.builder.ReloadingFileBasedConfigurationBuilder;
-import org.apache.commons.configuration2.builder.fluent.FileBasedBuilderParameters;
 import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.reloading.PeriodicReloadingTrigger;
@@ -26,10 +25,8 @@ public enum GlobalConfig {
 	 */
 	public enum Options {
 		TIMEZONE_SERVER("timezone"),
-		//		MAINTENANCE_ENABLED("maintenance.enabled"),
 		TELEGRAM_BOT_TOKEN("telegram.bot"),
 		TELEGRAM_CHANNEL("telegram.channel"),
-		ENABLE_LOG_SQL("log.sql"),
 		ENABLE_LOG_DEBUG("log.debug"),
 		SPARKPOST_API_KEY("sparkpost.apikey"),
 		SPARKPOST_EMAILS("sparkpost.emails"),
@@ -58,10 +55,8 @@ public enum GlobalConfig {
 
 			// defaults
 			setServerTimeZone(Defs.DATETIME_DEFAULT_TIMEZONE);
-			//			setMaintenanceEnabled(false);
 			setBotToken("");
 			setBotChannel("");
-			setLogSqlEnabled(false);
 			setLogDebugEnabled(false);
 			setSparkPostAPIKey("");
 			setSparkPostEmails("");
@@ -90,12 +85,8 @@ public enum GlobalConfig {
 
 	private ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> createConfigurationBuilder(File file,
 			ScheduledExecutorService executor) {
-
-		FileBasedBuilderParameters parameters = new Parameters().fileBased().setFile(file)
-				.setEncoding(Charsets.UTF_8.name());
-
-		ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> builder = new ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration>(
-				PropertiesConfiguration.class).configure(parameters);
+		var parameters = new Parameters().fileBased().setFile(file).setEncoding(Charsets.UTF_8.name());
+		var builder = new ReloadingFileBasedConfigurationBuilder<>(PropertiesConfiguration.class).configure(parameters);
 
 		// setup reloading interval
 		trigger = new PeriodicReloadingTrigger(builder.getReloadingController(), null, Defs.CONFIG_RELOAD_INTERVAL,
@@ -120,14 +111,6 @@ public enum GlobalConfig {
 	public String getServerTimeZone() {
 		return getConfig().getString(Options.TIMEZONE_SERVER.getName());
 	}
-
-	//	public boolean isMaintenanceEnabled() {
-	//		return getConfig().getBoolean(Options.MAINTENANCE_ENABLED.getName());
-	//	}
-	//
-	//	public void setMaintenanceEnabled(boolean enabled) {
-	//		getConfig().setProperty(Options.MAINTENANCE_ENABLED.getName(), enabled);
-	//	}
 
 	/**
 	 * @return Telegram bot token
@@ -216,14 +199,6 @@ public enum GlobalConfig {
 
 	public void setReportType(String reportType) {
 		getConfig().setProperty(Options.REPORT_TYPE.getName(), reportType);
-	}
-
-	public boolean isLogSqlEnabled() {
-		return getConfig().getBoolean(Options.ENABLE_LOG_SQL.getName());
-	}
-
-	public void setLogSqlEnabled(boolean enabled) {
-		getConfig().setProperty(Options.ENABLE_LOG_SQL.getName(), enabled);
 	}
 
 	public boolean isLogDebugEnabled() {
