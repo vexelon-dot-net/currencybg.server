@@ -18,7 +18,6 @@ import org.apache.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
@@ -120,7 +119,7 @@ public class BitcoinsHouseSource extends AbstractSource {
 					if (!isCanceled) {
 						try {
 							// Skip the error report, if the server is down. Nothing to do, anyway.
-							if (MediaType.TEXT_HTML.equals(
+							if ("text/html".equals(
 									Optional.ofNullable(response.getFirstHeader(HttpHeaders.CONTENT_TYPE))
 											.map(Header::getValue).orElse(""))) {
 								log.warn("{} is down! Currencies fetch skipped.", TAG_NAME);

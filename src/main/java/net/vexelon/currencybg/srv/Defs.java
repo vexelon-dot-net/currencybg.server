@@ -1,8 +1,8 @@
 package net.vexelon.currencybg.srv;
 
 import com.google.common.collect.Sets;
+import com.google.common.net.MediaType;
 
-import javax.ws.rs.core.MediaType;
 import java.util.Set;
 
 /**
@@ -47,7 +47,7 @@ public final class Defs {
 	 * HTTP API specific
 	 */
 	public static final String HEADER_APIKEY         = "APIKey";
-	public static final String API_JSON_CONTENT_TYPE = MediaType.APPLICATION_JSON_TYPE + ";charset=utf-8";
+	public static final String API_JSON_CONTENT_TYPE = MediaType.JSON_UTF_8.toString();
 
 	public static final String DATE_FORMAT     = "yyyy-MM-dd";
 	public static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";

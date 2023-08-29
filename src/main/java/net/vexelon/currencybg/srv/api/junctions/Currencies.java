@@ -1,5 +1,6 @@
 package net.vexelon.currencybg.srv.api.junctions;
 
+import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.Promise;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.Router;
@@ -10,7 +11,6 @@ import net.vexelon.currencybg.srv.db.DataSource;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.ws.rs.core.Response;
 import java.util.Map;
 
 public class Currencies extends AbstractJunction {
@@ -46,7 +46,7 @@ public class Currencies extends AbstractJunction {
 				source.connect();
 
 				if (!source.isCheckAuthentication(ctx.request().getHeader(Defs.HEADER_APIKEY))) {
-					throw new ApiAccessException(Response.Status.UNAUTHORIZED);
+					throw new ApiAccessException(HttpResponseStatus.UNAUTHORIZED);
 				}
 
 				promise.complete(source.getAllCurrentRatesAfter(Integer.parseInt(ctx.pathParam("source_id")),
@@ -63,7 +63,7 @@ public class Currencies extends AbstractJunction {
 				source.connect();
 
 				if (!source.isCheckAuthentication(ctx.request().getHeader(Defs.HEADER_APIKEY))) {
-					throw new ApiAccessException(Response.Status.UNAUTHORIZED);
+					throw new ApiAccessException(HttpResponseStatus.UNAUTHORIZED);
 				}
 
 				promise.complete(source.getAllCurrentRatesAfter(
@@ -80,7 +80,7 @@ public class Currencies extends AbstractJunction {
 				source.connect();
 
 				if (!source.isCheckAuthentication(ctx.request().getHeader(Defs.HEADER_APIKEY))) {
-					throw new ApiAccessException(Response.Status.UNAUTHORIZED);
+					throw new ApiAccessException(HttpResponseStatus.UNAUTHORIZED);
 				}
 
 				promise.complete(source.getAllRates(DateTimeUtils.parseDate(ctx.pathParam("date"), Defs.DATE_FORMAT)));
@@ -96,7 +96,7 @@ public class Currencies extends AbstractJunction {
 				source.connect();
 
 				if (!source.isCheckAuthentication(ctx.request().getHeader(Defs.HEADER_APIKEY))) {
-					throw new ApiAccessException(Response.Status.UNAUTHORIZED);
+					throw new ApiAccessException(HttpResponseStatus.UNAUTHORIZED);
 				}
 
 				promise.complete(source.getAllRates(Integer.parseInt(ctx.pathParam("source_id")),

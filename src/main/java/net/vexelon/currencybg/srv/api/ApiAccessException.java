@@ -1,24 +1,24 @@
 package net.vexelon.currencybg.srv.api;
 
-import javax.ws.rs.core.Response;
+import io.netty.handler.codec.http.HttpResponseStatus;
 
 public class ApiAccessException extends Exception {
 
 	private static final long serialVersionUID = -4304582711729622152L;
 
-	protected Response.Status status;
+	protected HttpResponseStatus status;
 
-	public ApiAccessException(Response.Status status) {
-		super(status.getReasonPhrase());
+	public ApiAccessException(HttpResponseStatus status) {
+		super(status.reasonPhrase());
 		this.status = status;
 	}
 
-	public ApiAccessException(Response.Status status, String message) {
+	public ApiAccessException(HttpResponseStatus status, String message) {
 		super(message);
 		this.status = status;
 	}
 
-	public Response.Status getStatus() {
+	public HttpResponseStatus getStatus() {
 		return status;
 	}
 }
