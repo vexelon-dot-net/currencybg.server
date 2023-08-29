@@ -1,11 +1,10 @@
-package net.vexelon.currencybg.srv.apix.junctions;
+package net.vexelon.currencybg.srv.api.junctions;
 
 import io.vertx.core.Promise;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import net.vexelon.currencybg.srv.Defs;
-import net.vexelon.currencybg.srv.api.AbstractJunction;
 import net.vexelon.currencybg.srv.api.ApiAccessException;
 import net.vexelon.currencybg.srv.db.DataSource;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;

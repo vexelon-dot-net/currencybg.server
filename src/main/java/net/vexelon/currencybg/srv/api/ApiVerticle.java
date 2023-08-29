@@ -1,10 +1,10 @@
-package net.vexelon.currencybg.srv.apix;
+package net.vexelon.currencybg.srv.api;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.ext.web.Router;
 import net.vexelon.currencybg.srv.Defs;
-import net.vexelon.currencybg.srv.apix.junctions.Currencies;
-import net.vexelon.currencybg.srv.apix.junctions.Root;
+import net.vexelon.currencybg.srv.api.junctions.Currencies;
+import net.vexelon.currencybg.srv.api.junctions.Root;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

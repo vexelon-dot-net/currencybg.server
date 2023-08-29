@@ -1,10 +1,11 @@
-package net.vexelon.currencybg.srv.api;
+package net.vexelon.currencybg.srv.api.junctions;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.ext.web.RoutingContext;
 import net.vexelon.currencybg.srv.Defs;
+import net.vexelon.currencybg.srv.api.ApiAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

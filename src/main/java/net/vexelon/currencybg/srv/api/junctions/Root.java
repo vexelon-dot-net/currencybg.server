@@ -1,4 +1,4 @@
-package net.vexelon.currencybg.srv.apix.junctions;
+package net.vexelon.currencybg.srv.api.junctions;
 
 import com.google.common.net.HttpHeaders;
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -6,7 +6,6 @@ import io.vertx.core.json.Json;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import net.vexelon.currencybg.srv.Defs;
-import net.vexelon.currencybg.srv.api.AbstractJunction;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;

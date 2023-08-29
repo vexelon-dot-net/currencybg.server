@@ -1,7 +1,7 @@
 package net.vexelon.currencybg.srv;
 
 import io.vertx.core.Vertx;
-import net.vexelon.currencybg.srv.apix.ApiVerticle;
+import net.vexelon.currencybg.srv.api.ApiVerticle;
 
 import java.sql.Driver;
 import java.sql.DriverManager;
