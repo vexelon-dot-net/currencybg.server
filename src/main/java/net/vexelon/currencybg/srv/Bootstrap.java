@@ -17,10 +17,8 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Enumeration;
 import java.util.Objects;
 import java.util.TimeZone;
 import java.util.concurrent.ScheduledExecutorService;
@@ -42,7 +40,6 @@ public class Bootstrap {
 		logConsole("Loading configurations ...");
 
 		File configFile;
-
 		if (StringUtils.isBlank(Defs.CONFIG_PATH)) {
 			logConsole(
 					"Global configuration env variable 'CBG_CFG_PATH' not defined. Trying to load 'cbg.properties' from resources...");
@@ -75,8 +72,10 @@ public class Bootstrap {
 		// apply log non-production log level, if needed
 		if (GlobalConfig.INSTANCE.isLogDebugEnabled()) {
 			LogManager.getLogger(Defs.LOGGER_NAME).setLevel(Level.TRACE);
-			log.trace("**Non-production** TRACE logging mode enabled.");
+			log.trace("Logging: **Non-production** TRACE mode enabled.");
 		}
+
+		log.info("Server: Name is '{}'", StringUtils.defaultIfEmpty(GlobalConfig.INSTANCE.getServerName(), "<empty>"));
 
 		// verify configuration
 		boolean zoneOK = false;
@@ -87,21 +86,22 @@ public class Bootstrap {
 			}
 		}
 		if (zoneOK) {
-			log.info("Server time zone is '{}'", GlobalConfig.INSTANCE.getServerTimeZone());
+			log.info("Server: Time zone is '{}'", GlobalConfig.INSTANCE.getServerTimeZone());
 		} else {
 			throw new RuntimeException(GlobalConfig.INSTANCE.getServerTimeZone() + " - time zone not found!");
 		}
 
-		if (GlobalConfig.INSTANCE.getBotToken().isEmpty()) {
-			log.warn("Telegram bot token is not set!");
-		}
-		if (GlobalConfig.INSTANCE.getBotChannel().isEmpty()) {
-			log.warn("Telegram bot channel is not set!");
+		if (GlobalConfig.INSTANCE.getBotToken().isBlank() && GlobalConfig.INSTANCE.getBotChannel().isBlank()) {
+			log.warn("Telegram: Neither bot token, nor bot channel config found.");
+		} else if (GlobalConfig.INSTANCE.getBotToken().isEmpty()) {
+			log.warn("Telegram: Bot token config not set.");
+		} else if (GlobalConfig.INSTANCE.getBotChannel().isEmpty()) {
+			log.warn("Telegram: Bot channel config not set.");
 		}
 
 		// try to display server version by looking into the MANIFEST.MF file
 		try {
-			Enumeration<URL> resources = getClass().getClassLoader().getResources("META-INF/MANIFEST.MF");
+			var resources = getClass().getClassLoader().getResources("META-INF/MANIFEST.MF");
 			while (resources.hasMoreElements()) {
 				try {
 					Manifest manifest = new Manifest(resources.nextElement().openStream());
@@ -120,6 +120,7 @@ public class Bootstrap {
 		}
 
 		log.info("Initializing Firebase ...");
+
 		try (var serviceAccount = Bootstrap.class.getResourceAsStream("/currencybg-app-firebase-adminsdk.json")) {
 			var credentials = GoogleCredentials.fromStream(Objects.requireNonNull(serviceAccount));
 
@@ -131,7 +132,8 @@ public class Bootstrap {
 			throw new RuntimeException("Failed initializing Firebase!", e);
 		}
 
-		log.info("Booting threads ...");
+		log.info("Starting threads ...");
+
 		executor.scheduleWithFixedDelay(new ReporterHeartbeat(), Defs.REPORTER_UPDATE_FIRST_INTERVAL,
 				Defs.REPORTER_UPDATES_PERIODIC_INTERVAL, TimeUnit.SECONDS);
 

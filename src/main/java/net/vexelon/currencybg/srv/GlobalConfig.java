@@ -24,6 +24,7 @@ public enum GlobalConfig {
 	 * Available configuration options to read/write
 	 */
 	public enum Options {
+		SERVER_NAME("server.name"),
 		TIMEZONE_SERVER("timezone"),
 		TELEGRAM_BOT_TOKEN("telegram.bot"),
 		TELEGRAM_CHANNEL("telegram.channel"),
@@ -32,7 +33,6 @@ public enum GlobalConfig {
 		SPARKPOST_EMAILS("sparkpost.emails"),
 		SPARKPOST_SUBJECT("sparkpost.subject"),
 		SPARKPOST_FROM("sparkpost.from"),
-		SERVER_NAME("server.name"),
 		REPORT_TYPE("reporter.type");
 
 		private final String optName;
@@ -54,6 +54,7 @@ public enum GlobalConfig {
 			builder = createConfigurationBuilder(file, executor);
 
 			// defaults
+			setServerName("");
 			setServerTimeZone(Defs.DATETIME_DEFAULT_TIMEZONE);
 			setBotToken("");
 			setBotChannel("");
@@ -62,7 +63,6 @@ public enum GlobalConfig {
 			setSparkPostEmails("");
 			setSparkPostSubject("");
 			setSparkPostFrom("");
-			setServerName("");
 			setReportType("");
 
 			builder.save();
@@ -102,6 +102,17 @@ public enum GlobalConfig {
 		} catch (ConfigurationException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	/**
+	 * @return Server name
+	 */
+	public String getServerName() {
+		return getConfig().getString(Options.SERVER_NAME.getName());
+	}
+
+	public void setServerName(String serverName) {
+		getConfig().setProperty(Options.SERVER_NAME.getName(), serverName);
 	}
 
 	public void setServerTimeZone(String timeZone) {
@@ -177,17 +188,6 @@ public enum GlobalConfig {
 
 	public void setSparkPostFrom(String from) {
 		getConfig().setProperty(Options.SPARKPOST_FROM.getName(), from);
-	}
-
-	/**
-	 * @return Server name
-	 */
-	public String getServerName() {
-		return getConfig().getString(Options.SERVER_NAME.getName());
-	}
-
-	public void setServerName(String serverName) {
-		getConfig().setProperty(Options.SERVER_NAME.getName(), serverName);
 	}
 
 	/**
