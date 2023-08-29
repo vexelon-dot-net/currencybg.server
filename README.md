@@ -31,11 +31,13 @@ To run locally execute:
 
 # Deployment
 
-Create a new Firebase project. Add a Firestore database and add all supported `sources` manually.
+Create a new Firebase project.
 
-Copy the Firebase authentication `adminsdk.json` file to `resources/`.
+Set the Firebase project id to the `GCP_PROJECT_ID` property in `gradle.properties`.
 
-Create a new Google Cloud project and set its name to the `GCP_PROJECT_ID` property in `gradle.properties`.
+Copy the Firebase service account json file to `resources/`.
+
+Add all supported `sources` manually to the Firestore database.
 
 Create a production configuration file at `src/main/resources/cbg.properties`.
 
