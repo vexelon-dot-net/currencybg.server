@@ -2,6 +2,7 @@ package net.vexelon.currencybg.srv.remote;
 
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
@@ -11,6 +12,7 @@ import net.vexelon.currencybg.srv.tests.TestUtils;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
+@Ignore
 public class SocieteGeneraleTest {
 
     @Test

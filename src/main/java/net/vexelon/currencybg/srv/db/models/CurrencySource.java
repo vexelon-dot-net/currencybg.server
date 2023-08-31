@@ -4,11 +4,14 @@ import java.util.Date;
 
 public class CurrencySource {
 
-	private int sourceId;
-	private String sourceName;
-	private int status;
-	private int updatePeriod;
-	private Date lastUpdate;
+	public static final int STATUS_ENABLED  = 0;
+	public static final int STATUS_DISABLED = 1;
+
+	private int                      sourceId;
+	private String                   sourceName;
+	private int                      status;
+	private int                      updatePeriod;
+	private Date                     lastUpdate;
 	private SourceUpdateRestrictions updateRestrictions;
 
 	public CurrencySource() {
@@ -74,8 +77,10 @@ public class CurrencySource {
 	@Override
 	public String toString() {
 		return "CurrencySource [sourceId=" + sourceId + ", sourceName=" + sourceName + ", status=" + status
-				+ ", updatePeriod=" + updatePeriod + ", lastUpdate=" + lastUpdate + ", updateRestrictions="
-				+ (updateRestrictions != null ? updateRestrictions.toString() : "") + "]";
+				+ ", updatePeriod=" + updatePeriod + ", lastUpdate=" + lastUpdate + ", updateRestrictions=" + (
+				updateRestrictions != null ?
+						updateRestrictions.toString() :
+						"") + "]";
 	}
 
 }

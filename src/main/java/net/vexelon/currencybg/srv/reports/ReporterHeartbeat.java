@@ -1,17 +1,14 @@
 package net.vexelon.currencybg.srv.reports;
 
-import java.io.IOException;
-import java.util.List;
-
+import net.vexelon.currencybg.srv.GlobalConfig;
+import net.vexelon.currencybg.srv.db.DataSource;
+import net.vexelon.currencybg.srv.db.DataSourceException;
+import net.vexelon.currencybg.srv.db.models.ReportData;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.vexelon.currencybg.srv.GlobalConfig;
-import net.vexelon.currencybg.srv.db.DataSource;
-import net.vexelon.currencybg.srv.db.DataSourceException;
-import net.vexelon.currencybg.srv.db.MySQLDataSource;
-import net.vexelon.currencybg.srv.db.models.ReportData;
+import java.io.IOException;
 
 public class ReporterHeartbeat implements Runnable {
 
@@ -19,12 +16,11 @@ public class ReporterHeartbeat implements Runnable {
 
 	@Override
 	public void run() {
-
-		try (final DataSource dataSource = new MySQLDataSource()) {
-
+		try (final var dataSource = DataSource.newDataSource()) {
 			dataSource.connect();
-			List<ReportData> reports = dataSource.getReports();
-			StringBuilder errorMessages = new StringBuilder();
+
+			var reports = dataSource.getReports();
+			var errorMessages = new StringBuilder();
 
 			for (ReportData reportData : reports) {
 				errorMessages.append(reportData.getMessage());
@@ -42,12 +38,9 @@ public class ReporterHeartbeat implements Runnable {
 					// Delete send errors
 					dataSource.deleteReports(reports);
 				}
-
 			}
-
 		} catch (IOException | DataSourceException e) {
 			log.error("Could not connect to database!", e);
 		}
 	}
-
 }

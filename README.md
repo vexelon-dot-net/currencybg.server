@@ -1,53 +1,53 @@
 Currency BG Server
 ============================
 
-[![CircleCI](https://circleci.com/gh/vexelon-dot-net/currencybg.server/tree/master.svg?style=svg&circle-token=dbb483218ea63d7fa3551c6cc3c3b3fd95f99e1e)](https://circleci.com/gh/vexelon-dot-net/currencybg.server/tree/master)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/vexelon-dot-net/currencybg.server/tree/feature%2Fgcp-migration.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/vexelon-dot-net/currencybg.server/tree/feature%2Fgcp-migration)
 
-Currency BG HTTP API
+Currency BG HTTP API Server
 
-HTTP [API documentation](docs/API.md)
+Read the [HTTP API documentation](docs/API.md) for details.
 
 # Requirements
 
-  * JDK `1.8`
-  * MySQL `5.5+` or MariaDB `10.0`
-  * Tomcat `8` or Jetty `9`
+* Java `17`
+* GCP project
+* Firestore on Firebase
 
 # Development
 
-Install [Gradle](https://gradle.org/gradle-download/) or use the `./gradlew` script.
-
-If you use Eclipse, you may generate the Eclipse project files by running:
-
-	./gradlew eclipse
-
 To build the project run:
 
-	./gradlew build
+	./gradlew clean assemble
+
+To deploy locally one must first configure one or more of the following env vars:
+
+    CBG_CFG_PATH=<directory path> // path to where server configurations will be saved
+    CBG_HOST=<listen address> // optional, default ::1
+    CBG_PORT=<listen port> // optional, default 8080
+
+To run locally execute:
+
+    ./gradlew run
 
 # Deployment
 
-Create a MySQL database and use the DDL in `schemas` to create all required tables.
+Create a new Firebase project.
 
-In order to deploy a local test version the following Java properties need to be setup, i.e.,
+Set the Firebase project id to the `GCP_PROJECT_ID` property in `gradle.properties`.
 
-    CBG_CFG_PATH=<directory path> // path to where server configurations will be saved
-    DB_HOST=<mysql hostname>
-    DB_PORT=<mysql port>
-    DB_NAME=<mysql database>
-    DB_USERNAME=<mysql user>
-    DB_PASSWORD=<mysql password>
+Copy the Firebase service account json file to `resources/`.
 
-To run locally:
+Add all supported `sources` manually to the Firestore database.
 
-	./gradlew tomcatRun \
-      -DCBG_CFG_PATH=<directory path> \
-      -DDB_HOST=<host> -DDB_PORT=<port> -DDB_NAME=<database> \
-      -DDB_USERNAME=<username> -DDB_PASSWORD=<password> 
+Create a production configuration file at `src/main/resources/cbg.properties`.
 
-To access the API open:
+To deploy to GCP run:
 
-    http://localhost:8090/api
+    ./gradlew appengineDeploy
+
+To monitor the app on AE run:
+
+    gcloud app logs tail -s default
 
 # License
 

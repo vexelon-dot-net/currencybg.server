@@ -1,29 +1,29 @@
 <COMMON>
     <EXCHANGERATES branchid="001">
-        <EXCHANGERATE currid="CHF" dtstamp="12/11/2021" type="S" units="1" mid="1.85071" buy="1.826" sell="1.881"/>
-        <EXCHANGERATE currid="CHF" dtstamp="12/11/2021" type="N" units="1" mid="1.85071" buy="1.826" sell="1.881"/>
-        <EXCHANGERATE currid="CHF" dtstamp="12/11/2021" type="T" units="1" mid="1.85194" buy="1.85194" sell="1.85194"/>
-        <EXCHANGERATE currid="DKK" dtstamp="12/11/2021" type="N" units="10" mid="2.62986" buy="2.6005" sell="2.6595"/>
-        <EXCHANGERATE currid="DKK" dtstamp="12/11/2021" type="S" units="10" mid="2.62986" buy="2.6005" sell="2.6595"/>
-        <EXCHANGERATE currid="DKK" dtstamp="12/11/2021" type="T" units="10" mid="2.62979" buy="2.62979" sell="2.62979"/>
         <EXCHANGERATE currid="EUR" dtstamp="21/02/2017" type="T" units="1" mid="1.95583" buy="1.95583" sell="1.95583"/>
-        <EXCHANGERATE currid="EUR" dtstamp="18/06/2020" type="N" units="1" mid="1.95583" buy="1.95" sell="1.96"/>
         <EXCHANGERATE currid="EUR" dtstamp="18/06/2020" type="S" units="1" mid="1.95583" buy="1.95" sell="1.96"/>
-        <EXCHANGERATE currid="GBP" dtstamp="12/11/2021" type="S" units="1" mid="2.28739" buy="2.2553" sell="2.3143"/>
-        <EXCHANGERATE currid="GBP" dtstamp="12/11/2021" type="N" units="1" mid="2.28739" buy="2.2553" sell="2.3143"/>
-        <EXCHANGERATE currid="GBP" dtstamp="12/11/2021" type="T" units="1" mid="2.2865" buy="2.2865" sell="2.2865"/>
-        <EXCHANGERATE currid="JPY" dtstamp="12/11/2021" type="S" units="100" mid="1.49872" buy="1.4665" sell="1.5255"/>
-        <EXCHANGERATE currid="JPY" dtstamp="12/11/2021" type="N" units="100" mid="1.49872" buy="1.4665" sell="1.5255"/>
-        <EXCHANGERATE currid="JPY" dtstamp="12/11/2021" type="T" units="100" mid="1.49769" buy="1.49769"
-                      sell="1.49769"/>
-        <EXCHANGERATE currid="NOK" dtstamp="12/11/2021" type="S" units="10" mid="1.9655" buy="1.9385" sell="1.9975"/>
-        <EXCHANGERATE currid="NOK" dtstamp="12/11/2021" type="N" units="10" mid="1.9655" buy="1.9385" sell="1.9975"/>
-        <EXCHANGERATE currid="NOK" dtstamp="12/11/2021" type="T" units="10" mid="1.96181" buy="1.96181" sell="1.96181"/>
-        <EXCHANGERATE currid="SEK" dtstamp="12/11/2021" type="N" units="10" mid="1.95417" buy="1.9305" sell="1.9895"/>
-        <EXCHANGERATE currid="SEK" dtstamp="12/11/2021" type="S" units="10" mid="1.95417" buy="1.9305" sell="1.9895"/>
-        <EXCHANGERATE currid="SEK" dtstamp="12/11/2021" type="T" units="10" mid="1.96274" buy="1.96274" sell="1.96274"/>
-        <EXCHANGERATE currid="USD" dtstamp="12/11/2021" type="N" units="1" mid="1.70845" buy="1.6847" sell="1.7337"/>
-        <EXCHANGERATE currid="USD" dtstamp="12/11/2021" type="S" units="1" mid="1.70845" buy="1.6847" sell="1.7337"/>
-        <EXCHANGERATE currid="USD" dtstamp="12/11/2021" type="T" units="1" mid="1.70666" buy="1.70666" sell="1.70666"/>
+        <EXCHANGERATE currid="EUR" dtstamp="18/06/2020" type="N" units="1" mid="1.95583" buy="1.95" sell="1.96"/>
+        <EXCHANGERATE currid="USD" dtstamp="25/08/2023" type="S" units="1" mid="1.80961" buy="1.7902" sell="1.8392"/>
+        <EXCHANGERATE currid="USD" dtstamp="25/08/2023" type="N" units="1" mid="1.80961" buy="1.7902" sell="1.8392"/>
+        <EXCHANGERATE currid="USD" dtstamp="25/08/2023" type="T" units="1" mid="1.80427" buy="1.80427" sell="1.80427"/>
+        <EXCHANGERATE currid="GBP" dtstamp="25/08/2023" type="T" units="1" mid="2.28351" buy="2.28351" sell="2.28351"/>
+        <EXCHANGERATE currid="GBP" dtstamp="25/08/2023" type="S" units="1" mid="2.2837" buy="2.2498" sell="2.3088"/>
+        <EXCHANGERATE currid="GBP" dtstamp="25/08/2023" type="N" units="1" mid="2.2837" buy="2.2498" sell="2.3088"/>
+        <EXCHANGERATE currid="CHF" dtstamp="25/08/2023" type="S" units="1" mid="2.04499" buy="2.0192" sell="2.0742"/>
+        <EXCHANGERATE currid="CHF" dtstamp="25/08/2023" type="N" units="1" mid="2.04499" buy="2.0192" sell="2.0742"/>
+        <EXCHANGERATE currid="CHF" dtstamp="25/08/2023" type="T" units="1" mid="2.04542" buy="2.04542" sell="2.04542"/>
+        <EXCHANGERATE currid="JPY" dtstamp="25/08/2023" type="N" units="100" mid="1.23983" buy="1.2125" sell="1.2715"/>
+        <EXCHANGERATE currid="JPY" dtstamp="25/08/2023" type="S" units="100" mid="1.23983" buy="1.2125" sell="1.2715"/>
+        <EXCHANGERATE currid="JPY" dtstamp="25/08/2023" type="T" units="100" mid="1.23818" buy="1.23818"
+                      sell="1.23818"/>
+        <EXCHANGERATE currid="NOK" dtstamp="25/08/2023" type="N" units="10" mid="1.69806" buy="1.6595" sell="1.7185"/>
+        <EXCHANGERATE currid="NOK" dtstamp="25/08/2023" type="S" units="10" mid="1.69806" buy="1.6595" sell="1.7185"/>
+        <EXCHANGERATE currid="NOK" dtstamp="25/08/2023" type="T" units="10" mid="1.68934" buy="1.68934" sell="1.68934"/>
+        <EXCHANGERATE currid="SEK" dtstamp="25/08/2023" type="N" units="10" mid="1.64425" buy="1.6155" sell="1.6745"/>
+        <EXCHANGERATE currid="SEK" dtstamp="25/08/2023" type="S" units="10" mid="1.64425" buy="1.6155" sell="1.6745"/>
+        <EXCHANGERATE currid="SEK" dtstamp="25/08/2023" type="T" units="10" mid="1.64114" buy="1.64114" sell="1.64114"/>
+        <EXCHANGERATE currid="DKK" dtstamp="25/08/2023" type="N" units="10" mid="2.62397" buy="2.5945" sell="2.6535"/>
+        <EXCHANGERATE currid="DKK" dtstamp="25/08/2023" type="S" units="10" mid="2.62397" buy="2.5945" sell="2.6535"/>
+        <EXCHANGERATE currid="DKK" dtstamp="25/08/2023" type="T" units="10" mid="2.6239" buy="2.6239" sell="2.6239"/>
     </EXCHANGERATES>
 </COMMON>

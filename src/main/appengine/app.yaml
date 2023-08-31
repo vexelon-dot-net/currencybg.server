@@ -1,0 +1,4 @@
+runtime: java17
+
+env_variables:
+  CBG_HOST: 0
