@@ -1,45 +1,42 @@
 package net.vexelon.currencybg.srv.remote;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import java.util.List;
-
-import org.junit.Test;
-
-import net.vexelon.currencybg.srv.db.models.CurrencyData;
+import net.vexelon.currencybg.srv.reports.ConsoleReporter;
 import net.vexelon.currencybg.srv.reports.NullReporter;
 import net.vexelon.currencybg.srv.tests.TestUtils;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class CryptoBGSourceTest {
-    @Test
-    public void test_CryptoBgSource_Header() {
 
-        try {
-            final List<CurrencyData> rates = new CryptoBGSource(new NullReporter())
-                    .getCryptoRates(TestUtils.getTestResource("/crypto_bg_source_header.html"));
+	@Test
+	public void test_CryptoBgSource_Header() {
+		try {
+			var rates = new CryptoBGSource(new ConsoleReporter()).getCryptoRates(
+					TestUtils.getTestResource("/crypto_bg_source_header.html"));
 
-            assertEquals("code is BTC", "BTC", rates.get(0).getCode());
-            assertEquals("BTC rate", 1, rates.get(0).getRatio());
-            assertEquals("BTC buy", "20371.73", rates.get(0).getBuy());
-            assertEquals("BTC sell", "21410.27", rates.get(0).getSell());
+			assertEquals("Parsed cryptos", 2, rates.size());
 
-            final List<CurrencyData> ratesNoData = new CryptoBGSource(new NullReporter())
-                    .getCryptoRates(TestUtils.getTestResource("/crypto_bg_source_header_no_data.html"));
+			assertEquals("code is BTC", "BTC", rates.get(0).getCode());
+			assertEquals("BTC rate", 1, rates.get(0).getRatio());
+			assertEquals("BTC buy", "45073.61", rates.get(0).getBuy());
+			assertEquals("BTC sell", "47814.28", rates.get(0).getSell());
 
-            assertTrue(ratesNoData.isEmpty());
+			assertEquals("code is ETH", "ETH", rates.get(1).getCode());
+			assertEquals("ETH rate", 1, rates.get(1).getRatio());
+			assertEquals("ETH buy", "2863.43", rates.get(1).getBuy());
+			assertEquals("ETH sell", "3023.22", rates.get(1).getSell());
 
-            final List<CurrencyData> ratesEmpty = new CryptoBGSource(new NullReporter())
-                    .getCryptoRates(TestUtils.getTestResource("/crypto_bg_source_header_empty.html"));
+			var ratesNoData = new CryptoBGSource(new NullReporter()).getCryptoRates(
+					TestUtils.getTestResource("/crypto_bg_source_header_no_data.html"));
+			assertTrue(ratesNoData.isEmpty());
 
-            assertTrue(ratesEmpty.isEmpty());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail(e.getMessage());
-        }
-
-    }
-
+			var ratesEmpty = new CryptoBGSource(new NullReporter()).getCryptoRates(
+					TestUtils.getTestResource("/crypto_bg_source_header_empty.html"));
+			assertTrue(ratesEmpty.isEmpty());
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
 }
