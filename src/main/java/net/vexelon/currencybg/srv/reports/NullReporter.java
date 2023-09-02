@@ -4,7 +4,6 @@ import java.io.IOException;
 
 /**
  * Dummy reports collector. Does not send any reports on {@link #send()}.
- *
  */
 public class NullReporter extends AbstractReporter {
 
@@ -30,5 +29,4 @@ public class NullReporter extends AbstractReporter {
 	public void write(String tag, String message) {
 		// do nothing
 	}
-
 }

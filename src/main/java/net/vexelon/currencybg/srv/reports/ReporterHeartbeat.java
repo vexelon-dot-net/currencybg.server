@@ -3,7 +3,6 @@ package net.vexelon.currencybg.srv.reports;
 import net.vexelon.currencybg.srv.GlobalConfig;
 import net.vexelon.currencybg.srv.db.DataSource;
 import net.vexelon.currencybg.srv.db.DataSourceException;
-import net.vexelon.currencybg.srv.db.models.ReportData;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,24 +21,24 @@ public class ReporterHeartbeat implements Runnable {
 			var reports = dataSource.getReports();
 			var errorMessages = new StringBuilder();
 
-			for (ReportData reportData : reports) {
+			for (var reportData : reports) {
 				errorMessages.append(reportData.getMessage());
 			}
 
 			if (!StringUtils.isEmpty(errorMessages)) {
-				Reporters reporterType = Reporters.getByName(GlobalConfig.INSTANCE.getReportType());
-
+				var reporterType = Reporters.getByName(GlobalConfig.INSTANCE.getReportType());
 				if (reporterType != null) {
-					Reporter reporter = reporterType.newInstance();
-
+					var reporter = reporterType.newInstance();
 					reporter.write(ReporterHeartbeat.class.getSimpleName(), errorMessages.toString());
 					reporter.send();
 
-					// Delete send errors
+					// delete sent errors
 					dataSource.deleteReports(reports);
 				}
 			}
-		} catch (IOException | DataSourceException e) {
+		} catch (IOException e) {
+			log.error("Failed reporter write-send!", e);
+		} catch (DataSourceException e) {
 			log.error("Could not connect to database!", e);
 		}
 	}

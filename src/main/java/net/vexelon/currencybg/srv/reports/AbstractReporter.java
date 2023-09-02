@@ -6,7 +6,7 @@ public abstract class AbstractReporter implements Reporter {
 
 	private static final String CLRF = System.getProperty("line.separator");
 
-	protected String name;
+	protected String        name;
 	protected StringBuilder buffer = new StringBuilder();
 
 	public AbstractReporter(String name) {
@@ -37,5 +37,4 @@ public abstract class AbstractReporter implements Reporter {
 	public boolean isEmpty() {
 		return buffer.length() == 0;
 	}
-
 }

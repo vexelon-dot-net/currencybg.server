@@ -20,7 +20,7 @@ public enum Reporters {
 	}
 
 	public static Reporters getByName(String name) {
-		for (Reporters r : values()) {
+		for (var r : values()) {
 			if (r.getId().equals(name)) {
 				return r;
 			}
@@ -30,20 +30,12 @@ public enum Reporters {
 
 	/**
 	 * Creates a new {@link Reporter} mapped via the {@link Reporters} constant.
-	 *
-	 * @param reporter
-	 * @return
 	 */
 	public Reporter newInstance() {
-		switch (id) {
-		case "sparkpost":
-			return new SparkPostReporter();
-		case "telegram":
-			return new TelegramReporter();
-		// <unknown>
-		default:
-			throw new RuntimeException("Invalid report id (" + id + ")!");
-		}
+		return switch (id) {
+			case "sparkpost" -> new SparkPostReporter();
+			case "telegram" -> new TelegramReporter();
+			default -> throw new RuntimeException("Invalid reporter id (" + id + ")");
+		};
 	}
-
 }

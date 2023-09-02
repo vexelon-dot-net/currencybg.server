@@ -4,7 +4,6 @@ import java.io.IOException;
 
 /**
  * Writes collected reports to {@link System#out} on {@link #send()}.
- *
  */
 public class ConsoleReporter extends AbstractReporter {
 
@@ -20,5 +19,4 @@ public class ConsoleReporter extends AbstractReporter {
 	public void send() throws IOException {
 		System.out.println(buffer.toString());
 	}
-
 }
