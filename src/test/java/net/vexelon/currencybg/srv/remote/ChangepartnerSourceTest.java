@@ -1,49 +1,44 @@
 package net.vexelon.currencybg.srv.remote;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.util.List;
-
+import net.vexelon.currencybg.srv.reports.ConsoleReporter;
+import net.vexelon.currencybg.srv.tests.TestUtils;
 import org.junit.Test;
 
-import net.vexelon.currencybg.srv.db.models.CurrencyData;
-import net.vexelon.currencybg.srv.reports.NullReporter;
-import net.vexelon.currencybg.srv.tests.TestUtils;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class ChangepartnerSourceTest {
-    @Test
-    public void test_changepartner_1() {
 
-        try {
-            List<CurrencyData> rates = new ChangepartnerSource(new NullReporter())
-                    .getChangepartnerRates(TestUtils.getTestResource("/changepartner_01.html"));
+	@Test
+	public void test_changepartner_1() {
+		try {
+			var rates = new ChangepartnerSource(new ConsoleReporter()).getChangepartnerRates(
+					TestUtils.getTestResource("/changepartner_01.html"));
 
-            assertTrue(rates.get(0).getCode().equals("USD"));
-            assertTrue(rates.get(0).getRatio() == 1);
-            assertTrue(rates.get(0).getBuy().equals("1.690"));
-            assertTrue(rates.get(0).getSell().equals("1.700"));
-            // CurrencyData [code=USD, ratio=1, buy=1.690, sell=1.700, date=Wed
-            // Jul 19 20:57:00 EEST 2017, source=800]
+			assertEquals("Currencies parsed", 16, rates.size());
 
-            assertTrue(rates.get(9).getCode().equals("CZK"));
-            assertTrue(rates.get(9).getRatio() == 100);
-            assertTrue(rates.get(9).getBuy().equals("7.300"));
-            assertTrue(rates.get(9).getSell().equals("7.480"));
-            // CurrencyData [code=CZK, ratio=100, buy=7.300, sell=7.480,
-            // date=Wed Jul 19 20:57:00 EEST 2017, source=800] ->9
+			assertEquals("USD", rates.get(0).getCode());
+			assertEquals(1, rates.get(0).getRatio());
+			assertEquals("1.790", rates.get(0).getBuy());
+			assertEquals("1.811", rates.get(0).getSell());
 
-            assertTrue(rates.get(19).getCode().equals("HRK"));
-            assertTrue(rates.get(19).getRatio() == 100);
-            assertTrue(rates.get(19).getBuy().equals("26.30"));
-            assertTrue(rates.get(19).getSell().equals("27.30"));
-            // CurrencyData [code=HRK, ratio=100, buy=26.30, sell=27.30,
-            // date=Wed Jul 19 20:57:00 EEST 2017, source=800] ->19
+			assertEquals("NOK", rates.get(6).getCode());
+			assertEquals(1, rates.get(6).getRatio());
+			assertEquals("", rates.get(6).getBuy());
+			assertEquals("0.169", rates.get(6).getSell());
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail(e.getMessage());
-        }
+			assertEquals("SEK", rates.get(7).getCode());
+			assertEquals(1, rates.get(7).getRatio());
+			assertEquals("0.155", rates.get(7).getBuy());
+			assertEquals("0.164", rates.get(7).getSell());
 
-    }
+			assertEquals("CZK", rates.get(8).getCode());
+			assertEquals(1, rates.get(8).getRatio());
+			assertEquals("0.0790", rates.get(8).getBuy());
+			assertEquals("0.0810", rates.get(8).getSell());
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
 }
