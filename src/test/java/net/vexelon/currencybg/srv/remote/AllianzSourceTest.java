@@ -1,11 +1,8 @@
 package net.vexelon.currencybg.srv.remote;
 
-import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.reports.ConsoleReporter;
 import net.vexelon.currencybg.srv.tests.TestUtils;
 import org.junit.Test;
-
-import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -14,7 +11,7 @@ public class AllianzSourceTest {
 	@Test
 	public void test_Allianz() {
 		try {
-			List<CurrencyData> rates = new AllianzSource(new ConsoleReporter()).getAllianzRates(
+			var rates = new AllianzSource(new ConsoleReporter()).getAllianzRates(
 					TestUtils.getTestResource("/allianz.xml"));
 
 			assertEquals(7, rates.size());
@@ -49,11 +46,9 @@ public class AllianzSourceTest {
 			assertEquals(10, rates.get(6).getRatio());
 			assertEquals("2.5945", rates.get(6).getBuy());
 			assertEquals("2.6535", rates.get(6).getSell());
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
 	}
-
 }

@@ -11,14 +11,11 @@ public class AltcoinsSourceTest {
 
 	@Test
 	public void test_AltcoinsSource01() {
-
 		try {
 			var rates = new AltcoinsSource(new ConsoleReporter()).getAltcoinsRates(
 					TestUtils.getTestResource("/altcoins.json"));
 
-			// XXX buy/sell rates - size of column is 10!
-			// This is not good, because it strips rate infos
-			// and the tests should be modified once the db and backend are updated!
+			assertEquals("Expected vs. Parsed", AltcoinsSource.CURRENCIES.size(), rates.size());
 
 			assertEquals("BTC", rates.get(0).getCode());
 			assertEquals(1, rates.get(0).getRatio());
@@ -44,13 +41,9 @@ public class AltcoinsSourceTest {
 			assertEquals(1, rates.get(5).getRatio());
 			assertEquals("0.21177211999999998", rates.get(5).getBuy()); // 0.1328160288
 			assertEquals("0.19804004999999997", rates.get(5).getSell()); // 0.121593888
-
-			assertEquals("Expected vs. Parsed", AltcoinsSource.CURRENCIES.size(), rates.size());
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
 	}
-
 }
