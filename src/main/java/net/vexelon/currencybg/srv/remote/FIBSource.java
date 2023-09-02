@@ -53,8 +53,8 @@ public class FIBSource extends AbstractSource {
 			int row = 1;
 
 			for (var child : Optional.ofNullable(doc.select(".scrollable-content > table > tbody").first())
-					.map(Element::children)
-					.orElseThrow(() -> new RuntimeException(".scrollable-content > table > tbody was not found!"))) {
+					.orElseThrow(() -> new RuntimeException(".scrollable-content > table > tbody was not found!"))
+					.children()) {
 				try {
 					var currencyData = new CurrencyData();
 					currencyData.setDate(updateDate);
