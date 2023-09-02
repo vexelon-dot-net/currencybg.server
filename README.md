@@ -1,7 +1,7 @@
 Currency BG Server
 ============================
 
-[![CircleCI](https://dl.circleci.com/status-badge/img/gh/vexelon-dot-net/currencybg.server/tree/feature%2Fgcp-migration.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/vexelon-dot-net/currencybg.server/tree/feature%2Fgcp-migration)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/vexelon-dot-net/currencybg.server/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/vexelon-dot-net/currencybg.server/tree/master)
 
 Currency BG HTTP API Server
 
