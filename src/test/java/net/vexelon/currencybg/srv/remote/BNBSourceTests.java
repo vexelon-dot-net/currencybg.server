@@ -1,6 +1,6 @@
 package net.vexelon.currencybg.srv.remote;
 
-import net.vexelon.currencybg.srv.reports.NullReporter;
+import net.vexelon.currencybg.srv.reports.ConsoleReporter;
 import net.vexelon.currencybg.srv.tests.TestUtils;
 import org.junit.Test;
 
@@ -13,7 +13,7 @@ public class BNBSourceTests {
 	@Test
 	public void test_bnb_1() {
 		try {
-			var rates = new BNBSource(new NullReporter()).getBNBRates(
+			var rates = new BNBSource(new ConsoleReporter()).getBNBRates(
 					TestUtils.getTestResource("/exchange_rates_en.xml"));
 
 			assertEquals("AUD", rates.get(0).getCode());
