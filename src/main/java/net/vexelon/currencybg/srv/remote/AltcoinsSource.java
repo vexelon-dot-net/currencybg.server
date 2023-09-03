@@ -56,17 +56,21 @@ public class AltcoinsSource extends AbstractSource {
 
 			for (Map.Entry<String, List<String>> next : pairs.entrySet()) {
 				if (CURRENCIES.contains(next.getKey()) && next.getValue().size() > 1) {
-					var currencyData = new CurrencyData();
-					currencyData.setCode(next.getKey());
-					currencyData.setBuy(next.getValue().get(0));
-					currencyData.setSell(next.getValue().get(1));
-					currencyData.setRatio(1);
-					currencyData.setSource(Sources.ALTCOINS.getID());
-					currencyData.setDate(updateDate);
-					result.add(currencyData);
+					try {
+						var currencyData = new CurrencyData();
+						currencyData.setCode(next.getKey());
+						currencyData.setBuy(next.getValue().get(0));
+						currencyData.setSell(next.getValue().get(1));
+						currencyData.setRatio(1);
+						currencyData.setSource(Sources.ALTCOINS.getID());
+						currencyData.setDate(updateDate);
+						result.add(currencyData);
+					} catch (IndexOutOfBoundsException e) {
+						log.warn("Failed on {}, Exception={}", next.getKey(), e.getMessage());
+						getReporter().write(TAG_NAME, "Could not process currency {}", next.getKey());
+					}
 				} else if (log.isInfoEnabled()) {
-					log.info("Buy/sell not available or unexpected info present in '{}'! Size={}", next.getKey(),
-							next.getValue().size());
+					log.info("Skipped unsupported crypto: {}", next.getKey());
 				}
 			}
 
