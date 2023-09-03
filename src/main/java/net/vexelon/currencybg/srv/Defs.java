@@ -74,9 +74,10 @@ public final class Defs {
 	 * Currency codes recognized by the mobile app
 	 */
 	public static final Set<String> CURRENCY_CODES_APP = Sets.newHashSet("AED", "ALL", "ARS", "AUD", "AZN", "BAM",
-			"BCH", "BGN", "BRL", "BTC", "BYN", "BYR", "CAD", "CHF", "CNH", "CNY", "CZK", "DASH", "DKK", "DOGE", "DOP",
-			"EEK", "EGP", "ETC", "ETH", "EUR", "GEL", "GBP", "HKD", "HRK", "HUF", "IDR", "INR", "ILS", "ISK", "JOD",
-			"JPY", "KES", "KRW", "LTC", "LTL", "LVL", "MDL", "MKD", "MUR", "MXN", "MYR", "NOK", "NZD", "PHP", "PLN",
-			"QAR", "RON", "RSD", "RUB", "SAR", "SEK", "SGD", "THB", "TND", "TRY", "TWD", "UAH", "USD", "VND", "XLM",
-			"XMR", "XRP", "ZAR", "ZEC");
+			"BGN", "BRL", "BYN", "BYR", "CAD", "CHF", "CNH", "CNY", "CZK", "DKK", "DOP", "EEK", "EGP", "EUR", "GEL",
+			"GBP", "HKD", "HRK", "HUF", "IDR", "INR", "ILS", "ISK", "JOD", "JPY", "KES", "KRW", "LTL", "LVL", "MDL",
+			"MKD", "MUR", "MXN", "MYR", "NOK", "NZD", "PHP", "PLN", "QAR", "RON", "RSD", "RUB", "SAR", "SEK", "SGD",
+			"THB", "TND", "TRY", "TWD", "UAH", "USD", "VND", "ZAR",
+			// crypto
+			"BCH", "BTC", "DASH", "DOGE", "ETC", "ETH", "LTC", "XLM", "XMR", "XRP", "ZEC");
 }
