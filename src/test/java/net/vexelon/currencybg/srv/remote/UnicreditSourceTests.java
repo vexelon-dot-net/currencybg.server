@@ -1,12 +1,10 @@
 package net.vexelon.currencybg.srv.remote;
 
-import net.vexelon.currencybg.srv.db.models.CurrencyData;
-import net.vexelon.currencybg.srv.reports.NullReporter;
+import net.vexelon.currencybg.srv.reports.ConsoleReporter;
 import net.vexelon.currencybg.srv.tests.TestUtils;
 import org.junit.Test;
 
 import java.util.Date;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -16,7 +14,7 @@ public class UnicreditSourceTests {
 	@Test
 	public void test_unicredit_1() {
 		try {
-			List<CurrencyData> rates = new UnicreditSource(new NullReporter()).getUnicreditRates(
+			var rates = new UnicreditSource(new ConsoleReporter()).getUnicreditRates(
 					TestUtils.getTestResource("/unicredit.html"));
 
 			assertEquals("Currencies parsed", 17, rates.size());
