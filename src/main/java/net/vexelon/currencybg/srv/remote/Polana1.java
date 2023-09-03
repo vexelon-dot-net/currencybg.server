@@ -77,7 +77,7 @@ public class Polana1 extends AbstractSource {
 
 					result.add(currencyData);
 				} catch (IndexOutOfBoundsException e) {
-					log.warn("Failed on row='{}', Exception={}", row, e.getMessage());
+					log.warn("Failed on row={}, Exception={}", row, e.getMessage());
 					getReporter().write(TAG_NAME, "Could not process currency on row={}!", row + "");
 				}
 			}

@@ -82,8 +82,8 @@ public class ForexHouseSource extends AbstractSource {
 					}
 
 				} catch (IndexOutOfBoundsException e) {
-					log.warn("Failed on row='{}', Exception={}", row, e.getMessage());
-					getReporter().write(TAG_NAME, "Could not process currency on row='{}'!", row + "");
+					log.warn("Failed on row={}, Exception={}", row, e.getMessage());
+					getReporter().write(TAG_NAME, "Could not process currency on row={}!", row + "");
 				}
 
 				row++;
@@ -106,8 +106,8 @@ public class ForexHouseSource extends AbstractSource {
 					}
 
 				} catch (IndexOutOfBoundsException e) {
-					log.warn("Failed on row='{}', Exception={}", row, e.getMessage());
-					getReporter().write(TAG_NAME, "Could not process currency on row='{}'!", row + "");
+					log.warn("Failed on row={}, Exception={}", row, e.getMessage());
+					getReporter().write(TAG_NAME, "Could not process currency on row={}!", row + "");
 				}
 
 			}
