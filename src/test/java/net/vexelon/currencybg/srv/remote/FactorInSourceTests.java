@@ -1,66 +1,53 @@
 package net.vexelon.currencybg.srv.remote;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.util.Date;
-import java.util.List;
-
-import org.junit.Test;
-
-import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.reports.NullReporter;
 import net.vexelon.currencybg.srv.tests.TestUtils;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class FactorInSourceTests {
 
-    @Test
-    public void test_factorin_1() {
-        try {
-            List<CurrencyData> rates = new Factorin(new NullReporter())
-                    .getFactorinRates(TestUtils.getTestResource("/factorin_06.2019.html"));
+	@Test
+	public void test_factorin_1() {
+		try {
+			var rates = new Factorin(new NullReporter()).getFactorinRates(TestUtils.getTestResource("/factorin.html"));
 
-            int last = rates.size() - 1;
-            Date lastUpdate = TestUtils.newDate(2019, 6, 15, 13, 9);
+			assertEquals("Currencies parsed", 53, rates.size());
 
-            assertTrue(rates.get(0).getCode().equals("EUR"));
-            assertTrue(rates.get(0).getRatio() == 1);
-            assertTrue(rates.get(0).getBuy().equals("1.953"));
-            assertTrue(rates.get(0).getSell().equals("1.959"));
-            assertTrue(rates.get(0).getDate().equals(lastUpdate));
+			var lastUpdate = TestUtils.newDate(2023, 9, 2, 11, 15);
 
-            assertTrue(rates.get(6).getCode().equals("TRY"));
-            assertTrue(rates.get(6).getRatio() == 1);
-            assertTrue(rates.get(6).getBuy().equals("0.3"));
-            assertTrue(rates.get(6).getSell().equals("0.309"));
-            assertTrue(rates.get(6).getDate().equals(lastUpdate));
+			assertEquals("EUR", rates.get(0).getCode());
+			assertEquals(1, rates.get(0).getRatio());
+			assertEquals("1.95", rates.get(0).getBuy());
+			assertEquals("1.962", rates.get(0).getSell());
+			assertEquals(lastUpdate, rates.get(0).getDate());
 
-            assertTrue(rates.get(last).getCode().equals("PHP"));
-            assertTrue(rates.get(last).getRatio() == 1);
-            assertTrue(rates.get(last).getBuy().equals("0.034"));
-            assertTrue(rates.get(last).getSell().equals("0.035"));
-            assertTrue(rates.get(last).getDate().equals(lastUpdate));
+			assertEquals("TRY", rates.get(6).getCode());
+			assertEquals(1, rates.get(6).getRatio());
+			assertEquals("0.068", rates.get(6).getBuy());
+			assertEquals("0.0708", rates.get(6).getSell());
+			assertEquals(lastUpdate, rates.get(6).getDate());
 
-            assertTrue(rates.get(last - 10).getCode().equals("TWD"));
-            assertTrue(rates.get(last - 10).getRatio() == 1);
-            assertTrue(rates.get(last - 10).getBuy().equals("0.052"));
-            assertTrue(rates.get(last - 10).getSell().equals("0.057"));
-            assertTrue(rates.get(last - 10).getDate().equals(lastUpdate));
+			rates.stream().filter(r -> r.getCode().equals("PHP")).findAny().ifPresentOrElse(found -> {
+				assertEquals("PHP", found.getCode());
+				assertEquals(1, found.getRatio());
+				assertEquals("0.0303", found.getBuy());
+				assertEquals("0.0331", found.getSell());
+				assertEquals(lastUpdate, found.getDate());
+			}, () -> fail("PHP not found"));
 
-            assertTrue(rates.get(last - 16).getCode().equals("KRW"));
-            assertTrue(rates.get(last - 16).getRatio() == 1);
-            assertTrue(rates.get(last - 16).getBuy().equals("0.00146"));
-            assertTrue(rates.get(last - 16).getSell().equals("0.00152"));
-            assertTrue(rates.get(last - 16).getDate().equals(lastUpdate));
-
-            assertTrue(rates.get(last - 24).getCode().equals("BAM"));
-            assertTrue(rates.get(last - 24).getRatio() == 1);
-            assertTrue(rates.get(last - 24).getBuy().equals("1"));
-            assertTrue(rates.get(last - 24).getSell().equals("1.04"));
-            assertTrue(rates.get(last - 24).getDate().equals(lastUpdate));
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail(e.getMessage());
-        }
-    }
+			rates.stream().filter(r -> r.getCode().equals("EGP")).findAny().ifPresentOrElse(found -> {
+				assertEquals("EGP", found.getCode());
+				assertEquals(1, found.getRatio());
+				assertEquals("0.0601", found.getBuy());
+				assertEquals("0.0628", found.getSell());
+				assertEquals(lastUpdate, found.getDate());
+			}, () -> fail("EGP not found"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
 }
