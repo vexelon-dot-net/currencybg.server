@@ -1,19 +1,15 @@
 package net.vexelon.currencybg.srv.remote;
 
 import com.google.common.base.Charsets;
-import com.google.common.collect.Lists;
 import net.vexelon.currencybg.srv.Defs;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.reports.Reporter;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.http.HttpResponse;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,8 +20,9 @@ import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class TavexSource extends AbstractSource {
 
@@ -41,58 +38,60 @@ public class TavexSource extends AbstractSource {
 
 	/**
 	 * Transforms Tavex HTML data into {@link CurrencyData} models.
-	 *
-	 * @param input
-	 * @return
-	 * @throws IOException
-	 * @throws ParseException
 	 */
 	public List<CurrencyData> getTavexRates(InputStream input) throws IOException, ParseException {
-		List<CurrencyData> result = Lists.newArrayList();
+		var result = new ArrayList<CurrencyData>();
 
-		Document doc = Jsoup.parse(input, Charsets.UTF_8.name(), URL_SOURCE);
+		var doc = Jsoup.parse(input, Charsets.UTF_8.name(), URL_SOURCE);
 
 		try {
+			var updateDate = DateTimeUtils.parseDate(LocalDateTime.now(ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA))
+					.format(DateTimeFormatter.ofPattern(DATE_FORMAT)), DATE_FORMAT);
 
-			String currentDateTimeSofia = LocalDateTime.now(ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA))
-					.format(DateTimeFormatter.ofPattern(DATE_FORMAT)).toString();
+			// Parse currencies
+			int row = 0;
 
-			Date updateDate = DateTimeUtils.parseDate(currentDateTimeSofia, DATE_FORMAT);
+			for (var spanChild : Objects.requireNonNull(
+					doc.select("div.currency-hero__rates table.list-table.list-table--full > tbody").first(),
+					"div.currency-hero__rates table.list-table.list-table--full was not found!").children()) {
 
-			// Parse table with currencies
-			Elements wrappers = doc.select("div.table-flex--currency div.table-flex__body");
-			for (Element wrapper : wrappers) {
-				Elements span = wrapper.children();
-				int row = 0;
+				var currencyData = new CurrencyData();
+				try {
+					var childs = spanChild.children();
 
-				for (Element spanChild : span) {
-					CurrencyData currencyData = new CurrencyData();
-					try {
-						currencyData.setCode(spanChild.child(0).child(1).text());
-						currencyData.setRatio(NumberUtils.toInt(spanChild.child(1).text(), 1));
+					var code = childs.get(0).child(0).text().strip();
+					var name = childs.get(0).child(1).text().strip();
 
-						Elements spans = spanChild.child(2).children();
-						if (spans.size() > 1) {
-							currencyData.setBuy(spans.get(0).text());
-							if ("-".equals(currencyData.getBuy())) {
-								currencyData.setBuy("");
-							}
-							currencyData.setSell(spans.get(1).text());
-							if ("-".equals(currencyData.getSell())) {
-								currencyData.setSell("");
-							}
+					currencyData.setCode(code);
+					currencyData.setRatio(name.endsWith(")") ?
+							Integer.parseInt(
+									StringUtils.substringBeforeLast(StringUtils.substringAfterLast(name, "("), ")")) :
+							1);
+
+					if (childs.size() > 1) {
+						currencyData.setBuy(childs.get(1).text().strip());
+						if ("-".equals(currencyData.getBuy())) {
+							currencyData.setBuy("");
 						}
-
-						currencyData.setSource(Sources.TAVEX.getID());
-						currencyData.setDate(updateDate);
-						result.add(currencyData);
-					} catch (IndexOutOfBoundsException e) {
-						log.warn("Failed on row={}, Exception={}", row, e.getMessage());
-						getReporter().write(TAG_NAME, "Could not process currency on row={}!", row + "");
 					}
 
-					row++;
+					if (childs.size() > 2) {
+						currencyData.setSell(childs.get(2).text().strip());
+						if ("-".equals(currencyData.getSell())) {
+							currencyData.setSell("");
+						}
+					}
+
+					currencyData.setSource(Sources.TAVEX.getID());
+					currencyData.setDate(updateDate);
+					result.add(currencyData);
+				} catch (IndexOutOfBoundsException e) {
+					log.warn("Failed on row={}, Exception={}", row, e.getMessage());
+					getReporter().write(TAG_NAME, "Could not process currency on row={}, code={}", row + "",
+							currencyData.getCode());
 				}
+
+				row++;
 			}
 
 			return normalizeCurrencyData(result);
@@ -116,11 +115,11 @@ public class TavexSource extends AbstractSource {
 
 				@Override
 				public void onRequestCompleted(HttpResponse response, boolean isCanceled) {
-					List<CurrencyData> result = Lists.newArrayList();
+					var result = new ArrayList<CurrencyData>();
 
 					if (!isCanceled) {
 						try {
-							result = getTavexRates(response.getEntity().getContent());
+							result.addAll(getTavexRates(response.getEntity().getContent()));
 						} catch (IOException | ParseException e) {
 							log.error("Could not parse source data!", e);
 							getReporter().write(TAG_NAME, "Parse failed= {}", ExceptionUtils.getStackTrace(e));
@@ -143,5 +142,4 @@ public class TavexSource extends AbstractSource {
 	public String getName() {
 		return TAG_NAME;
 	}
-
 }
