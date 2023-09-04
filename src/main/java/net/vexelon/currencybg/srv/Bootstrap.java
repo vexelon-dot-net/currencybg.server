@@ -138,10 +138,10 @@ public class Bootstrap {
 		executor.scheduleWithFixedDelay(new ReporterHeartbeat(), Defs.REPORTER_UPDATE_FIRST_INTERVAL,
 				Defs.REPORTER_UPDATES_PERIODIC_INTERVAL, TimeUnit.SECONDS);
 
-		//		executor.scheduleWithFixedDelay(new Heartbeat(), Defs.UPDATE_FIRST_INTERVAL, Defs.UPDATES_PERIODIC_INTERVAL,
-		//				TimeUnit.SECONDS);
+		executor.scheduleWithFixedDelay(new UpdateHeartbeat(), Defs.UPDATE_FIRST_INTERVAL,
+				Defs.UPDATES_PERIODIC_INTERVAL, TimeUnit.SECONDS);
 
-		executor.scheduleWithFixedDelay(new CleanupHeartbeat(), Defs.CLEANUP_FIRST_INTERVAL / 3, //  TODO
+		executor.scheduleWithFixedDelay(new CleanupHeartbeat(), Defs.CLEANUP_FIRST_INTERVAL,
 				Defs.CLEANUP_PERIODIC_INTERVAL, TimeUnit.SECONDS);
 	}
 

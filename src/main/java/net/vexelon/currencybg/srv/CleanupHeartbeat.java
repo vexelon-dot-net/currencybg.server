@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
  */
 public class CleanupHeartbeat implements Runnable {
 
-	private static final Logger log = LoggerFactory.getLogger(Heartbeat.class);
+	private static final Logger log = LoggerFactory.getLogger(CleanupHeartbeat.class);
 
 	@Override
 	public void run() {

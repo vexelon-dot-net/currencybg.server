@@ -19,11 +19,11 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Fetches currencies from remote server and imports them into the database.
+ * Fetches currencies from remote server and imports them into the database
  */
-public class Heartbeat implements Runnable {
+public class UpdateHeartbeat implements Runnable {
 
-	private static final Logger log = LoggerFactory.getLogger(Heartbeat.class);
+	private static final Logger log = LoggerFactory.getLogger(UpdateHeartbeat.class);
 
 	private boolean isUpdateGo(SourceUpdateRestrictions updateRestrictions) {
 		if (!updateRestrictions.isEmpty()) {
@@ -102,7 +102,6 @@ public class Heartbeat implements Runnable {
 		log.trace("Downloading rates from sources ...");
 
 		try {
-
 			try (final var dataSource = DataSource.newDataSource()) {
 				/*
 				 * Fetch all (active) sources from database
