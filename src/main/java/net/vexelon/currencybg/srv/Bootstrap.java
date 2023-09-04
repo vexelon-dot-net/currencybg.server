@@ -91,6 +91,8 @@ public class Bootstrap {
 			throw new RuntimeException(GlobalConfig.INSTANCE.getServerTimeZone() + " - time zone not found!");
 		}
 
+		log.info("Server: Cleanup threshold is {} days", GlobalConfig.INSTANCE.getCleanupInterval());
+
 		if (GlobalConfig.INSTANCE.getBotToken().isBlank() && GlobalConfig.INSTANCE.getBotChannel().isBlank()) {
 			log.warn("Telegram: Neither bot token, nor bot channel config found.");
 		} else if (GlobalConfig.INSTANCE.getBotToken().isEmpty()) {

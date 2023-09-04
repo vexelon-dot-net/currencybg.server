@@ -35,7 +35,7 @@ public final class Defs {
 	 */
 	public static final long UPDATE_FIRST_INTERVAL     = 10; // 10 seconds
 	public static final long UPDATES_PERIODIC_INTERVAL = 5 * 60; // 5 minutes
-	public static final long CLEANUP_FIRST_INTERVAL    = 30; // 10 seconds
+	public static final long CLEANUP_FIRST_INTERVAL    = 40; // 40 seconds
 	public static final long CLEANUP_PERIODIC_INTERVAL = 12 * 60 * 60; // 12 hours
 	public static final int  DEFAULT_CLEANUP_INTERVAL  = 3; // days
 

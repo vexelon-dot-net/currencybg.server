@@ -12,7 +12,7 @@ public class Main {
 	private static ScheduledExecutorService executor = null;
 
 	public static void main(final String[] args) {
-		System.out.println("*** CurrencyBG server start ***");
+		System.out.println("*** CurrencyBG server boot-up ***");
 
 		try {
 			// setup a background tasks executor with a minimum of 2 parallel threads
