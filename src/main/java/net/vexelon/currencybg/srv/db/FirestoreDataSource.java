@@ -5,6 +5,7 @@ import com.google.cloud.firestore.FieldPath;
 import com.google.cloud.firestore.FieldValue;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.FirestoreOptions;
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -14,6 +15,8 @@ import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.CurrencySource;
 import net.vexelon.currencybg.srv.db.models.ReportData;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -23,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 public final class FirestoreDataSource implements DataSource {
+
+	private static final Logger log = LoggerFactory.getLogger(FirestoreDataSource.class);
 
 	// TODO: use env or config about this
 	private static final String            PROJECT_ID  = "currencybg-app";
@@ -112,6 +117,38 @@ public final class FirestoreDataSource implements DataSource {
 		} catch (Exception e) {
 			throw new DataSourceException("Error fetching currencies from Firestore! (sourceId=%d)".formatted(sourceId),
 					e);
+		}
+	}
+
+	@Override
+	public void cleanupRates(int ageInDays) throws DataSourceException {
+		try {
+			var notAfter = DateTimeUtils.addDays(new Date(), -ageInDays);
+			if (log.isDebugEnabled()) {
+				log.debug("Delete all currency rates older than: {}", notAfter);
+			}
+
+			var currencies = db.collection("currencies");
+			var snapshot = currencies.whereLessThan("date", notAfter).get();
+
+			var documents = snapshot.get().getDocuments();
+			log.info("Found {} currency rates to delete", documents.size());
+
+			if (!documents.isEmpty()) {
+				var partitions = Lists.partition(documents, 500);
+				var batch = db.batch();
+
+				for (var partition : partitions) {
+					for (var doc : partition) {
+						batch.delete(doc.getReference());
+					}
+				}
+
+				var results = batch.commit().get();
+				log.info("Deleted {} currency rates.", results.size());
+			}
+		} catch (Exception e) {
+			throw new DataSourceException("Error deleting currency rates from Firestore!", e);
 		}
 	}
 

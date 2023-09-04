@@ -31,16 +31,19 @@ public final class Defs {
 			.getOrDefault("CBG_PORT", System.getenv().getOrDefault("PORT", "8080"));
 
 	/*
-	 * Currency update parameters
+	 * Currency rates threads
 	 */
 	public static final long UPDATE_FIRST_INTERVAL     = 10; // 10 seconds
 	public static final long UPDATES_PERIODIC_INTERVAL = 5 * 60; // 5 minutes
+	public static final long CLEANUP_FIRST_INTERVAL    = 30; // 10 seconds
+	public static final long CLEANUP_PERIODIC_INTERVAL = 12 * 60 * 60; // 12 hours
+	public static final int  DEFAULT_CLEANUP_INTERVAL  = 3; // days
 
 	/*
-	 * Reporter thread parameters
+	 * Reporter thread
 	 */
-	public static final long REPORTER_UPDATE_FIRST_INTERVAL     = 10;// seconds
-	public static final long REPORTER_UPDATES_PERIODIC_INTERVAL = 60 * 60;// 1
+	public static final long REPORTER_UPDATE_FIRST_INTERVAL     = 20; // seconds
+	public static final long REPORTER_UPDATES_PERIODIC_INTERVAL = 60 * 60; // 1 hour
 	// hour
 
 	/*

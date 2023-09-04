@@ -26,9 +26,10 @@ public enum GlobalConfig {
 	public enum Options {
 		SERVER_NAME("server.name"),
 		TIMEZONE_SERVER("timezone"),
+		ENABLE_LOG_DEBUG("log.debug"),
+		CLEANUP_INTERVAL("cleanup.interval"),
 		TELEGRAM_BOT_TOKEN("telegram.bot"),
 		TELEGRAM_CHANNEL("telegram.channel"),
-		ENABLE_LOG_DEBUG("log.debug"),
 		SPARKPOST_API_KEY("sparkpost.apikey"),
 		SPARKPOST_EMAILS("sparkpost.emails"),
 		SPARKPOST_SUBJECT("sparkpost.subject"),
@@ -56,9 +57,10 @@ public enum GlobalConfig {
 			// defaults
 			setServerName("");
 			setServerTimeZone(Defs.DATETIME_DEFAULT_TIMEZONE);
+			setLogDebugEnabled(false);
+			setCleanupInterval(Defs.DEFAULT_CLEANUP_INTERVAL);
 			setBotToken("");
 			setBotChannel("");
-			setLogDebugEnabled(false);
 			setSparkPostAPIKey("");
 			setSparkPostEmails("");
 			setSparkPostSubject("");
@@ -121,6 +123,22 @@ public enum GlobalConfig {
 
 	public String getServerTimeZone() {
 		return getConfig().getString(Options.TIMEZONE_SERVER.getName());
+	}
+
+	public boolean isLogDebugEnabled() {
+		return getConfig().getBoolean(Options.ENABLE_LOG_DEBUG.getName());
+	}
+
+	public void setLogDebugEnabled(boolean enabled) {
+		getConfig().setProperty(Options.ENABLE_LOG_DEBUG.getName(), enabled);
+	}
+
+	public int getCleanupInterval() {
+		return getConfig().getInt(Options.CLEANUP_INTERVAL.getName(), Defs.DEFAULT_CLEANUP_INTERVAL);
+	}
+
+	public void setCleanupInterval(int intervalInDays) {
+		getConfig().setProperty(Options.CLEANUP_INTERVAL.getName(), intervalInDays);
 	}
 
 	/**
@@ -199,13 +217,5 @@ public enum GlobalConfig {
 
 	public void setReportType(String reportType) {
 		getConfig().setProperty(Options.REPORT_TYPE.getName(), reportType);
-	}
-
-	public boolean isLogDebugEnabled() {
-		return getConfig().getBoolean(Options.ENABLE_LOG_DEBUG.getName());
-	}
-
-	public void setLogDebugEnabled(boolean enabled) {
-		getConfig().setProperty(Options.ENABLE_LOG_DEBUG.getName(), enabled);
 	}
 }

@@ -90,6 +90,11 @@ public interface DataSource extends Closeable {
 	String getAllRates(int sourceId, Date dateFrom) throws DataSourceException;
 
 	/**
+	 * Deletes all currency rates older than {@code ageInDays}
+	 */
+	void cleanupRates(int ageInDays) throws DataSourceException;
+
+	/**
 	 * Fetches a list of sources
 	 *
 	 * @param isActiveOnly If {@code true}, only actives sources will be fetched.
@@ -148,5 +153,4 @@ public interface DataSource extends Closeable {
 	 * Remove all reports specified
 	 */
 	void deleteReports(@Nonnull Collection<ReportData> reports) throws DataSourceException;
-
 }
