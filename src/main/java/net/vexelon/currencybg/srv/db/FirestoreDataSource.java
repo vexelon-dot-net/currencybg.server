@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import net.vexelon.currencybg.srv.Defs;
+import net.vexelon.currencybg.srv.GlobalConfig;
 import net.vexelon.currencybg.srv.db.adapters.*;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.CurrencySource;
@@ -29,11 +30,9 @@ public final class FirestoreDataSource implements DataSource {
 
 	private static final Logger log = LoggerFactory.getLogger(FirestoreDataSource.class);
 
-	// TODO: use env or config about this
-	private static final String            PROJECT_ID  = "currencybg-app";
-	private static       GoogleCredentials credentials = null;
-	private              Firestore         db          = null;
-	private              Gson              gson        = null;
+	private static GoogleCredentials credentials = null;
+	private        Firestore         db          = null;
+	private        Gson              gson        = null;
 
 	FirestoreDataSource() {
 	}
@@ -52,8 +51,9 @@ public final class FirestoreDataSource implements DataSource {
 	@Override
 	public void connect() throws DataSourceException {
 		try {
-			this.db = FirestoreOptions.getDefaultInstance().toBuilder().setProjectId(PROJECT_ID)
-					.setCredentials(credentials).build().getService();
+			this.db = FirestoreOptions.getDefaultInstance().toBuilder()
+					.setProjectId(GlobalConfig.INSTANCE.getGcpProjectId()).setCredentials(credentials).build()
+					.getService();
 		} catch (Exception e) {
 			throw new DataSourceException("Could not open Firestore client channels!", e);
 		}

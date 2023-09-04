@@ -92,6 +92,7 @@ public class Bootstrap {
 		}
 
 		log.info("Server: Cleanup threshold is {} days", GlobalConfig.INSTANCE.getCleanupInterval());
+		log.info("Server: GCP Project ID is '{}'", GlobalConfig.INSTANCE.getGcpProjectId());
 
 		if (GlobalConfig.INSTANCE.getBotToken().isBlank() && GlobalConfig.INSTANCE.getBotChannel().isBlank()) {
 			log.warn("Telegram: Neither bot token, nor bot channel config found.");
@@ -143,7 +144,7 @@ public class Bootstrap {
 		executor.scheduleWithFixedDelay(new UpdateHeartbeat(), Defs.UPDATE_FIRST_INTERVAL,
 				Defs.UPDATES_PERIODIC_INTERVAL, TimeUnit.SECONDS);
 
-		executor.scheduleWithFixedDelay(new CleanupHeartbeat(), Defs.CLEANUP_FIRST_INTERVAL,
+		executor.scheduleWithFixedDelay(new CleanupHeartbeat(), Defs.CLEANUP_FIRST_INTERVAL ,
 				Defs.CLEANUP_PERIODIC_INTERVAL, TimeUnit.SECONDS);
 	}
 

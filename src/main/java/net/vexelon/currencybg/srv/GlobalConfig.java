@@ -28,6 +28,7 @@ public enum GlobalConfig {
 		TIMEZONE_SERVER("timezone"),
 		ENABLE_LOG_DEBUG("log.debug"),
 		CLEANUP_INTERVAL("cleanup.interval"),
+		GCP_PROJECT_ID("gcp.project_id"),
 		TELEGRAM_BOT_TOKEN("telegram.bot"),
 		TELEGRAM_CHANNEL("telegram.channel"),
 		SPARKPOST_API_KEY("sparkpost.apikey"),
@@ -59,6 +60,7 @@ public enum GlobalConfig {
 			setServerTimeZone(Defs.DATETIME_DEFAULT_TIMEZONE);
 			setLogDebugEnabled(false);
 			setCleanupInterval(Defs.DEFAULT_CLEANUP_INTERVAL);
+			setGcpProjectId("");
 			setBotToken("");
 			setBotChannel("");
 			setSparkPostAPIKey("");
@@ -139,6 +141,14 @@ public enum GlobalConfig {
 
 	public void setCleanupInterval(int intervalInDays) {
 		getConfig().setProperty(Options.CLEANUP_INTERVAL.getName(), intervalInDays);
+	}
+
+	public String getGcpProjectId() {
+		return getConfig().getString(Options.GCP_PROJECT_ID.getName(), "");
+	}
+
+	public void setGcpProjectId(String projectId) {
+		getConfig().setProperty(Options.GCP_PROJECT_ID.getName(), projectId);
 	}
 
 	/**

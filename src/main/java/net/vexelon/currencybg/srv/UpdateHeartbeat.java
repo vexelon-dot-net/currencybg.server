@@ -161,12 +161,11 @@ public class UpdateHeartbeat implements Runnable {
 								public void onCompleted(List<CurrencyData> currencyDataList) {
 									log.info("{} - source download successful.", source.getName());
 
-									if (log.isTraceEnabled()) {
-										// TODO remove this trace log
-										for (var currency : currencyDataList) {
-											log.trace(currency.toString());
-										}
-									}
+									//									if (log.isTraceEnabled()) {
+									//										for (var currency : currencyDataList) {
+									//											log.trace(currency.toString());
+									//										}
+									//									}
 
 									log.debug("{} - importing downloaded rates in database ...", source.getName());
 									try (final var dataSource = DataSource.newDataSource()) {
