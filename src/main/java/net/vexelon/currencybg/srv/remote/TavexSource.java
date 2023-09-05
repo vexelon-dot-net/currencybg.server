@@ -37,7 +37,7 @@ public class TavexSource extends AbstractSource {
 	}
 
 	/**
-	 * Transforms Tavex HTML data into {@link CurrencyData} models.
+	 * Transforms Tavex HTML data into {@link CurrencyData} models
 	 */
 	public List<CurrencyData> getTavexRates(InputStream input) throws IOException, ParseException {
 		var result = new ArrayList<CurrencyData>();

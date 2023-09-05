@@ -40,12 +40,7 @@ public class CryptoBGSource extends AbstractSource {
 	}
 
 	/**
-	 * Transforms Crypto BG HTML data into {@link CurrencyData} models.
-	 *
-	 * @param input
-	 * @return
-	 * @throws IOException
-	 * @throws ParseException
+	 * Transforms Crypto BG HTML data into {@link CurrencyData} models
 	 */
 	public List<CurrencyData> getCryptoRates(InputStream input) throws IOException, ParseException {
 		var result = new ArrayList<CurrencyData>();

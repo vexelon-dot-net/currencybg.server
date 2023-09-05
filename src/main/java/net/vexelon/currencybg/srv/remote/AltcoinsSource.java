@@ -41,9 +41,7 @@ public class AltcoinsSource extends AbstractSource {
 	}
 
 	/**
-	 * Transforms Altcoins json data into {@link CurrencyData} models.
-	 *
-	 * @return Parsed currencies.
+	 * Transforms Altcoins json data into {@link CurrencyData} models
 	 */
 	public List<CurrencyData> getAltcoinsRates(InputStream input) throws IOException, ParseException {
 		var result = new ArrayList<CurrencyData>();

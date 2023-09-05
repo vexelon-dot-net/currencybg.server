@@ -52,12 +52,7 @@ public class BNBSource extends AbstractSource {
 	}
 
 	/**
-	 * Transforms XML data into {@link CurrencyData} models.
-	 *
-	 * @param input
-	 * @return
-	 * @throws IOException
-	 * @throws XmlPullParserException
+	 * Transforms XML data into {@link CurrencyData} models
 	 */
 	public List<CurrencyData> getBNBRates(InputStream input) throws IOException, XmlPullParserException {
 		var result = new ArrayList<CurrencyData>();

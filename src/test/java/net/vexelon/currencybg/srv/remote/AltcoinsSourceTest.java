@@ -15,7 +15,7 @@ public class AltcoinsSourceTest {
 			var rates = new AltcoinsSource(new ConsoleReporter()).getAltcoinsRates(
 					TestUtils.getTestResource("/altcoins.json"));
 
-			assertEquals("Expected vs. Parsed", AltcoinsSource.CURRENCIES.size(), rates.size());
+			assertEquals("Parsed crypto", 10, rates.size());
 
 			assertEquals("BTC", rates.get(0).getCode());
 			assertEquals(1, rates.get(0).getRatio());
