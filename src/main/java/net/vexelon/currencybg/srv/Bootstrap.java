@@ -91,17 +91,6 @@ public class Bootstrap {
 			throw new RuntimeException(GlobalConfig.INSTANCE.getServerTimeZone() + " - time zone not found!");
 		}
 
-		log.info("Server: Cleanup threshold is {} days", GlobalConfig.INSTANCE.getCleanupInterval());
-		log.info("Server: GCP Project ID is '{}'", GlobalConfig.INSTANCE.getGcpProjectId());
-
-		if (GlobalConfig.INSTANCE.getBotToken().isBlank() && GlobalConfig.INSTANCE.getBotChannel().isBlank()) {
-			log.warn("Telegram: Neither bot token, nor bot channel config found.");
-		} else if (GlobalConfig.INSTANCE.getBotToken().isEmpty()) {
-			log.warn("Telegram: Bot token config not set.");
-		} else if (GlobalConfig.INSTANCE.getBotChannel().isEmpty()) {
-			log.warn("Telegram: Bot channel config not set.");
-		}
-
 		// try to display server version by looking into the MANIFEST.MF file
 		try {
 			var resources = getClass().getClassLoader().getResources("META-INF/MANIFEST.MF");
@@ -122,6 +111,10 @@ public class Bootstrap {
 			System.err.println("Could not find application version! Error: " + t.getMessage());
 		}
 
+		log.info("Server: Cleanup threshold is {} days", GlobalConfig.INSTANCE.getCleanupInterval());
+		log.info("Server: GCP Project ID is '{}'", GlobalConfig.INSTANCE.getGcpProjectId());
+		log.info("Server: GCP Firebase url is '{}'", GlobalConfig.INSTANCE.getGcpFirebaseUrl());
+
 		log.info("Initializing Firebase ...");
 
 		try (var serviceAccount = Bootstrap.class.getResourceAsStream("/currencybg-app-ad0dcf2da0f3.json")) {
@@ -129,11 +122,19 @@ public class Bootstrap {
 					Objects.requireNonNull(serviceAccount, "serviceAccount is <null>"));
 
 			FirebaseApp.initializeApp(FirebaseOptions.builder().setCredentials(credentials)
-					.setDatabaseUrl("https://currencybg-app.firebaseio.com").build());
+					.setDatabaseUrl(GlobalConfig.INSTANCE.getGcpFirebaseUrl()).build());
 
 			FirestoreDataSource.setCredentials(credentials);
 		} catch (IOException e) {
 			throw new RuntimeException("Failed initializing Firebase!", e);
+		}
+
+		if (GlobalConfig.INSTANCE.getBotToken().isBlank() && GlobalConfig.INSTANCE.getBotChannel().isBlank()) {
+			log.warn("Telegram: Neither bot token, nor bot channel config found.");
+		} else if (GlobalConfig.INSTANCE.getBotToken().isEmpty()) {
+			log.warn("Telegram: Bot token config not set.");
+		} else if (GlobalConfig.INSTANCE.getBotChannel().isEmpty()) {
+			log.warn("Telegram: Bot channel config not set.");
 		}
 
 		log.info("Starting threads ...");
@@ -144,7 +145,7 @@ public class Bootstrap {
 		executor.scheduleWithFixedDelay(new UpdateHeartbeat(), Defs.UPDATE_FIRST_INTERVAL,
 				Defs.UPDATES_PERIODIC_INTERVAL, TimeUnit.SECONDS);
 
-		executor.scheduleWithFixedDelay(new CleanupHeartbeat(), Defs.CLEANUP_FIRST_INTERVAL ,
+		executor.scheduleWithFixedDelay(new CleanupHeartbeat(), Defs.CLEANUP_FIRST_INTERVAL,
 				Defs.CLEANUP_PERIODIC_INTERVAL, TimeUnit.SECONDS);
 	}
 

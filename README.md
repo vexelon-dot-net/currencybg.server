@@ -39,7 +39,8 @@ Copy the Firebase service account json file to `resources/`.
 
 Add all supported `sources` manually to the Firestore database.
 
-Create a production configuration file at `src/main/resources/cbg.properties`.
+Create a production configuration file at `src/main/resources/cbg.properties`. Set the `gcp.project.id`
+and `gcp.firebase.url` configuration properties.
 
 To deploy to GCP run:
 

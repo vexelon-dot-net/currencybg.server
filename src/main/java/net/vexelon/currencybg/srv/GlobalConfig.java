@@ -28,7 +28,8 @@ public enum GlobalConfig {
 		TIMEZONE_SERVER("timezone"),
 		ENABLE_LOG_DEBUG("log.debug"),
 		CLEANUP_INTERVAL("cleanup.interval"),
-		GCP_PROJECT_ID("gcp.project_id"),
+		GCP_PROJECT_ID("gcp.project.id"),
+		GCP_FIREBASE_RUL("gcp.firebase.url"),
 		TELEGRAM_BOT_TOKEN("telegram.bot"),
 		TELEGRAM_CHANNEL("telegram.channel"),
 		SPARKPOST_API_KEY("sparkpost.apikey"),
@@ -149,6 +150,14 @@ public enum GlobalConfig {
 
 	public void setGcpProjectId(String projectId) {
 		getConfig().setProperty(Options.GCP_PROJECT_ID.getName(), projectId);
+	}
+
+	public String getGcpFirebaseUrl() {
+		return getConfig().getString(Options.GCP_FIREBASE_RUL.getName(), "");
+	}
+
+	public void setGcpFirebaseUrl(String projectId) {
+		getConfig().setProperty(Options.GCP_FIREBASE_RUL.getName(), projectId);
 	}
 
 	/**
