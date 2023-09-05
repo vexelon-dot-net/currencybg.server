@@ -16,6 +16,7 @@ import java.time.*;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -120,15 +121,24 @@ public class UpdateHeartbeat implements Runnable {
 					sourceCalendar.setTimeInMillis(currencySource.getLastUpdate().getTime() + TimeUnit.SECONDS.toMillis(
 							currencySource.getUpdatePeriod()));
 					if (sourceCalendar.after(nowCalendar)) {
-						log.debug("Source ({}) update skipped.", currencySource.getSourceId());
+						if (log.isDebugEnabled()) {
+							log.debug("Source {} ({}) update skipped.",
+									Objects.requireNonNull(Sources.valueOf(currencySource.getSourceId()),
+											"source id=" + currencySource.getSourceId() + " not found").name(),
+									currencySource.getSourceId());
+						}
 						continue;
 					}
 
 					// check if update is allowed on this date
 					var updateRestrictions = currencySource.getUpdateRestrictions();
 					if (!isUpdateGo(updateRestrictions)) {
-						log.debug("Source ({}) updates are disabled for the current time/date!",
-								currencySource.getSourceId());
+						if (log.isDebugEnabled()) {
+							log.debug("Source {} ({}) updates are disabled for the current time/date.",
+									Objects.requireNonNull(Sources.valueOf(currencySource.getSourceId()),
+											"source id=" + currencySource.getSourceId() + " not found").name(),
+									currencySource.getSourceId());
+						}
 						continue;
 					}
 
