@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @deprecated Does not offer buy/sell services
+ */
 public class BNBSource extends AbstractSource {
 
 	private static final Logger log      = LoggerFactory.getLogger(BNBSource.class);

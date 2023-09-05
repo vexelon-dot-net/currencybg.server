@@ -11,7 +11,7 @@ import static org.junit.Assert.fail;
 public class BNBSourceTests {
 
 	@Test
-	public void test_bnb_1() {
+	public void test_bnb() {
 		try {
 			var rates = new BNBSource(new ConsoleReporter()).getBNBRates(
 					TestUtils.getTestResource("/exchange_rates_en.xml"));
