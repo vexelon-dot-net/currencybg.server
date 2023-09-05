@@ -62,6 +62,7 @@ public enum GlobalConfig {
 			setLogDebugEnabled(false);
 			setCleanupInterval(Defs.DEFAULT_CLEANUP_INTERVAL);
 			setGcpProjectId("");
+			setGcpFirebaseUrl("");
 			setBotToken("");
 			setBotChannel("");
 			setSparkPostAPIKey("");
