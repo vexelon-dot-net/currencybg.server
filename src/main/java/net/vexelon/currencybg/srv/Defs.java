@@ -1,9 +1,10 @@
 package net.vexelon.currencybg.srv;
 
-import com.google.common.collect.Sets;
 import com.google.common.net.MediaType;
 
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Global constants
@@ -73,14 +74,19 @@ public final class Defs {
 	public static final String CURRENCY_MONERO       = "XMR";
 	public static final String CURRENCY_STELLAR      = "XLM";
 
+	public static final Set<String> CURRENCY_CODES_CRYPTO = Set.of(CURRENCY_BITCOIN, CURRENCY_BITCOIN_CASH,
+			CURRENCY_ETHERIUM, CURRENCY_EOS, CURRENCY_LITECOIN, CURRENCY_DASH, CURRENCY_DOGECOIN, CURRENCY_RIPPLE,
+			CURRENCY_ZCASH, CURRENCY_MONERO, CURRENCY_STELLAR);
+
 	/**
 	 * Currency codes recognized by the mobile app
 	 */
-	public static final Set<String> CURRENCY_CODES_APP = Sets.newHashSet("AED", "ALL", "ARS", "AUD", "AZN", "BAM",
-			"BGN", "BRL", "BYN", "BYR", "CAD", "CHF", "CNH", "CNY", "CZK", "DKK", "DOP", "EEK", "EGP", "EUR", "GEL",
-			"GBP", "HKD", "HRK", "HUF", "IDR", "INR", "ILS", "ISK", "JOD", "JPY", "KES", "KRW", "LTL", "LVL", "MDL",
-			"MKD", "MUR", "MXN", "MYR", "NOK", "NZD", "PHP", "PLN", "QAR", "RON", "RSD", "RUB", "SAR", "SEK", "SGD",
-			"THB", "TND", "TRY", "TWD", "UAH", "USD", "VND", "ZAR",
+	public static final Set<String> CURRENCY_CODES_APP = Stream.concat(Set.of(
+					// fiat
+					"AED", "ALL", "ARS", "AUD", "AZN", "BAM", "BGN", "BRL", "BYN", "BYR", "CAD", "CHF", "CNH", "CNY", "CZK",
+					"DKK", "DOP", "EEK", "EGP", "EUR", "GEL", "GBP", "HKD", "HRK", "HUF", "IDR", "INR", "ILS", "ISK", "JOD",
+					"JPY", "KES", "KRW", "LTL", "LVL", "MDL", "MKD", "MUR", "MXN", "MYR", "NOK", "NZD", "PHP", "PLN", "QAR",
+					"RON", "RSD", "RUB", "SAR", "SEK", "SGD", "THB", "TND", "TRY", "TWD", "UAH", "USD", "VND", "ZAR").stream(),
 			// crypto
-			"BCH", "BTC", "DASH", "DOGE", "ETC", "ETH", "LTC", "XLM", "XMR", "XRP", "ZEC");
+			CURRENCY_CODES_CRYPTO.stream()).collect(Collectors.toSet());
 }

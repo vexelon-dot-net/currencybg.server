@@ -24,18 +24,14 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class XChangeBGSource extends AbstractSource {
 
 	private static final Logger log      = LoggerFactory.getLogger(XChangeBGSource.class);
 	private static final String TAG_NAME = XChangeBGSource.class.getSimpleName();
 
-	private static final String      URL_SOURCE  = "https://api.xchange.bg/api/exchange-pairs";
-	private static final String      DATE_FORMAT = "dd.MM.yyyy HH:mm";
-	public static final  Set<String> CURRENCIES  = Set.of(Defs.CURRENCY_BITCOIN, Defs.CURRENCY_ETHERIUM,
-			Defs.CURRENCY_LITECOIN, Defs.CURRENCY_DOGECOIN, Defs.CURRENCY_RIPPLE, Defs.CURRENCY_BITCOIN_CASH,
-			Defs.CURRENCY_DASH, Defs.CURRENCY_MONERO, Defs.CURRENCY_ZCASH, Defs.CURRENCY_STELLAR, Defs.CURRENCY_EOS);
+	private static final String URL_SOURCE  = "https://api.xchange.bg/api/exchange-pairs";
+	private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
 
 	public XChangeBGSource(Reporter reporter) {
 		super(reporter);
@@ -56,7 +52,7 @@ public class XChangeBGSource extends AbstractSource {
 
 			for (var next : pairs) {
 				var code = StringUtils.substringBefore(next.getSymbol(), "-");
-				if (next.isActive() && CURRENCIES.contains(code) && next.getSymbol().endsWith("-BGN")) {
+				if (next.isActive() && Defs.CURRENCY_CODES_CRYPTO.contains(code) && next.getSymbol().endsWith("-BGN")) {
 					try {
 						var currencyData = new CurrencyData();
 						currencyData.setCode(code);

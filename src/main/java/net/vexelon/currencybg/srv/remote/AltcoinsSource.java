@@ -23,18 +23,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class AltcoinsSource extends AbstractSource {
 
 	private static final Logger log      = LoggerFactory.getLogger(AltcoinsSource.class);
 	private static final String TAG_NAME = AltcoinsSource.class.getSimpleName();
 
-	private static final String      URL_SOURCE  = "https://altcoins.bg/currencies/rates";
-	private static final String      DATE_FORMAT = "dd.MM.yyyy HH:mm";
-	public static final  Set<String> CURRENCIES  = Set.of(Defs.CURRENCY_BITCOIN, Defs.CURRENCY_ETHERIUM,
-			Defs.CURRENCY_LITECOIN, Defs.CURRENCY_RIPPLE, Defs.CURRENCY_BITCOIN_CASH, Defs.CURRENCY_DASH,
-			Defs.CURRENCY_MONERO, Defs.CURRENCY_ZCASH, Defs.CURRENCY_STELLAR, Defs.CURRENCY_EOS);
+	private static final String URL_SOURCE  = "https://altcoins.bg/currencies/rates";
+	private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
 
 	public AltcoinsSource(Reporter reporter) {
 		super(reporter);
@@ -54,7 +50,7 @@ public class AltcoinsSource extends AbstractSource {
 					.fromJson(reader, new TypeToken<Map<String, List<String>>>() {}.getType());
 
 			for (var next : pairs.entrySet()) {
-				if (CURRENCIES.contains(next.getKey()) && next.getValue().size() > 1) {
+				if (Defs.CURRENCY_CODES_CRYPTO.contains(next.getKey()) && next.getValue().size() > 1) {
 					try {
 						var currencyData = new CurrencyData();
 						currencyData.setCode(next.getKey());

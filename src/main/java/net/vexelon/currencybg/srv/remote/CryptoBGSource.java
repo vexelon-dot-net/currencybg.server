@@ -22,16 +22,14 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class CryptoBGSource extends AbstractSource {
 
 	private static final Logger log      = LoggerFactory.getLogger(CryptoBGSource.class);
 	private static final String TAG_NAME = CryptoBGSource.class.getSimpleName();
 
-	private static final String      URL_SOURCE  = "https://crypto.bg/tickers_header";
-	private static final String      DATE_FORMAT = "dd.MM.yyyy HH:mm";
-	public static final  Set<String> CURRENCIES  = Set.of(Defs.CURRENCY_BITCOIN, Defs.CURRENCY_ETHERIUM);
+	private static final String URL_SOURCE  = "https://crypto.bg/tickers_header";
+	private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
 
 	private String htmlData;
 
@@ -56,7 +54,7 @@ public class CryptoBGSource extends AbstractSource {
 			for (var span : doc.select("table > tbody > tr")) {
 				if (!span.children().isEmpty()) {
 					var code = StringUtils.substringBefore(span.child(0).text(), " ");
-					if (CURRENCIES.contains(code)) {
+					if (Defs.CURRENCY_CODES_CRYPTO.contains(code)) {
 						var currencyData = new CurrencyData();
 						currencyData.setCode(code);
 						currencyData.setBuy(StringUtils.remove(span.child(1).text(), ","));
