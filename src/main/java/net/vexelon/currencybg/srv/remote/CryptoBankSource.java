@@ -102,13 +102,13 @@ public class CryptoBankSource extends AbstractSource {
 		CurrencyData result = new CurrencyData();
 
 		if (payload.indexOf("DOGE") > 0) {
-			result.setCode(Defs.CURRENCY_DOGECOIN);
+			result.setCode(Defs.CURRENCY_DOGE_COIN);
 		} else if (payload.indexOf("BCH") > 0) {
 			result.setCode(Defs.CURRENCY_BITCOIN_CASH);
 		} else if (payload.indexOf("DASH") > 0) {
 			result.setCode(Defs.CURRENCY_DASH);
 		} else if (payload.indexOf("LTC") > 0) {
-			result.setCode(Defs.CURRENCY_LITECOIN);
+			result.setCode(Defs.CURRENCY_LITE_COIN);
 		} else if (payload.indexOf("ETH") > 0) {
 			result.setCode(Defs.CURRENCY_ETHERIUM);
 		} else if (payload.indexOf("BTC") > 0) {

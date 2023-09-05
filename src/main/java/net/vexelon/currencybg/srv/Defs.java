@@ -63,20 +63,25 @@ public final class Defs {
 	 */
 	public static final String CURRENCY_BITCOIN      = "BTC";
 	public static final String CURRENCY_BITCOIN_CASH = "BCH";
+	public static final String CURRENCY_BINANCE_COIN = "BNB";
 	public static final String CURRENCY_ETHERIUM     = "ETH";
 	public static final String CURRENCY_EOS          = "EOS";
 	//    public static final String CURRENCY_ETHERIUM_CLASSIC = "ETC";
-	public static final String CURRENCY_LITECOIN     = "LTC";
+	public static final String CURRENCY_CHAINLINK    = "LINK";
+	public static final String CURRENCY_LITE_COIN    = "LTC";
 	public static final String CURRENCY_DASH         = "DASH";
-	public static final String CURRENCY_DOGECOIN     = "DOGE";
+	public static final String CURRENCY_DOGE_COIN    = "DOGE";
+	public static final String CURRENCY_USD_COIN     = "USDC"; // stablecoin
+	public static final String CURRENCY_TETHER       = "USDT"; // stablecoin
 	public static final String CURRENCY_RIPPLE       = "XRP";
 	public static final String CURRENCY_ZCASH        = "ZEC";
 	public static final String CURRENCY_MONERO       = "XMR";
 	public static final String CURRENCY_STELLAR      = "XLM";
 
 	public static final Set<String> CURRENCY_CODES_CRYPTO = Set.of(CURRENCY_BITCOIN, CURRENCY_BITCOIN_CASH,
-			CURRENCY_ETHERIUM, CURRENCY_EOS, CURRENCY_LITECOIN, CURRENCY_DASH, CURRENCY_DOGECOIN, CURRENCY_RIPPLE,
-			CURRENCY_ZCASH, CURRENCY_MONERO, CURRENCY_STELLAR);
+			CURRENCY_BINANCE_COIN, CURRENCY_ETHERIUM, CURRENCY_EOS, CURRENCY_CHAINLINK, CURRENCY_LITE_COIN,
+			CURRENCY_DASH, CURRENCY_DOGE_COIN, CURRENCY_USD_COIN, CURRENCY_TETHER, CURRENCY_RIPPLE, CURRENCY_ZCASH,
+			CURRENCY_MONERO, CURRENCY_STELLAR);
 
 	/**
 	 * Currency codes recognized by the mobile app

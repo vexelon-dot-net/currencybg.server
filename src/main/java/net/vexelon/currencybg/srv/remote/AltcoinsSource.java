@@ -62,7 +62,7 @@ public class AltcoinsSource extends AbstractSource {
 						result.add(currencyData);
 					} catch (IndexOutOfBoundsException e) {
 						log.warn("Failed on {}, Exception={}", next.getKey(), e.getMessage());
-						getReporter().write(TAG_NAME, "Could not process currency {}", next.getKey());
+						getReporter().write(TAG_NAME, "Could not process crypto {}", next.getKey());
 					}
 				} else if (log.isInfoEnabled()) {
 					log.info("Skipped unsupported crypto: {}", next.getKey());

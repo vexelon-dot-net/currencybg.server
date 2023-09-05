@@ -68,7 +68,7 @@ public class XChangeBGSource extends AbstractSource {
 						result.add(currencyData);
 					} catch (Exception e) {
 						log.warn("Failed on {}, Exception={}", next.getSymbol(), e.getMessage());
-						getReporter().write(TAG_NAME, "Could not process currency {}", next.getSymbol());
+						getReporter().write(TAG_NAME, "Could not process crypto {}", next.getSymbol());
 					}
 				} else if (log.isInfoEnabled()) {
 					log.info("Skipped unsupported crypto: {}", next.getSymbol());

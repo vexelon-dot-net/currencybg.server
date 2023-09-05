@@ -1,5 +1,6 @@
 package net.vexelon.currencybg.srv.remote;
 
+import com.google.common.collect.Iterables;
 import net.vexelon.currencybg.srv.reports.ConsoleReporter;
 import net.vexelon.currencybg.srv.reports.NullReporter;
 import net.vexelon.currencybg.srv.tests.TestUtils;
@@ -15,17 +16,31 @@ public class CryptoBGSourceTest {
 			var rates = new CryptoBGSource(new ConsoleReporter()).getCryptoRates(
 					TestUtils.getTestResource("/crypto_bg_source_header.html"));
 
-			assertEquals("Parsed cryptos", 2, rates.size());
+			assertEquals("Parsed crypto", 4, rates.size());
 
-			assertEquals("code is BTC", "BTC", rates.get(0).getCode());
-			assertEquals("BTC rate", 1, rates.get(0).getRatio());
-			assertEquals("BTC buy", "45073.61", rates.get(0).getBuy());
-			assertEquals("BTC sell", "47814.28", rates.get(0).getSell());
+			var rate = rates.iterator().next();
+			assertEquals("code is BTC", "BTC", rate.getCode());
+			assertEquals("BTC rate", 1, rate.getRatio());
+			assertEquals("BTC buy", "45073.61", rate.getBuy());
+			assertEquals("BTC sell", "47814.28", rate.getSell());
 
-			assertEquals("code is ETH", "ETH", rates.get(1).getCode());
-			assertEquals("ETH rate", 1, rates.get(1).getRatio());
-			assertEquals("ETH buy", "2863.43", rates.get(1).getBuy());
-			assertEquals("ETH sell", "3023.22", rates.get(1).getSell());
+			rate = Iterables.get(rates, 1);
+			assertEquals("code is USDC", "USDC", rate.getCode());
+			assertEquals("USDC rate", 1, rate.getRatio());
+			assertEquals("USDC buy", "1.75", rate.getBuy());
+			assertEquals("USDC sell", "1.85", rate.getSell());
+
+			rate = Iterables.get(rates, 2);
+			assertEquals("code is USDT", "USDT", rate.getCode());
+			assertEquals("USDT rate", 1, rate.getRatio());
+			assertEquals("USDT buy", "1.75", rate.getBuy());
+			assertEquals("USDT sell", "1.85", rate.getSell());
+
+			rate = Iterables.get(rates, 3);
+			assertEquals("code is ETH", "ETH", rate.getCode());
+			assertEquals("ETH rate", 1, rate.getRatio());
+			assertEquals("ETH buy", "2863.43", rate.getBuy());
+			assertEquals("ETH sell", "3023.22", rate.getSell());
 
 			var ratesNoData = new CryptoBGSource(new NullReporter()).getCryptoRates(
 					TestUtils.getTestResource("/crypto_bg_source_header_no_data.html"));

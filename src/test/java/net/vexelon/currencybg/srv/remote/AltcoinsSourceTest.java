@@ -1,5 +1,6 @@
 package net.vexelon.currencybg.srv.remote;
 
+import com.google.common.collect.Iterables;
 import net.vexelon.currencybg.srv.reports.ConsoleReporter;
 import net.vexelon.currencybg.srv.tests.TestUtils;
 import org.junit.Test;
@@ -15,32 +16,55 @@ public class AltcoinsSourceTest {
 			var rates = new AltcoinsSource(new ConsoleReporter()).getAltcoinsRates(
 					TestUtils.getTestResource("/altcoins.json"));
 
-			assertEquals("Parsed crypto", 10, rates.size());
+			assertEquals("Parsed crypto", 14, rates.size());
 
-			assertEquals("BTC", rates.get(0).getCode());
-			assertEquals(1, rates.get(0).getRatio());
-			assertEquals("45984.868176", rates.get(0).getBuy());
-			assertEquals("47868.08480999999", rates.get(0).getSell());
+			var rate = rates.iterator().next();
+			assertEquals("BTC", rate.getCode());
+			assertEquals(1, rate.getRatio());
+			assertEquals("45984.868176", rate.getBuy());
+			assertEquals("47868.08480999999", rate.getSell());
 
-			assertEquals("ETH", rates.get(1).getCode());
-			assertEquals(1, rates.get(1).getRatio());
-			assertEquals("2908.809696", rates.get(1).getBuy());
-			assertEquals("3028.2716772", rates.get(1).getSell());
+			rate = Iterables.get(rates, 1);
+			assertEquals("ETH", rate.getCode());
+			assertEquals(1, rate.getRatio());
+			assertEquals("2908.809696", rate.getBuy());
+			assertEquals("3028.2716772", rate.getSell());
 
-			assertEquals("XRP", rates.get(2).getCode());
-			assertEquals(1, rates.get(2).getRatio());
-			assertEquals("0.8836463999999999", rates.get(2).getBuy());
-			assertEquals("0.92463", rates.get(2).getSell());
+			rate = Iterables.get(rates, 2);
+			assertEquals("USDT", rate.getCode());
+			assertEquals(1, rate.getRatio());
+			assertEquals("1.781469768", rate.getBuy());
+			assertEquals("1.8542460636", rate.getSell());
 
-			assertEquals("DASH", rates.get(9).getCode());
-			assertEquals(1, rates.get(9).getRatio());
-			assertEquals("44.083299", rates.get(9).getBuy());
-			assertEquals("47.098604", rates.get(9).getSell());
+			rate = Iterables.get(rates, 3);
+			assertEquals("USDC", rate.getCode());
+			assertEquals(1, rate.getRatio());
+			assertEquals("1.7766442199999999", rate.getBuy());
+			assertEquals("1.8498009599999998", rate.getSell());
 
-			assertEquals("XLM", rates.get(5).getCode());
-			assertEquals(1, rates.get(5).getRatio());
-			assertEquals("0.19804004999999997", rates.get(5).getBuy());
-			assertEquals("0.21177211999999998", rates.get(5).getSell());
+			rate = Iterables.get(rates, 4);
+			assertEquals("BNB", rate.getCode());
+			assertEquals(1, rate.getRatio());
+			assertEquals("380.49062999999995", rate.getBuy());
+			assertEquals("396.272016", rate.getSell());
+
+			rate = Iterables.get(rates, 5);
+			assertEquals("XRP", rate.getCode());
+			assertEquals(1, rate.getRatio());
+			assertEquals("0.8836463999999999", rate.getBuy());
+			assertEquals("0.92463", rate.getSell());
+
+			rate = Iterables.get(rates, 9);
+			assertEquals("XLM", rate.getCode());
+			assertEquals(1, rate.getRatio());
+			assertEquals("0.19804004999999997", rate.getBuy());
+			assertEquals("0.21177211999999998", rate.getSell());
+
+			rate = Iterables.get(rates, 13);
+			assertEquals("DASH", rate.getCode());
+			assertEquals(1, rate.getRatio());
+			assertEquals("44.083299", rate.getBuy());
+			assertEquals("47.098604", rate.getSell());
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());

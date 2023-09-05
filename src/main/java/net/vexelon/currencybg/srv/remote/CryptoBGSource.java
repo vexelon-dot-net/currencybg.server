@@ -53,16 +53,34 @@ public class CryptoBGSource extends AbstractSource {
 			// Parse table with currencies
 			for (var span : doc.select("table > tbody > tr")) {
 				if (!span.children().isEmpty()) {
-					var code = StringUtils.substringBefore(span.child(0).text(), " ");
+					var code = StringUtils.substringBefore(span.child(0).text(), "/").strip();
+					// CryptoBG has the same rates for Tether and USD coin
+					code = switch (code) {
+						case "USDC(T)" -> Defs.CURRENCY_USD_COIN;
+						default -> code;
+					};
+
 					if (Defs.CURRENCY_CODES_CRYPTO.contains(code)) {
-						var currencyData = new CurrencyData();
-						currencyData.setCode(code);
-						currencyData.setBuy(StringUtils.remove(span.child(1).text(), ","));
-						currencyData.setSell(StringUtils.remove(span.child(2).text(), ","));
-						currencyData.setRatio(1);
-						currencyData.setSource(Sources.CRYPTO.getID());
-						currencyData.setDate(updateDate);
-						result.add(currencyData);
+						try {
+							var currencyData = new CurrencyData();
+							currencyData.setCode(code);
+							currencyData.setBuy(StringUtils.remove(span.child(1).text(), ","));
+							currencyData.setSell(StringUtils.remove(span.child(2).text(), ","));
+							currencyData.setRatio(1);
+							currencyData.setSource(Sources.CRYPTO.getID());
+							currencyData.setDate(updateDate);
+							result.add(currencyData);
+
+							if (Defs.CURRENCY_USD_COIN.equals(currencyData.getCode())) {
+								// CryptoBG has the same rates for Tether and USD coin
+								result.add(new CurrencyData(Defs.CURRENCY_TETHER, currencyData.getRatio(),
+										currencyData.getBuy(), currencyData.getSell(), currencyData.getDate(),
+										currencyData.getSource()));
+							}
+						} catch (Exception e) {
+							log.warn("Failed on {}, Exception={}", code, e.getMessage());
+							getReporter().write(TAG_NAME, "Could not process crypto {}", code);
+						}
 					} else {
 						log.info("Skipped unsupported crypto: {}", code);
 					}

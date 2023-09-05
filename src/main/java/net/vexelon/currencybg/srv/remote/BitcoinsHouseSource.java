@@ -49,7 +49,7 @@ public class BitcoinsHouseSource extends AbstractSource {
 			Pair.of("buyRipple", "sellRipple"), Pair.of("buyZcash", "sellZcash"));
 
 	private static final Map<String, String> MAPPINGS = ImmutableMap.of("buy", Defs.CURRENCY_BITCOIN, "buyEthereum",
-			Defs.CURRENCY_ETHERIUM, "buyLitecoin", Defs.CURRENCY_LITECOIN, "buyRipple", Defs.CURRENCY_RIPPLE,
+			Defs.CURRENCY_ETHERIUM, "buyLitecoin", Defs.CURRENCY_LITE_COIN, "buyRipple", Defs.CURRENCY_RIPPLE,
 			"buyZcash", Defs.CURRENCY_ZCASH);
 
 	private String htmlData;
