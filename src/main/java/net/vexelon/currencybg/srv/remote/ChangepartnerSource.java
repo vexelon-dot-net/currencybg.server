@@ -58,6 +58,8 @@ public class ChangepartnerSource extends AbstractSource {
 						currencyData.setBuy(spanChild.select("tr > td > table.border > tbody > tr > td").get(2).text());
 						currencyData.setSell(
 								spanChild.select("tr > td > table.border > tbody > tr > td").get(3).text());
+						currencyData.setBuy(currencyData.getBuy().strip().replace("-", ""));
+						currencyData.setSell(currencyData.getSell().strip().replace("-", ""));
 
 						//					String currencyRatio = currencyActualValue.replaceAll("[^\\d.]", "");
 						//					if (!currencyRatio.isEmpty()) {
