@@ -47,18 +47,19 @@ public class AltcoinsSource extends AbstractSource {
 		var result = new ArrayList<CurrencyData>();
 
 		try (var reader = new InputStreamReader((input))) {
-			Map<String, List<String>> pairs = new GsonBuilder().create()
-					.fromJson(reader, new TypeToken<Map<String, List<String>>>() {}.getType());
 			var updateDate = DateTimeUtils.parseDate(LocalDateTime.now(ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA))
 					.format(DateTimeFormatter.ofPattern(DATE_FORMAT)), DATE_FORMAT);
 
-			for (Map.Entry<String, List<String>> next : pairs.entrySet()) {
+			Map<String, List<String>> pairs = new GsonBuilder().create()
+					.fromJson(reader, new TypeToken<Map<String, List<String>>>() {}.getType());
+
+			for (var next : pairs.entrySet()) {
 				if (CURRENCIES.contains(next.getKey()) && next.getValue().size() > 1) {
 					try {
 						var currencyData = new CurrencyData();
 						currencyData.setCode(next.getKey());
-						currencyData.setBuy(next.getValue().get(0));
-						currencyData.setSell(next.getValue().get(1));
+						currencyData.setBuy(next.getValue().get(1));
+						currencyData.setSell(next.getValue().get(0));
 						currencyData.setRatio(1);
 						currencyData.setSource(Sources.ALTCOINS.getID());
 						currencyData.setDate(updateDate);
