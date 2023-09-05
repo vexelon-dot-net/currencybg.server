@@ -32,7 +32,6 @@ public enum Sources {
 	}
 
 	/**
-	 * @param id
 	 * @return {@link Sources} or {@code null}.
 	 */
 	public static Sources valueOf(int id) {
@@ -45,10 +44,7 @@ public enum Sources {
 	}
 
 	/**
-	 * Creates a new {@link Source} mapped via the {@link Sources} constant.
-	 *
-	 * @param reporter
-	 * @return
+	 * Creates a new {@link Source} mapped via the {@link Sources} constant
 	 */
 	public Source newInstance(Reporter reporter) {
 		return switch (id) {
@@ -71,7 +67,7 @@ public enum Sources {
 			case 500 -> new UnicreditSource(reporter);
 
 			// Societe Generale Express Bank (Deprecated)
-			case 600 -> new SocieteGenerale(reporter);
+			case 600 -> throw new IllegalArgumentException("SocieteGenerale is no long supported!");
 
 			// Crypto (Bitcoin Source)
 			case 700 -> new CryptoBGSource(reporter);
@@ -80,16 +76,16 @@ public enum Sources {
 			case 800 -> new ChangepartnerSource(reporter);
 
 			// ForexHouse
-			case 900 -> new ForexHouseSource(reporter);
+			case 900 -> throw new IllegalArgumentException("ForexHouse is no long supported!");
 
 			// ForexHouse (Deprecated)
 			case 1000 -> new AllianzSource(reporter);
 
 			// CryptoBank (Deprecated)
-			case 1100 -> new CryptoBankSource(reporter);
+			case 1100 -> throw new IllegalArgumentException("CryptoBank is no long supported!");
 
 			// BitcounsHouse (Deprecated)
-			case 1200 -> new BitcoinsHouseSource(reporter);
+			case 1200 -> throw new IllegalArgumentException("BitcoinsHouse is no long supported!");
 
 			// xChangeBG
 			case 1300 -> new XChangeBGSource(reporter);

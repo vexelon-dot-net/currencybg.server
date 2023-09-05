@@ -1,51 +1,56 @@
 package net.vexelon.currencybg.srv.remote;
 
-import net.vexelon.currencybg.srv.db.models.CurrencyData;
-import net.vexelon.currencybg.srv.reports.NullReporter;
+import com.google.common.collect.Iterables;
+import net.vexelon.currencybg.srv.reports.ConsoleReporter;
 import net.vexelon.currencybg.srv.tests.TestUtils;
 import org.junit.Test;
 
-import java.util.List;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class XChangeBGSourceTest {
-    @Test
-    public void test_xchangebg_1() {
-        List<CurrencyData> rates;
-        CurrencyData first;
-        XChangeBGSource source = new XChangeBGSource(new NullReporter());
 
-        try {
-            List<String> csrf = source.getXChangeCSRF(TestUtils.getTestResource("/xbg.html"));
-            assertEquals("csrf tokens", 2, csrf.size());
-            assertEquals("csrf tokens", "csrf5e95a069ae58a", csrf.get(0));
-            assertEquals("csrf tokens", "1657dc947156d0b7b3e0d8eb84bc3196", csrf.get(1));
+	@Test
+	public void test_xchangebg() {
+		var source = new XChangeBGSource(new ConsoleReporter());
 
-            rates = source.getXChangeRates(TestUtils.getTestResource("/xbg_btc_buy.json"),
-                    TestUtils.getTestResource("/xbg_btc_sell.json"), "BTC-BGN");
+		try {
+			var rates = source.getXChangeRates(TestUtils.getTestResource("/xchg-bg-exchange-pairs.json"));
 
-            assertEquals("BTC size=1", 1, rates.size());
-            first = rates.iterator().next();
-            assertEquals("BTC", first.getCode());
-            assertEquals(1, first.getRatio());
-            assertEquals("12722.80", first.getBuy());
-            assertEquals("11974.84", first.getSell());
+			assertEquals("Parsed crypto", 5, rates.size());
 
-            rates = new XChangeBGSource(new NullReporter())
-                    .getXChangeRates(TestUtils.getTestResource("/xbg_eth_buy.json"),
-                            TestUtils.getTestResource("/xbg_eth_sell.json"), "ETH-BGN");
+			var rate = rates.iterator().next();
+			assertEquals("BTC", rate.getCode());
+			assertEquals(1, rate.getRatio());
+			assertEquals("45530.14875154", rate.getBuy());
+			assertEquals("48346.64805934", rate.getSell());
 
-            assertEquals("ETH size=1", 1, rates.size());
-            first = rates.iterator().next();
-            assertEquals("ETH", first.getCode());
-            assertEquals(1, first.getRatio());
-            assertEquals("292.98", first.getBuy());
-            assertEquals("276.30", first.getSell());
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail(e.getMessage());
-        }
-    }
+			rate = Iterables.get(rates, 1);
+			assertEquals("ETH", rate.getCode());
+			assertEquals(1, rate.getRatio());
+			assertEquals("2884.21225556", rate.getBuy());
+			assertEquals("3062.63728203", rate.getSell());
 
+			rate = Iterables.get(rates, 2);
+			assertEquals("DOGE", rate.getCode());
+			assertEquals(1, rate.getRatio());
+			assertEquals("0.11296142", rate.getBuy());
+			assertEquals("0.12000733", rate.getSell());
+
+			rate = Iterables.get(rates, 3);
+			assertEquals("LTC", rate.getCode());
+			assertEquals(1, rate.getRatio());
+			assertEquals("110.92467365", rate.getBuy());
+			assertEquals("117.84642772", rate.getSell());
+
+			rate = Iterables.get(rates, 4);
+			assertEquals("BCH", rate.getCode());
+			assertEquals(1, rate.getRatio());
+			assertEquals("341.23518126", rate.getBuy());
+			assertEquals("362.56410362", rate.getSell());
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
 }
