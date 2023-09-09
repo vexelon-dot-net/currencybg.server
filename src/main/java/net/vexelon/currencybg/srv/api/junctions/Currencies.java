@@ -1,7 +1,6 @@
 package net.vexelon.currencybg.srv.api.junctions;
 
 import io.netty.handler.codec.http.HttpResponseStatus;
-import io.vertx.core.Promise;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -41,7 +40,7 @@ public class Currencies extends AbstractJunction {
 	}
 
 	private void todayFromDateAndSource(RoutingContext ctx) {
-		ctx.vertx().executeBlocking((Promise<String> promise) -> {
+		ctx.vertx().executeBlocking(() -> {
 			try (final var source = DataSource.newDataSource()) {
 				source.connect();
 
@@ -49,16 +48,14 @@ public class Currencies extends AbstractJunction {
 					throw new ApiAccessException(HttpResponseStatus.UNAUTHORIZED);
 				}
 
-				promise.complete(source.getAllCurrentRatesAfter(Integer.parseInt(ctx.pathParam("source_id")),
-						DateTimeUtils.parseDate(ctx.pathParam("from_date"), Defs.DATE_FORMAT)));
-			} catch (Exception e) {
-				promise.fail(e);
+				return source.getAllCurrentRatesAfter(Integer.parseInt(ctx.pathParam("source_id")),
+						DateTimeUtils.parseDate(ctx.pathParam("from_date"), Defs.DATE_FORMAT));
 			}
 		}).onSuccess(json -> sendJson(ctx, json)).onFailure(t -> sendError(ctx, t));
 	}
 
 	private void todayFromDate(RoutingContext ctx) {
-		ctx.vertx().executeBlocking((Promise<String> promise) -> {
+		ctx.vertx().executeBlocking(() -> {
 			try (final var source = DataSource.newDataSource()) {
 				source.connect();
 
@@ -66,16 +63,14 @@ public class Currencies extends AbstractJunction {
 					throw new ApiAccessException(HttpResponseStatus.UNAUTHORIZED);
 				}
 
-				promise.complete(source.getAllCurrentRatesAfter(
-						DateTimeUtils.parseDate(ctx.pathParam("from_date"), Defs.DATE_FORMAT)));
-			} catch (Exception e) {
-				promise.fail(e);
+				return source.getAllCurrentRatesAfter(
+						DateTimeUtils.parseDate(ctx.pathParam("from_date"), Defs.DATE_FORMAT));
 			}
 		}).onSuccess(json -> sendJson(ctx, json)).onFailure(t -> sendError(ctx, t));
 	}
 
 	private void fromDate(RoutingContext ctx) {
-		ctx.vertx().executeBlocking((Promise<String> promise) -> {
+		ctx.vertx().executeBlocking(() -> {
 			try (final var source = DataSource.newDataSource()) {
 				source.connect();
 
@@ -83,15 +78,13 @@ public class Currencies extends AbstractJunction {
 					throw new ApiAccessException(HttpResponseStatus.UNAUTHORIZED);
 				}
 
-				promise.complete(source.getAllRates(DateTimeUtils.parseDate(ctx.pathParam("date"), Defs.DATE_FORMAT)));
-			} catch (Exception e) {
-				promise.fail(e);
+				return source.getAllRates(DateTimeUtils.parseDate(ctx.pathParam("date"), Defs.DATE_FORMAT));
 			}
 		}).onSuccess(json -> sendJson(ctx, json)).onFailure(t -> sendError(ctx, t));
 	}
 
 	private void fromDateAndSource(RoutingContext ctx) {
-		ctx.vertx().executeBlocking((Promise<String> promise) -> {
+		ctx.vertx().executeBlocking(() -> {
 			try (final var source = DataSource.newDataSource()) {
 				source.connect();
 
@@ -99,10 +92,8 @@ public class Currencies extends AbstractJunction {
 					throw new ApiAccessException(HttpResponseStatus.UNAUTHORIZED);
 				}
 
-				promise.complete(source.getAllRates(Integer.parseInt(ctx.pathParam("source_id")),
-						DateTimeUtils.parseDate(ctx.pathParam("date"), Defs.DATE_FORMAT)));
-			} catch (Exception e) {
-				promise.fail(e);
+				return source.getAllRates(Integer.parseInt(ctx.pathParam("source_id")),
+						DateTimeUtils.parseDate(ctx.pathParam("date"), Defs.DATE_FORMAT));
 			}
 		}).onSuccess(json -> sendJson(ctx, json)).onFailure(t -> sendError(ctx, t));
 	}

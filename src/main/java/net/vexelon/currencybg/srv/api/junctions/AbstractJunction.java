@@ -18,7 +18,7 @@ public abstract class AbstractJunction {
 		if (t instanceof ApiAccessException ex) {
 			ctx.response().setStatusCode(ex.getStatus().code());
 			ctx.response().end(ex.getStatus().reasonPhrase());
-			log.debug("Unauthorized request from {}", ctx.request().remoteAddress().hostAddress());
+			log.debug("Unauthorized request from {}", ctx.request().remoteAddress().host());
 		} else if (t instanceof NumberFormatException) {
 			ctx.response().setStatusCode(HttpResponseStatus.BAD_REQUEST.code());
 			ctx.response().end(HttpResponseStatus.BAD_REQUEST.reasonPhrase());
