@@ -14,17 +14,6 @@ public abstract class AbstractJunction {
 
 	private static final Logger log = LoggerFactory.getLogger(AbstractJunction.class);
 
-	/**
-	 * Verifies API is accessible
-	 *
-	 * @throws ApiAccessException
-	 */
-	protected void verifyAccess() throws ApiAccessException {
-		//		if (GlobalConfig.INSTANCE.isMaintenanceEnabled()) {
-		//			throw new ApiAccessException(Status.SERVICE_UNAVAILABLE, "Server maintenance enabled!");
-		//		}
-	}
-
 	protected void sendError(RoutingContext ctx, Throwable t) {
 		if (t instanceof ApiAccessException ex) {
 			ctx.response().setStatusCode(ex.getStatus().code());
