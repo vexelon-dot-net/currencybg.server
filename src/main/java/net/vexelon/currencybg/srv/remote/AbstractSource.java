@@ -4,6 +4,7 @@ import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.reports.Reporter;
 import net.vexelon.currencybg.srv.utils.TrustAllX509Manager;
+import net.vexelon.currencybg.srv.utils.UserAgentUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
@@ -120,10 +121,7 @@ public abstract class AbstractSource implements Source {
 
 	protected void doGet(URI uri, String userAgent, final HTTPCallback httpCallback) {
 		HttpGet httpGet = new HttpGet(uri);
-
-		if (!StringUtils.isEmpty(userAgent)) {
-			httpGet.setHeader("User-Agent", userAgent);
-		}
+		httpGet.setHeader("User-Agent", StringUtils.isBlank(userAgent) ? UserAgentUtils.random() : userAgent);
 
 		getClient(uri.getScheme().startsWith("https")).execute(httpGet, new FutureCallback<HttpResponse>() {
 
