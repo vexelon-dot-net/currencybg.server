@@ -24,7 +24,7 @@ public class UnicreditSource extends AbstractSource {
 	private static final Logger log      = LoggerFactory.getLogger(UnicreditSource.class);
 	private static final String TAG_NAME = UnicreditSource.class.getSimpleName();
 
-	private static final String URL_SOURCE  = "https://www.unicreditbulbank.bg/bg/valutni-kursove/";
+	private static final String URL_SOURCE  = "https://www.unicreditbulbank.bg/bg/kursove-indeksi/valutni-kursove";
 	private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
 
 	public UnicreditSource(Reporter reporter) {
