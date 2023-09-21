@@ -97,7 +97,7 @@ public abstract class AbstractSource implements Source {
 				.timeout(DEFAULT_SOCKET_TIMEOUT.toMillis())
 				// user-agent string
 				.putHeader(HttpHeaders.USER_AGENT.toString(),
-						Objects.toString(userAgent).isBlank() ? UserAgentUtils.random() : userAgent)
+						Objects.toString(userAgent, "").isBlank() ? UserAgentUtils.random() : userAgent)
 				// send request
 				.send()
 				// ok
