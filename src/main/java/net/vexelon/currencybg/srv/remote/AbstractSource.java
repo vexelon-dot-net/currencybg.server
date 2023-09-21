@@ -17,7 +17,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public abstract class AbstractSource implements Source {
@@ -73,35 +76,39 @@ public abstract class AbstractSource implements Source {
 	}
 
 	protected void doPost(String url, String entity, String contentType, final HTTPCallback httpCallback) {
-		getClient(url.startsWith("https")).postAbs(url).putHeader(HttpHeaders.CONTENT_TYPE.toString(), contentType)
-				.putHeader(HttpHeaders.USER_AGENT.toString(), UserAgentUtils.random()).sendBuffer(Buffer.buffer(entity))
+		getClient(url.startsWith("https")).postAbs(url)
+				// max timeout
+				.timeout(DEFAULT_SOCKET_TIMEOUT)
+				// user-agent string
+				.putHeader(HttpHeaders.USER_AGENT.toString(), UserAgentUtils.random())
+				// post content-type
+				.putHeader(HttpHeaders.CONTENT_TYPE.toString(), contentType)
+				// post body
+				.sendBuffer(Buffer.buffer(entity))
+				// ok
 				.onSuccess(response -> httpCallback.onRequestCompleted(toResponseWrapper(response), false))
+				// failed
 				.onFailure(httpCallback::onRequestFailed);
 	}
 
-	//	protected void doPost(String url, String entity, String contentType, final HTTPCallback responseCallback)
-	//			throws URISyntaxException {
-	//		doPost(new URI(url), entity, contentType, responseCallback);
-	//	}
-
 	protected void doGet(String url, String userAgent, final HTTPCallback httpCallback) {
-		getClient(url.startsWith("https")).getAbs(url).putHeader(HttpHeaders.USER_AGENT.toString(),
-						Objects.toString(userAgent).isBlank() ? UserAgentUtils.random() : userAgent).send()
+		getClient(url.startsWith("https")).getAbs(url)
+				// max timeout
+				.timeout(DEFAULT_SOCKET_TIMEOUT)
+				// user-agent string
+				.putHeader(HttpHeaders.USER_AGENT.toString(),
+						Objects.toString(userAgent).isBlank() ? UserAgentUtils.random() : userAgent)
+				// send request
+				.send()
+				// ok
 				.onSuccess(response -> httpCallback.onRequestCompleted(toResponseWrapper(response), false))
+				// failed
 				.onFailure(httpCallback::onRequestFailed);
 	}
 
 	protected void doGet(String url, final HTTPCallback responseCallback) {
 		doGet(url, null, responseCallback);
 	}
-
-	//	protected void doGet(URI uri, final HTTPCallback httpCallback) {
-	//		doGet(uri, null, httpCallback);
-	//	}
-	//
-	//	protected void doGet(String url, final HTTPCallback responseCallback) throws URISyntaxException {
-	//		doGet(new URI(url), responseCallback);
-	//	}
 
 	/**
 	 * Verifies that each {@link CurrencyData} entry contains a valid or
@@ -112,13 +119,13 @@ public abstract class AbstractSource implements Source {
 	 * @return Normalized list of {@link CurrencyData} models.
 	 */
 	protected List<CurrencyData> normalizeCurrencyData(final List<CurrencyData> currencyDataList) {
-		List<CurrencyData> result = new ArrayList<CurrencyData>(currencyDataList);
+		var result = new ArrayList<CurrencyData>(currencyDataList);
 
 		int i = 0;
-		Iterator<CurrencyData> iterator = result.iterator();
+		var iterator = result.iterator();
 
 		while (iterator.hasNext()) {
-			CurrencyData currencyData = iterator.next();
+			var currencyData = iterator.next();
 
 			try {
 				if (StringUtils.isEmpty(currencyData.getCode())) {
@@ -257,5 +264,4 @@ public abstract class AbstractSource implements Source {
 
 		void onRequestFailed(Throwable t);
 	}
-
 }
