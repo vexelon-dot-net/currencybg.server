@@ -4,7 +4,6 @@ import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpVersion;
-import io.vertx.core.net.ClientOptionsBase;
 import io.vertx.ext.web.client.HttpResponse;
 import io.vertx.ext.web.client.WebClient;
 import io.vertx.ext.web.client.WebClientOptions;
@@ -17,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +27,8 @@ public abstract class AbstractSource implements Source {
 
 	private static final Logger log = LoggerFactory.getLogger(AbstractSource.class);
 
-	protected static final int DEFAULT_SOCKET_TIMEOUT  = 3 * 60 * 1000;
-	protected static final int DEFAULT_CONNECT_TIMEOUT = 1 * 60 * 1000;
+	protected static final Duration DEFAULT_SOCKET_TIMEOUT  = Duration.ofMinutes(3);
+	protected static final Duration DEFAULT_CONNECT_TIMEOUT = Duration.ofSeconds(30);
 
 	private final Vertx     vertx;
 	private final Reporter  reporter;
@@ -59,7 +59,7 @@ public abstract class AbstractSource implements Source {
 					// follow 301 redirects
 					.setFollowRedirects(true)
 					// drop connection timeout
-					.setConnectTimeout(ClientOptionsBase.DEFAULT_CONNECT_TIMEOUT)
+					.setConnectTimeout((int) DEFAULT_CONNECT_TIMEOUT.toMillis())
 					// trust all server certs
 					.setTrustAll(true)
 					// use h2
@@ -78,7 +78,7 @@ public abstract class AbstractSource implements Source {
 	protected void doPost(String url, String entity, String contentType, final HTTPCallback httpCallback) {
 		getClient(url.startsWith("https")).postAbs(url)
 				// max timeout
-				.timeout(DEFAULT_SOCKET_TIMEOUT)
+				.timeout(DEFAULT_SOCKET_TIMEOUT.toMillis())
 				// user-agent string
 				.putHeader(HttpHeaders.USER_AGENT.toString(), UserAgentUtils.random())
 				// post content-type
@@ -94,7 +94,7 @@ public abstract class AbstractSource implements Source {
 	protected void doGet(String url, String userAgent, final HTTPCallback httpCallback) {
 		getClient(url.startsWith("https")).getAbs(url)
 				// max timeout
-				.timeout(DEFAULT_SOCKET_TIMEOUT)
+				.timeout(DEFAULT_SOCKET_TIMEOUT.toMillis())
 				// user-agent string
 				.putHeader(HttpHeaders.USER_AGENT.toString(),
 						Objects.toString(userAgent).isBlank() ? UserAgentUtils.random() : userAgent)
