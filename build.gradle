@@ -15,7 +15,7 @@ plugins {
 }
 apply plugin: 'com.google.cloud.tools.appengine'
 
-def appVersion = '2.0.0'
+def appVersion = '2.1.0'
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 mainClassName = 'net.vexelon.currencybg.srv.Main'
