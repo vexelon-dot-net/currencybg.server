@@ -37,7 +37,6 @@ dependencies {
             'commons-beanutils:commons-beanutils:_',
             'org.apache.commons:commons-lang3:_',
             'org.apache.commons:commons-configuration2:_',
-            'org.apache.httpcomponents:httpasyncclient:_',
             'org.slf4j:slf4j-reload4j:_',
             'org.slf4j:slf4j-api:_',
             'com.google.guava:guava:_',

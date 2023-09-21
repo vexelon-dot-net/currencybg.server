@@ -1,21 +1,20 @@
 package net.vexelon.currencybg.srv.remote;
 
 import com.google.common.base.Charsets;
+import io.vertx.core.Vertx;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.reports.Reporter;
 import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.http.HttpResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,15 +23,13 @@ import java.util.Optional;
 
 public class FIBSource extends AbstractSource {
 
-	private static final Logger log      = LoggerFactory.getLogger(FIBSource.class);
-	private static final String TAG_NAME = FIBSource.class.getSimpleName();
+	private static final Logger log         = LoggerFactory.getLogger(FIBSource.class);
+	private static final String TAG_NAME    = FIBSource.class.getSimpleName();
+	private static final String URL_SOURCE  = "https://www.fibank.bg/bg/valutni-kursove";
+	private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
 
-	private static final String FAKE_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36";
-	private static final String URL_SOURCE      = "https://www.fibank.bg/bg/valutni-kursove";
-	private static final String DATE_FORMAT     = "dd.MM.yyyy HH:mm";
-
-	public FIBSource(Reporter reporter) {
-		super(reporter);
+	public FIBSource(Vertx vertx, Reporter reporter) {
+		super(vertx, reporter);
 	}
 
 	public List<CurrencyData> getFIBRates(InputStream input) throws IOException, ParseException {
@@ -87,42 +84,36 @@ public class FIBSource extends AbstractSource {
 
 	@Override
 	public void getRates(final Callback callback) throws SourceException {
-		try {
-			doGet(new URI(URL_SOURCE), FAKE_USER_AGENT, new HTTPCallback() {
+		doGet(URL_SOURCE, new HTTPCallback() {
 
-				@Override
-				public void onRequestFailed(Exception e) {
-					getReporter().write(TAG_NAME, "Connection failure= {}", ExceptionUtils.getStackTrace(e));
+			@Override
+			public void onRequestFailed(Throwable t) {
+				getReporter().write(TAG_NAME, "Connection failure= {}", ExceptionUtils.getStackTrace(t));
 
-					FIBSource.this.close();
-					callback.onFailed(e);
-				}
+				FIBSource.this.close();
+				callback.onFailed(t);
+			}
 
-				@Override
-				public void onRequestCompleted(HttpResponse response, boolean isCanceled) {
-					var result = new ArrayList<CurrencyData>();
+			@Override
+			public void onRequestCompleted(HttpResponseWrapper response, boolean isCanceled) {
+				var result = new ArrayList<CurrencyData>();
 
-					if (!isCanceled) {
-						try {
-							result.addAll(getFIBRates(response.getEntity().getContent()));
-						} catch (IOException | ParseException e) {
-							log.error("Could not parse source data!", e);
-							getReporter().write(TAG_NAME, "Parse failed= {}", ExceptionUtils.getStackTrace(e));
-						}
-					} else {
-						log.warn("Request was canceled! No currencies were downloaded.");
-						getReporter().write(TAG_NAME, "Request was canceled! No currencies were downloaded.");
+				if (!isCanceled) {
+					try (var input = new ByteArrayInputStream(response.content())) {
+						result.addAll(getFIBRates(input));
+					} catch (IOException | ParseException e) {
+						log.error("Could not parse source data!", e);
+						getReporter().write(TAG_NAME, "Parse failed= {}", ExceptionUtils.getStackTrace(e));
 					}
-
-					FIBSource.this.close();
-					callback.onCompleted(result);
-
+				} else {
+					log.warn("Request was canceled! No currencies were downloaded.");
+					getReporter().write(TAG_NAME, "Request was canceled! No currencies were downloaded.");
 				}
-			});
 
-		} catch (URISyntaxException e) {
-			throw new SourceException("Invalid source url - " + URL_SOURCE, e);
-		}
+				FIBSource.this.close();
+				callback.onCompleted(result);
+			}
+		});
 	}
 
 	@Override

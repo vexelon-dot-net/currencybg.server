@@ -1,5 +1,6 @@
 package net.vexelon.currencybg.srv.remote;
 
+import io.vertx.core.Vertx;
 import net.vexelon.currencybg.srv.Defs;
 import net.vexelon.currencybg.srv.reports.NullReporter;
 import net.vexelon.currencybg.srv.tests.TestUtils;
@@ -16,7 +17,8 @@ public class Polana1SourceTests {
 	@Test
 	public void test_polana1_1() {
 		try {
-			var rates = new Polana1(new NullReporter()).getPolana1(TestUtils.getTestResource("/polana1.html"));
+			var rates = new Polana1(Vertx.vertx(), new NullReporter()).getPolana1(
+					TestUtils.getTestResource("/polana1.html"));
 
 			assertEquals("Currencies parsed", 15, rates.size());
 

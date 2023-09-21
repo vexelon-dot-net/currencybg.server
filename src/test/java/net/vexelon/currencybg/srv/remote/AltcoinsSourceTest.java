@@ -1,6 +1,7 @@
 package net.vexelon.currencybg.srv.remote;
 
 import com.google.common.collect.Iterables;
+import io.vertx.core.Vertx;
 import net.vexelon.currencybg.srv.reports.ConsoleReporter;
 import net.vexelon.currencybg.srv.tests.TestUtils;
 import org.junit.Test;
@@ -13,7 +14,7 @@ public class AltcoinsSourceTest {
 	@Test
 	public void test_AltcoinsSource01() {
 		try {
-			var rates = new AltcoinsSource(new ConsoleReporter()).getAltcoinsRates(
+			var rates = new AltcoinsSource(Vertx.vertx(), new ConsoleReporter()).getAltcoinsRates(
 					TestUtils.getTestResource("/altcoins.json"));
 
 			assertEquals("Parsed crypto", 14, rates.size());

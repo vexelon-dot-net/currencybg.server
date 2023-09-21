@@ -1,9 +1,11 @@
 package net.vexelon.currencybg.srv.remote;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import io.vertx.core.Vertx;
 import net.vexelon.currencybg.srv.Defs;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.Sources;
@@ -12,25 +14,23 @@ import net.vexelon.currencybg.srv.utils.DateTimeUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
-import org.apache.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * @deprecated No longer operational.
@@ -54,8 +54,8 @@ public class BitcoinsHouseSource extends AbstractSource {
 
 	private String htmlData;
 
-	public BitcoinsHouseSource(Reporter reporter) {
-		super(reporter);
+	public BitcoinsHouseSource(Vertx vertx, Reporter reporter) {
+		super(vertx, reporter);
 	}
 
 	/**
@@ -101,56 +101,49 @@ public class BitcoinsHouseSource extends AbstractSource {
 
 	@Override
 	public void getRates(Callback callback) throws SourceException {
-		try {
-			doGet(URL_SOURCE, new HTTPCallback() {
+		doGet(URL_SOURCE, new HTTPCallback() {
 
-				@Override
-				public void onRequestFailed(Exception e) {
-					getReporter().write(TAG_NAME, "Connection failure= {}", ExceptionUtils.getStackTrace(e));
+			@Override
+			public void onRequestFailed(Throwable t) {
+				getReporter().write(TAG_NAME, "Connection failure= {}", ExceptionUtils.getStackTrace(t));
 
-					BitcoinsHouseSource.this.close();
-					callback.onFailed(e);
-				}
+				BitcoinsHouseSource.this.close();
+				callback.onFailed(t);
+			}
 
-				@Override
-				public void onRequestCompleted(HttpResponse response, boolean isCanceled) {
-					List<CurrencyData> result = Lists.newArrayList();
+			@Override
+			public void onRequestCompleted(HttpResponseWrapper response, boolean isCanceled) {
+				var result = new ArrayList<CurrencyData>();
 
-					if (!isCanceled) {
-						try {
-							// Skip the error report, if the server is down. Nothing to do, anyway.
-							if ("text/html".equals(
-									Optional.ofNullable(response.getFirstHeader(HttpHeaders.CONTENT_TYPE))
-											.map(Header::getValue).orElse(""))) {
-								log.warn("{} is down! Currencies fetch skipped.", TAG_NAME);
-								callback.onCompleted(result);
-								return;
-							}
-
-							result = getBitcoinsHouseRates(response.getEntity().getContent());
-						} catch (IOException | ParseException e) {
-							log.error("Could not parse source data!", e);
-							getReporter().write(TAG_NAME, "Parse failed= {}  HTML= {}", ExceptionUtils.getStackTrace(e),
-									htmlData);
+				if (!isCanceled) {
+					try (var input = new ByteArrayInputStream(response.content())) {
+						// Skip the error report, if the server is down. Nothing to do, anyway.
+						if ("text/html".equals(
+								Iterables.getFirst(response.headers().get(HttpHeaders.CONTENT_TYPE), ""))) {
+							log.warn("{} is down! Currencies fetch skipped.", TAG_NAME);
+							callback.onCompleted(result);
+							return;
 						}
-					} else {
-						log.warn("Request was canceled! No currencies were downloaded.");
-						getReporter().write(TAG_NAME, "Request was canceled! No currencies were downloaded.");
+
+						result.addAll(getBitcoinsHouseRates(input));
+					} catch (IOException | ParseException e) {
+						log.error("Could not parse source data!", e);
+						getReporter().write(TAG_NAME, "Parse failed= {}  HTML= {}", ExceptionUtils.getStackTrace(e),
+								htmlData);
 					}
-
-					BitcoinsHouseSource.this.close();
-					callback.onCompleted(result);
+				} else {
+					log.warn("Request was canceled! No currencies were downloaded.");
+					getReporter().write(TAG_NAME, "Request was canceled! No currencies were downloaded.");
 				}
-			});
-		} catch (URISyntaxException e) {
-			throw new SourceException("Invalid source url - " + URL_SOURCE, e);
-		}
 
+				BitcoinsHouseSource.this.close();
+				callback.onCompleted(result);
+			}
+		});
 	}
 
 	@Override
 	public String getName() {
 		return TAG_NAME;
 	}
-
 }

@@ -1,36 +1,24 @@
 package net.vexelon.currencybg.srv.remote;
 
+import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
+import io.vertx.core.http.HttpHeaders;
+import io.vertx.core.http.HttpVersion;
+import io.vertx.core.net.ClientOptionsBase;
+import io.vertx.ext.web.client.HttpResponse;
+import io.vertx.ext.web.client.WebClient;
+import io.vertx.ext.web.client.WebClientOptions;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.reports.Reporter;
-import net.vexelon.currencybg.srv.utils.TrustAllX509Manager;
 import net.vexelon.currencybg.srv.utils.UserAgentUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.concurrent.FutureCallback;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
-import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
-import org.apache.http.impl.nio.client.HttpAsyncClients;
-import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class AbstractSource implements Source {
 
@@ -39,116 +27,81 @@ public abstract class AbstractSource implements Source {
 	protected static final int DEFAULT_SOCKET_TIMEOUT  = 3 * 60 * 1000;
 	protected static final int DEFAULT_CONNECT_TIMEOUT = 1 * 60 * 1000;
 
-	private Reporter                 reporter;
-	private CloseableHttpAsyncClient client;
+	private final Vertx     vertx;
+	private final Reporter  reporter;
+	private       WebClient client;
 
-	public AbstractSource(Reporter reporter) {
+
+	public AbstractSource(Vertx vertx, Reporter reporter) {
+		this.vertx = vertx;
 		this.reporter = reporter;
 	}
 
+	//	public AbstractSource(Reporter reporter) {
+	//		this.reporter = reporter;
+	//	}
+
 	public void close() {
-		IOUtils.closeQuietly(client);
+		if (client != null) {
+			client.close();
+		}
 	}
 
 	/**
-	 * Creates an asynchronous HTTP client configuration with default timeouts.
-	 *
-	 * @see #newHttpAsyncClient(boolean)
+	 * Creates an HTTP client configuration with default timeouts, if it does not already exist
 	 */
-	protected static CloseableHttpAsyncClient newHttpAsyncClient(boolean useSSL) {
-		RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(DEFAULT_SOCKET_TIMEOUT)
-				.setConnectTimeout(DEFAULT_CONNECT_TIMEOUT).build();
-
-		HttpAsyncClientBuilder builder = HttpAsyncClients.custom();
-
-		if (useSSL) {
-			try {
-				SSLContext context = SSLContext.getInstance("SSL");
-				context.init(null, new TrustManager[] { new TrustAllX509Manager() }, new SecureRandom());
-
-				SSLIOSessionStrategy strategy = new SSLIOSessionStrategy(context,
-						SSLIOSessionStrategy.getDefaultHostnameVerifier());
-
-				builder.setSSLStrategy(strategy);
-			} catch (Exception e) {
-				log.error("Failed initializing SSL context! Skipped.", e);
-			}
-		}
-
-		return builder.setDefaultRequestConfig(requestConfig).build();
-	}
-
-	protected CloseableHttpAsyncClient getClient(boolean useSSL) {
+	protected WebClient getClient(boolean useSSL) {
 		if (client == null) {
-			client = newHttpAsyncClient(useSSL);
-			client.start();
+			client = WebClient.create(vertx, new WebClientOptions()
+					// follow 301 redirects
+					.setFollowRedirects(true)
+					// drop connection timeout
+					.setConnectTimeout(ClientOptionsBase.DEFAULT_CONNECT_TIMEOUT)
+					// trust all server certs
+					.setTrustAll(true)
+					// use h2
+					.setProtocolVersion(HttpVersion.HTTP_2).setUseAlpn(true));
 		}
+
 		return client;
 	}
 
-	protected void doPost(URI uri, String entity, String contentType, final HTTPCallback httpCallback) {
-		HttpPost httpPost = new HttpPost(uri);
-		httpPost.setHeader(HttpHeaders.CONTENT_TYPE, contentType);
-		try {
-			httpPost.setEntity(new StringEntity(entity));
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
-		}
-
-		getClient(uri.getScheme().startsWith("https")).execute(httpPost, new FutureCallback<HttpResponse>() {
-
-			@Override
-			public void failed(Exception e) {
-				httpCallback.onRequestFailed(e);
-			}
-
-			@Override
-			public void completed(HttpResponse response) {
-				httpCallback.onRequestCompleted(response, false);
-			}
-
-			@Override
-			public void cancelled() {
-				httpCallback.onRequestCompleted(null, false);
-			}
-		});
+	private HttpResponseWrapper toResponseWrapper(HttpResponse<Buffer> response) {
+		return new HttpResponseWrapper(response.body().getBytes(), response.headers().entries().stream().collect(
+				Collectors.groupingBy(Map.Entry::getKey,
+						Collectors.mapping(Map.Entry::getValue, Collectors.toList()))));
 	}
 
-	protected void doPost(String url, String entity, String contentType, final HTTPCallback responseCallback)
-			throws URISyntaxException {
-		doPost(new URI(url), entity, contentType, responseCallback);
+	protected void doPost(String url, String entity, String contentType, final HTTPCallback httpCallback) {
+		getClient(url.startsWith("https")).postAbs(url).putHeader(HttpHeaders.CONTENT_TYPE.toString(), contentType)
+				.putHeader(HttpHeaders.USER_AGENT.toString(), UserAgentUtils.random()).sendBuffer(Buffer.buffer(entity))
+				.onSuccess(response -> httpCallback.onRequestCompleted(toResponseWrapper(response), false))
+				.onFailure(httpCallback::onRequestFailed);
 	}
 
-	protected void doGet(URI uri, String userAgent, final HTTPCallback httpCallback) {
-		HttpGet httpGet = new HttpGet(uri);
-		httpGet.setHeader("User-Agent", StringUtils.isBlank(userAgent) ? UserAgentUtils.random() : userAgent);
+	//	protected void doPost(String url, String entity, String contentType, final HTTPCallback responseCallback)
+	//			throws URISyntaxException {
+	//		doPost(new URI(url), entity, contentType, responseCallback);
+	//	}
 
-		getClient(uri.getScheme().startsWith("https")).execute(httpGet, new FutureCallback<HttpResponse>() {
-
-			@Override
-			public void failed(Exception e) {
-				httpCallback.onRequestFailed(e);
-			}
-
-			@Override
-			public void completed(HttpResponse response) {
-				httpCallback.onRequestCompleted(response, false);
-			}
-
-			@Override
-			public void cancelled() {
-				httpCallback.onRequestCompleted(null, false);
-			}
-		});
+	protected void doGet(String url, String userAgent, final HTTPCallback httpCallback) {
+		getClient(url.startsWith("https")).getAbs(url).putHeader(HttpHeaders.USER_AGENT.toString(),
+						Objects.toString(userAgent).isBlank() ? UserAgentUtils.random() : userAgent).send()
+				.onSuccess(response -> httpCallback.onRequestCompleted(toResponseWrapper(response), false))
+				.onFailure(httpCallback::onRequestFailed);
 	}
 
-	protected void doGet(URI uri, final HTTPCallback httpCallback) {
-		doGet(uri, null, httpCallback);
+	protected void doGet(String url, final HTTPCallback responseCallback) {
+		doGet(url, null, responseCallback);
 	}
 
-	protected void doGet(String url, final HTTPCallback responseCallback) throws URISyntaxException {
-		doGet(new URI(url), responseCallback);
-	}
+	//	protected void doGet(URI uri, final HTTPCallback httpCallback) {
+	//		doGet(uri, null, httpCallback);
+	//	}
+	//
+	//	protected void doGet(String url, final HTTPCallback responseCallback) throws URISyntaxException {
+	//		doGet(new URI(url), responseCallback);
+	//	}
 
 	/**
 	 * Verifies that each {@link CurrencyData} entry contains a valid or
@@ -293,14 +246,16 @@ public abstract class AbstractSource implements Source {
 		return reporter;
 	}
 
+	public record HttpResponseWrapper(byte[] content, Map<String, List<String>> headers) {}
+
 	/**
 	 * HTTP request callback
 	 */
 	public interface HTTPCallback {
 
-		void onRequestCompleted(final HttpResponse response, boolean isCanceled);
+		void onRequestCompleted(HttpResponseWrapper response, boolean isCanceled);
 
-		void onRequestFailed(Exception e);
+		void onRequestFailed(Throwable t);
 	}
 
 }

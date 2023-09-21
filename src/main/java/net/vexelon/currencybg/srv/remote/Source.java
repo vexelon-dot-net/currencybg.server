@@ -1,48 +1,40 @@
 package net.vexelon.currencybg.srv.remote;
 
-import java.util.List;
-
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
+
+import java.util.List;
 
 public interface Source {
 
 	/**
-	 * Fetches exchange rates from the underlying source.
-	 * 
-	 * @param callback
-	 *            Override the {@link Callback#onCompleted(List)} to receive a
-	 *            {@link CurrencyData} list and {@link Callback#onFailed()} for
-	 *            error notifications in case download fails.
-	 * @throws SourceException
+	 * Fetches exchange rates from the underlying source
+	 *
+	 * @param callback Override the {@link Callback#onCompleted(List)} to receive a
+	 *                 {@link CurrencyData} list and {@link Callback#onFailed(Exception)}} for
+	 *                 error notifications in case download fails.
 	 */
 	void getRates(final Callback callback) throws SourceException;
 
 	/**
-	 * 
-	 * @return Source logical name.
+	 * @return Source logical name
 	 */
 	String getName();
 
 	/**
 	 * Currencies download callback
-	 * 
 	 */
-	public interface Callback {
+	interface Callback {
 
 		/**
-		 * Notifies the caller that currencies download has finished.
-		 * 
-		 * @param currencyDataList
+		 * Notifies the caller that currencies download has finished
 		 */
 		void onCompleted(List<CurrencyData> currencyDataList);
 
 		/**
-		 * Notifies the caller that there was a server error.
-		 * 
-		 * @param exception
-		 *            {@link Exception} error.
+		 * Notifies the caller that there was a server error
+		 *
+		 * @param t {@link Throwable} error
 		 */
-		void onFailed(Exception exception);
-
+		void onFailed(Throwable t);
 	}
 }

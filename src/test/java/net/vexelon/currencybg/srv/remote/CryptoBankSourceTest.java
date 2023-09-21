@@ -1,7 +1,8 @@
 package net.vexelon.currencybg.srv.remote;
 
+import io.vertx.core.Vertx;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
-import net.vexelon.currencybg.srv.reports.NullReporter;
+import net.vexelon.currencybg.srv.reports.ConsoleReporter;
 import net.vexelon.currencybg.srv.tests.TestUtils;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -21,7 +22,7 @@ public class CryptoBankSourceTest {
 	public void test_cryptobank_1() {
 
 		try {
-			List<CurrencyData> rates = new CryptoBankSource(new NullReporter()).getCryptoBankRates(
+			List<CurrencyData> rates = new CryptoBankSource(Vertx.vertx(), new ConsoleReporter()).getCryptoBankRates(
 					TestUtils.getTestResource("/cryptobank_01.html"));
 
 			assertTrue(rates.size() == 6);

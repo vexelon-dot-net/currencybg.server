@@ -20,12 +20,13 @@ public class Main {
 			System.out.println("Max threads = " + parallelThreads);
 			executor = Executors.newScheduledThreadPool(parallelThreads);
 
+			var vertx = Vertx.vertx();
+
 			// init application and boot background services
-			var bootstrap = new Bootstrap();
+			var bootstrap = new Bootstrap(vertx);
 			bootstrap.start(executor);
 
 			// start API server
-			var vertx = Vertx.vertx();
 			vertx.deployVerticle(new ApiVerticle(Main::onStop));
 		} catch (Throwable t) {
 			t.printStackTrace();

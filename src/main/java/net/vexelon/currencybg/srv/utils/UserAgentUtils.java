@@ -22,7 +22,8 @@ public final class UserAgentUtils {
 			"Mozilla/5.0 (Windows; U; Windows NT 5.2) AppleWebKit/531.2.0 (KHTML, like Gecko) Chrome/34.0.871.0 Safari/531.2.0",
 			"Mozilla/5.0 (Windows; U; Windows NT 6.2) AppleWebKit/534.1.0 (KHTML, like Gecko) Chrome/36.0.868.0 Safari/534.1.0",
 			"Mozilla/5.0 (Windows NT 5.1; Win64; x64; rv:15.1) Gecko/20100101 Firefox/15.1.8",
-			"Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 5.2; Trident/6.0; .NET CLR 4.8.59447.3)");
+			"Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 5.2; Trident/6.0; .NET CLR 4.8.59447.3)",
+			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36");
 
 	public static String random() {
 		return ua.get(ThreadLocalRandom.current().nextInt(ua.size()));

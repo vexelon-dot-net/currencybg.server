@@ -4,6 +4,7 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.common.base.Charsets;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import io.vertx.core.Vertx;
 import net.vexelon.currencybg.srv.db.FirestoreDataSource;
 import net.vexelon.currencybg.srv.reports.ReporterHeartbeat;
 import org.apache.commons.io.IOUtils;
@@ -29,6 +30,11 @@ import java.util.jar.Manifest;
 public class Bootstrap {
 
 	private static final Logger log = LoggerFactory.getLogger(Bootstrap.class);
+	private final        Vertx  vertx;
+
+	public Bootstrap(Vertx vertx) {
+		this.vertx = vertx;
+	}
 
 	/**
 	 * @throws RuntimeException On configuration loading errors.
@@ -142,7 +148,7 @@ public class Bootstrap {
 		executor.scheduleWithFixedDelay(new ReporterHeartbeat(), Defs.REPORTER_UPDATE_FIRST_INTERVAL,
 				Defs.REPORTER_UPDATES_PERIODIC_INTERVAL, TimeUnit.SECONDS);
 
-		executor.scheduleWithFixedDelay(new UpdateHeartbeat(), Defs.UPDATE_FIRST_INTERVAL,
+		executor.scheduleWithFixedDelay(new UpdateHeartbeat(vertx), Defs.UPDATE_FIRST_INTERVAL,
 				Defs.UPDATES_PERIODIC_INTERVAL, TimeUnit.SECONDS);
 
 		executor.scheduleWithFixedDelay(new CleanupHeartbeat(), Defs.CLEANUP_FIRST_INTERVAL,

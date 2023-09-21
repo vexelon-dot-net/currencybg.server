@@ -1,6 +1,7 @@
 package net.vexelon.currencybg.srv.remote;
 
-import net.vexelon.currencybg.srv.reports.ConsoleReporter;
+import io.vertx.core.Vertx;
+import net.vexelon.currencybg.srv.reports.NullReporter;
 import net.vexelon.currencybg.srv.tests.TestUtils;
 import org.junit.Test;
 
@@ -11,7 +12,8 @@ public class TavexSourceTests {
 	@Test
 	public void test_tavex_1() {
 		try {
-			var rates = new TavexSource(new ConsoleReporter()).getTavexRates(TestUtils.getTestResource("/tavex.html"));
+			var rates = new TavexSource(Vertx.vertx(), new NullReporter()).getTavexRates(
+					TestUtils.getTestResource("/tavex.html"));
 
 			assertEquals("Currencies parsed", 59, rates.size());
 

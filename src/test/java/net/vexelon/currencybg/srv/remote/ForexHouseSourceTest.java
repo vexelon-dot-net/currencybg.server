@@ -1,5 +1,6 @@
 package net.vexelon.currencybg.srv.remote;
 
+import io.vertx.core.Vertx;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.reports.NullReporter;
 import net.vexelon.currencybg.srv.tests.TestUtils;
@@ -18,7 +19,7 @@ public class ForexHouseSourceTest {
 	public void test_forexhouse_1() {
 
 		try {
-			List<CurrencyData> rates = new ForexHouseSource(new NullReporter()).getForexHouseRates(
+			List<CurrencyData> rates = new ForexHouseSource(Vertx.vertx(), new NullReporter()).getForexHouseRates(
 					TestUtils.getTestResource("/forexhouse_01.html"));
 
 			assertEquals("GBP", rates.get(0).getCode());

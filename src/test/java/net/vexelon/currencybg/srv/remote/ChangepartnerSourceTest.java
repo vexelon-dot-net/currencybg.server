@@ -1,5 +1,6 @@
 package net.vexelon.currencybg.srv.remote;
 
+import io.vertx.core.Vertx;
 import net.vexelon.currencybg.srv.reports.ConsoleReporter;
 import net.vexelon.currencybg.srv.tests.TestUtils;
 import org.junit.Test;
@@ -12,7 +13,7 @@ public class ChangepartnerSourceTest {
 	@Test
 	public void test_changepartner_1() {
 		try {
-			var rates = new ChangepartnerSource(new ConsoleReporter()).getChangepartnerRates(
+			var rates = new ChangepartnerSource(Vertx.vertx(), new ConsoleReporter()).getChangepartnerRates(
 					TestUtils.getTestResource("/changepartner_01.html"));
 
 			assertEquals("Currencies parsed", 16, rates.size());

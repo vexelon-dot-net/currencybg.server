@@ -1,5 +1,6 @@
 package net.vexelon.currencybg.srv.remote;
 
+import io.vertx.core.Vertx;
 import net.vexelon.currencybg.srv.reports.ConsoleReporter;
 import net.vexelon.currencybg.srv.tests.TestUtils;
 import org.junit.Test;
@@ -11,7 +12,7 @@ public class AllianzSourceTest {
 	@Test
 	public void test_Allianz() {
 		try {
-			var rates = new AllianzSource(new ConsoleReporter()).getAllianzRates(
+			var rates = new AllianzSource(Vertx.vertx(), new ConsoleReporter()).getAllianzRates(
 					TestUtils.getTestResource("/allianz.xml"));
 
 			assertEquals(7, rates.size());

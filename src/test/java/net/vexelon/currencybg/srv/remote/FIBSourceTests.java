@@ -1,5 +1,6 @@
 package net.vexelon.currencybg.srv.remote;
 
+import io.vertx.core.Vertx;
 import net.vexelon.currencybg.srv.reports.NullReporter;
 import net.vexelon.currencybg.srv.tests.TestUtils;
 import org.junit.Test;
@@ -12,7 +13,8 @@ public class FIBSourceTests {
 	@Test
 	public void test_FIB() {
 		try {
-			var rates = new FIBSource(new NullReporter()).getFIBRates(TestUtils.getTestResource("/fib.html"));
+			var rates = new FIBSource(Vertx.vertx(), new NullReporter()).getFIBRates(
+					TestUtils.getTestResource("/fib.html"));
 
 			assertEquals("Currencies parsed", 13, rates.size());
 

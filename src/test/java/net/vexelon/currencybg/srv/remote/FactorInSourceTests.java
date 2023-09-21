@@ -1,5 +1,6 @@
 package net.vexelon.currencybg.srv.remote;
 
+import io.vertx.core.Vertx;
 import net.vexelon.currencybg.srv.reports.NullReporter;
 import net.vexelon.currencybg.srv.tests.TestUtils;
 import org.junit.Test;
@@ -12,7 +13,8 @@ public class FactorInSourceTests {
 	@Test
 	public void test_factorin_1() {
 		try {
-			var rates = new Factorin(new NullReporter()).getFactorinRates(TestUtils.getTestResource("/factorin.html"));
+			var rates = new Factorin(Vertx.vertx(), new NullReporter()).getFactorinRates(
+					TestUtils.getTestResource("/factorin.html"));
 
 			assertEquals("Currencies parsed", 53, rates.size());
 

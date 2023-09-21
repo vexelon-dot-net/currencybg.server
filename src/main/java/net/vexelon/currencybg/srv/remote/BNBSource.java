@@ -1,20 +1,20 @@
 package net.vexelon.currencybg.srv.remote;
 
 import com.google.common.base.Charsets;
+import io.vertx.core.Vertx;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
 import net.vexelon.currencybg.srv.db.models.Sources;
 import net.vexelon.currencybg.srv.reports.Reporter;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,8 +50,8 @@ public class BNBSource extends AbstractSource {
 	private static final String XML_TAG_TITLE       = "TITLE";
 	private static final String XML_TAG_F_STAR      = "F_STAR";
 
-	public BNBSource(Reporter reporter) {
-		super(reporter);
+	public BNBSource(Vertx vertx, Reporter reporter) {
+		super(vertx, reporter);
 	}
 
 	/**
@@ -131,40 +131,36 @@ public class BNBSource extends AbstractSource {
 
 	@Override
 	public void getRates(final Callback callback) throws SourceException {
-		try {
-			doGet(URL_BNB_FORMAT_EN, new HTTPCallback() {
+		doGet(URL_BNB_FORMAT_EN, new HTTPCallback() {
 
-				@Override
-				public void onRequestFailed(Exception e) {
-					getReporter().write(TAG_NAME, "Connection failure= {}", ExceptionUtils.getStackTrace(e));
+			@Override
+			public void onRequestFailed(Throwable t) {
+				getReporter().write(TAG_NAME, "Connection failure= {}", ExceptionUtils.getStackTrace(t));
 
-					BNBSource.this.close();
-					callback.onFailed(e);
-				}
+				BNBSource.this.close();
+				callback.onFailed(t);
+			}
 
-				@Override
-				public void onRequestCompleted(HttpResponse response, boolean isCanceled) {
-					var result = new ArrayList<CurrencyData>();
+			@Override
+			public void onRequestCompleted(HttpResponseWrapper response, boolean isCanceled) {
+				var result = new ArrayList<CurrencyData>();
 
-					if (!isCanceled) {
-						try {
-							result.addAll(getBNBRates(response.getEntity().getContent()));
-						} catch (IOException e) {
-							log.error("Could not parse source data!", e);
-							getReporter().write(TAG_NAME, "Parse failed= {}", ExceptionUtils.getStackTrace(e));
-						} catch (XmlPullParserException e) {
-							log.error("Could not parse XML data!", e);
-							getReporter().write(TAG_NAME, "XML parse failed= {}", ExceptionUtils.getStackTrace(e));
-						}
+				if (!isCanceled) {
+					try (var input = new ByteArrayInputStream(response.content())) {
+						result.addAll(getBNBRates(input));
+					} catch (IOException e) {
+						log.error("Could not parse source data!", e);
+						getReporter().write(TAG_NAME, "Parse failed= {}", ExceptionUtils.getStackTrace(e));
+					} catch (XmlPullParserException e) {
+						log.error("Could not parse XML data!", e);
+						getReporter().write(TAG_NAME, "XML parse failed= {}", ExceptionUtils.getStackTrace(e));
 					}
-
-					BNBSource.this.close();
-					callback.onCompleted(result);
 				}
-			});
-		} catch (URISyntaxException e) {
-			throw new SourceException("Invalid source url - " + URL_BNB_FORMAT_EN, e);
-		}
+
+				BNBSource.this.close();
+				callback.onCompleted(result);
+			}
+		});
 	}
 
 	@Override

@@ -1,7 +1,8 @@
 package net.vexelon.currencybg.srv.remote;
 
 import com.google.common.collect.Iterables;
-import net.vexelon.currencybg.srv.reports.ConsoleReporter;
+import io.vertx.core.Vertx;
+import net.vexelon.currencybg.srv.reports.NullReporter;
 import net.vexelon.currencybg.srv.tests.TestUtils;
 import org.junit.Test;
 
@@ -12,7 +13,7 @@ public class XChangeBGSourceTest {
 
 	@Test
 	public void test_xchangebg() {
-		var source = new XChangeBGSource(new ConsoleReporter());
+		var source = new XChangeBGSource(Vertx.vertx(), new NullReporter());
 
 		try {
 			var rates = source.getXChangeRates(TestUtils.getTestResource("/xchg-bg-exchange-pairs.json"));

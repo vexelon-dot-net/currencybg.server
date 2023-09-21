@@ -1,7 +1,7 @@
 package net.vexelon.currencybg.srv.remote;
 
 import com.google.common.collect.Iterables;
-import net.vexelon.currencybg.srv.reports.ConsoleReporter;
+import io.vertx.core.Vertx;
 import net.vexelon.currencybg.srv.reports.NullReporter;
 import net.vexelon.currencybg.srv.tests.TestUtils;
 import org.junit.Test;
@@ -13,7 +13,7 @@ public class CryptoBGSourceTest {
 	@Test
 	public void test_CryptoBgSource_Header() {
 		try {
-			var rates = new CryptoBGSource(new ConsoleReporter()).getCryptoRates(
+			var rates = new CryptoBGSource(Vertx.vertx(), new NullReporter()).getCryptoRates(
 					TestUtils.getTestResource("/crypto_bg_source_header.html"));
 
 			assertEquals("Parsed crypto", 4, rates.size());
@@ -42,11 +42,11 @@ public class CryptoBGSourceTest {
 			assertEquals("ETH buy", "2863.43", rate.getBuy());
 			assertEquals("ETH sell", "3023.22", rate.getSell());
 
-			var ratesNoData = new CryptoBGSource(new NullReporter()).getCryptoRates(
+			var ratesNoData = new CryptoBGSource(Vertx.vertx(), new NullReporter()).getCryptoRates(
 					TestUtils.getTestResource("/crypto_bg_source_header_no_data.html"));
 			assertTrue(ratesNoData.isEmpty());
 
-			var ratesEmpty = new CryptoBGSource(new NullReporter()).getCryptoRates(
+			var ratesEmpty = new CryptoBGSource(Vertx.vertx(), new NullReporter()).getCryptoRates(
 					TestUtils.getTestResource("/crypto_bg_source_header_empty.html"));
 			assertTrue(ratesEmpty.isEmpty());
 		} catch (Exception e) {

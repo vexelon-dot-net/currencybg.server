@@ -1,6 +1,7 @@
 package net.vexelon.currencybg.srv.remote;
 
-import net.vexelon.currencybg.srv.reports.ConsoleReporter;
+import io.vertx.core.Vertx;
+import net.vexelon.currencybg.srv.reports.NullReporter;
 import net.vexelon.currencybg.srv.tests.TestUtils;
 import org.junit.Test;
 
@@ -14,7 +15,7 @@ public class UnicreditSourceTests {
 	@Test
 	public void test_unicredit_1() {
 		try {
-			var rates = new UnicreditSource(new ConsoleReporter()).getUnicreditRates(
+			var rates = new UnicreditSource(Vertx.vertx(), new NullReporter()).getUnicreditRates(
 					TestUtils.getTestResource("/unicredit.html"));
 
 			assertEquals("Currencies parsed", 17, rates.size());

@@ -1,5 +1,6 @@
 package net.vexelon.currencybg.srv;
 
+import io.vertx.core.Vertx;
 import net.vexelon.currencybg.srv.db.DataSource;
 import net.vexelon.currencybg.srv.db.DataSourceException;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
@@ -25,6 +26,11 @@ import java.util.concurrent.TimeUnit;
 public class UpdateHeartbeat implements Runnable {
 
 	private static final Logger log = LoggerFactory.getLogger(UpdateHeartbeat.class);
+	private final        Vertx  vertx;
+
+	public UpdateHeartbeat(Vertx vertx) {
+		this.vertx = vertx;
+	}
 
 	private boolean isUpdateGo(SourceUpdateRestrictions updateRestrictions) {
 		if (!updateRestrictions.isEmpty()) {
@@ -146,7 +152,7 @@ public class UpdateHeartbeat implements Runnable {
 					if (sourceType != null) {
 						try {
 							final var reporter = new DataSourceReporter();
-							final var source = sourceType.newInstance(reporter);
+							final var source = sourceType.newInstance(vertx, reporter);
 
 							// set update datetime flag
 							currencySource.setLastUpdate(new Date());
@@ -155,8 +161,8 @@ public class UpdateHeartbeat implements Runnable {
 							source.getRates(new Source.Callback() {
 
 								@Override
-								public void onFailed(Exception e) {
-									log.error("{} - source download failed!", source.getName(), e);
+								public void onFailed(Throwable t) {
+									log.error("{} - source download failed!", source.getName(), t);
 
 									if (!reporter.isEmpty()) {
 										try {
