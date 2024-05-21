@@ -1,7 +1,7 @@
 package net.vexelon.currencybg.srv.remote;
 
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.JsonParseException;
 import io.vertx.core.Vertx;
 import net.vexelon.currencybg.srv.Defs;
 import net.vexelon.currencybg.srv.db.models.CurrencyData;
@@ -46,23 +46,42 @@ public class AltcoinsSource extends AbstractSource {
 			var updateDate = DateTimeUtils.parseDate(LocalDateTime.now(ZoneId.of(Defs.DATETIME_TIMEZONE_SOFIA))
 					.format(DateTimeFormatter.ofPattern(DATE_FORMAT)), DATE_FORMAT);
 
-			Map<String, List<String>> pairs = new GsonBuilder().create()
-					.fromJson(reader, new TypeToken<Map<String, List<String>>>() {}.getType());
+			var gson = new GsonBuilder().create();
+			var pairs = gson.fromJson(reader, Map.class);
 
-			for (var next : pairs.entrySet()) {
-				if (Defs.CURRENCY_CODES_CRYPTO.contains(next.getKey()) && next.getValue().size() > 1) {
+			for (var entry : pairs.entrySet()) {
+				var next = (Map.Entry<String, Object>) entry;
+
+				if (Defs.CURRENCY_CODES_CRYPTO.contains(next.getKey()) && next.getValue() instanceof List valueList) {
 					try {
+						// parse value
 						var currencyData = new CurrencyData();
 						currencyData.setCode(next.getKey());
-						currencyData.setBuy(next.getValue().get(1));
-						currencyData.setSell(next.getValue().get(0));
+
+						if (valueList.get(1) instanceof Double d) {
+							currencyData.setBuy(Double.toString(d));
+						} else if (valueList.get(1) instanceof String str) {
+							currencyData.setBuy(str);
+						} else {
+							throw new RuntimeException("Unsupported value type: " + valueList.get(1));
+						}
+
+						if (valueList.get(0) instanceof Double d) {
+							currencyData.setSell(Double.toString(d));
+						} else if (valueList.get(0) instanceof String str) {
+							currencyData.setSell(str);
+						} else {
+							throw new RuntimeException("Unsupported value type: " + valueList.get(1));
+						}
+
 						currencyData.setRatio(1);
 						currencyData.setSource(Sources.ALTCOINS.getID());
 						currencyData.setDate(updateDate);
 						result.add(currencyData);
-					} catch (IndexOutOfBoundsException e) {
+					} catch (JsonParseException | IndexOutOfBoundsException e) {
 						log.warn("Failed on {}, Exception={}", next.getKey(), e.getMessage());
-						getReporter().write(TAG_NAME, "Could not process crypto {}", next.getKey());
+						getReporter().write(TAG_NAME, "Failed with '{}' while parsing '{}' value: {}", e.getMessage(),
+								next.getKey(), (String) next.getValue());
 					}
 				} else if (log.isInfoEnabled()) {
 					log.info("Skipped unsupported crypto: {}", next.getKey());
